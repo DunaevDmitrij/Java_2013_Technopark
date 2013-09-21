@@ -6,4 +6,5 @@ Read files About_git_ignore_and_idea.txt and something about .gitignore before m
 ## Team
 * Dunaev Dmitrij
 * Lobachev Artem
-* 
+* Kislenko Maksim
+* Sidorov Vadim
