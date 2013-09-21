@@ -11,7 +11,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 
-public class Hello  {
+public class Main {
     public static void main(String args[ ])throws Exception {
         Frontend frontend = new Frontend();
 
