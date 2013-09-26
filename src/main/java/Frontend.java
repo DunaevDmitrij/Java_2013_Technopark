@@ -20,9 +20,17 @@ public class Frontend extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException, ServletException
     {
+        String responseText = "";
+
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("Hello!");
+        responseText +=  "<html><head><title>Hello server!</title></head><body>\n";
+        //response.getWriter().println("<html><head><title>Hello server!</title></head><body>");
+        //response.getWriter().println("Hello!");
+        //TODO question: is variant with String really quicker?
+        responseText += "Hello!\n";
+        //response.getWriter().println("</body></html>");
+        responseText += "</body></html>";
 
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
@@ -33,7 +41,7 @@ public class Frontend extends HttpServlet {
 
 
         }
-        response.getWriter().println(userId);
+        response.getWriter().println(responseText);
     }
 
     public void doPost(HttpServletRequest request,
