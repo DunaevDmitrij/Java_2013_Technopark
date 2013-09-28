@@ -20,6 +20,12 @@ public class PageGenerator {
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
 
+    /**
+     * Наполняет шаблон даннымы и возвращает в виде строки.
+     * @param filename Имя шаблона.
+     * @param data Множество переменная-значение для шаблона.
+     * @return Шаблонизированная страница.
+     */
     public static String getPage(String filename, Map<String, Object> data) {
         Writer stream = new StringWriter();
         try {
