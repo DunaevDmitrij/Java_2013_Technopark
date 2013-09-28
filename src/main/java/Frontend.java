@@ -1,5 +1,3 @@
-import com.sun.net.httpserver.HttpServer;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,86 +20,134 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Frontend extends HttpServlet {
 
-    private Map<String, Long> users;
-
+    /**
+     * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
+     * Добавляет пользователей к Map.
+     */
     public Frontend(){
         users = new HashMap<>();
         users.put("vasia", 0L);
         users.put("valera", 1L);
     }
 
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws IOException, ServletException {
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        //baseRequest.setHandled(true);
-
-        //текущая сессия
-        HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId == null)
-        {
-            Map<String, Object> pageVariables = new HashMap<>();
-            response.getWriter().println(PageGenerator.getPage("auth.tml", pageVariables));
-        }
-        else
-        {
-            Map<String, Object> pageVariables = new HashMap<>();
-            pageVariables.put("UserID", userId);
-            pageVariables.put("Time", getTime());
-            String name = (String) session.getAttribute("userName");
-            pageVariables.put("User", name);
-            String sessionId = (String) session.getId();
-            pageVariables.put("Session", sessionId);
-            response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
-        }
-    }
-
+    /**
+     *
+     * @return текущее время в заданном формате.
+     */
     public static String getTime() {
         Date date = new Date();
         date.getTime();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss"); // здесь задаем формат времени
         return formatter.format(date);
     }
 
+    /**
+     * Обрабатываем GET запрос.
+     * @param request запрос
+     * @param response ответ
+     * @throws IOException TODO написать откуда может появиться!
+     * @throws ServletException TODO написать откуда может появиться!
+     */
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+            throws IOException, ServletException {
+
+        response.setContentType("text/html;charset=utf-8");
+
+        //если пользователь пришел на страницу авторизации
+        if (request.getPathInfo().equals(AUTH_PAGE_ADDRESS)){
+
+            //получаем id http сессии и userId, если его нет
+            HttpSession session = request.getSession();
+            Long userId = (Long) session.getAttribute("userId");
+
+            //если пользователь не авторизован
+            if (userId == null)
+            {
+                //отдаем страницу авторизации
+                //TODO отдавать статическую страницу не запуская шаблонизатор, быстрее будет
+                response.getWriter().println(PageGenerator.getPage("auth.tml", new HashMap<String, Object>()));
+            }
+            //пользователь авторизован
+            else
+            {
+                //получаем из сессии имя пользователя и id сессии
+                String name = (String) session.getAttribute("userName");
+                String sessionId = (String) session.getId();
+                //отдаем страницу с ними
+                Map<String, Object> pageVariables = new HashMap<>();
+                pageVariables.put("UserID", userId);
+                pageVariables.put("Time", getTime());
+                pageVariables.put("User", name);
+                pageVariables.put("Session", sessionId);
+                response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+            }
+
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        //пользователь пришел на необрабатываемый адрес
+        else{
+            //TODO сделать красивую статическую страничку 404
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Обрабатываем POST запрос.
+     * @param request
+     * @param response
+     * @throws IOException TODO написать откуда может появиться!
+     * @throws ServletException  TODO написать откуда может появиться!
+     */
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws IOException, ServletException
     {
         response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        //baseRequest.setHandled(true);
 
-        if (request.getPathInfo().equals("/auth"))
+        //пользователь пытается авторизоваться
+        if (request.getPathInfo().equals(AUTH_POST_ADDRESS))
         {
             String name = (String) request.getParameter("login");
 
+            //пользователь с таким именем существует
+            //TODO добавить проверку пароля что ли
             if (users.containsKey(name))
             {
+                //получаем id сессии и пользователя
                 HttpSession session = request.getSession();
-                Long userId = (Long) users.get(name);//(Long) session.getAttribute("userId");
-                //userId = userIdGenerator.getAndIncrement();
-
-                Map<String, Object> pageVariables = new HashMap<>();
+                String sessionId = (String) session.getId();
+                Long userId = (Long) users.get(name);
+                //добавляем информацию о пользователе в сессию
                 session.setAttribute("userId", userId);
                 session.setAttribute("userName", name);
+                //возвращаем  страницу с информацией о пользоватеде
+                Map<String, Object> pageVariables = new HashMap<>();
                 pageVariables.put("UserID", userId);
                 pageVariables.put("Time", getTime());
                 pageVariables.put("User", name);
-                String sessionId = (String) session.getId();
                 pageVariables.put("Session", sessionId);
                 response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
             }
+            //пользователя не существует
             else
             {
-                response.getWriter().println("Wrong user");
+                response.getWriter().println("Wrong username or password");
             }
+
+            response.setStatus(HttpServletResponse.SC_OK);
         }
+        //обращение к несуществующему адресу
+        else{
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
     }
 
+    protected static String AUTH_PAGE_ADDRESS = "/test";
+    protected static String AUTH_POST_ADDRESS = "/auth";
 
+    private Map<String, Long> users;
     private AtomicLong userIdGenerator = new AtomicLong();
 
 
