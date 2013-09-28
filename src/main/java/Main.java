@@ -16,17 +16,20 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 
 public class Main {
+    public static String STATIC_DIR = "static";
+    public static int SERVER_PORT = 8080;
+
+
     public static void main(String args[ ])throws Exception {
         Frontend frontend = new Frontend();
 
-        Server server = new Server(8080);
+        Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(frontend), "/*");
 
         ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
-
-        resource_handler.setResourceBase("static");
+        resource_handler.setDirectoriesListed(false); // не показывать содержание директории при переходе по /
+        resource_handler.setResourceBase(STATIC_DIR); //путь к папке статики от корня проекта
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
