@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+function refresh(){
+location.reload();
+}
+</script>
+</head>
+<body onload="setInterval(refresh(), 900);">
+User id = ${UserId}
+<br>
+Current Server Time = ${Time}
+</body>
+</html>

@@ -6,6 +6,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -17,9 +22,17 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Frontend extends HttpServlet {
 
+    public static String getTime() {
+        Date date = new Date();
+        date.getTime();
+        DateFormat formatter = new SimpleDateFormat("HH.mm.ss");
+        return formatter.format(date);
+    }
+
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException, ServletException
     {
+        /*
         String responseText = "";
 
         response.setContentType("text/html;charset=utf-8");
@@ -31,9 +44,10 @@ public class Frontend extends HttpServlet {
         responseText += "Hello!\n";
         //response.getWriter().println("</body></html>");
         responseText += "</body></html>";
-
+          */
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
+
 
         if (userId == null) {
             userId = userIdGenerator.getAndIncrement();
@@ -41,7 +55,13 @@ public class Frontend extends HttpServlet {
 
 
         }
-        response.getWriter().println(responseText);
+
+        Map<String, Object> pageVariables = new HashMap<>();
+        pageVariables.put("UserId", userId);
+        pageVariables.put("Time",getTime());
+        response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+
+        //response.getWriter().println(responseText);
     }
 
     public void doPost(HttpServletRequest request,
