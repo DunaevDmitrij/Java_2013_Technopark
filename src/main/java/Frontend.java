@@ -22,54 +22,77 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Frontend extends HttpServlet {
 
-    public static String getTime() {
-        Date date = new Date();
-        date.getTime();
-        DateFormat formatter = new SimpleDateFormat("HH.mm.ss");
-        return formatter.format(date);
-    }
-
     public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws IOException, ServletException
-    {
-        /*
-        String responseText = "";
-
+                      HttpServletResponse response)
+            throws IOException, ServletException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        responseText +=  "<html><head><title>Hello server!</title></head><body>\n";
-        //response.getWriter().println("<html><head><title>Hello server!</title></head><body>");
-        //response.getWriter().println("Hello!");
-        //TODO question: is variant with String really quicker?
-        responseText += "Hello!\n";
-        //response.getWriter().println("</body></html>");
-        responseText += "</body></html>";
-          */
+        //baseRequest.setHandled(true);
+
+        //текущая сессия
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
-
-        if (userId == null) {
-            userId = userIdGenerator.getAndIncrement();
-            session.setAttribute("userId", userId);
-
-
+        if (userId == null)
+        {
+            Map<String, Object> pageVariables = new HashMap<>();
+            response.getWriter().println(PageGenerator.getPage("auth.tml", pageVariables));
         }
+        else
+        {
+            Map<String, Object> pageVariables = new HashMap<>();
+            pageVariables.put("UserID", userId);
+            pageVariables.put("Time", getTime());
+            String name = (String) session.getAttribute("userName");
+            pageVariables.put("User", name);
+            String sessionId = (String) session.getId();
+            pageVariables.put("Session", sessionId);
+            response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+        }
+    }
 
-        Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("UserId", userId);
-        pageVariables.put("Time",getTime());
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
-
-        //response.getWriter().println(responseText);
+    public static String getTime() {
+        Date date = new Date();
+        date.getTime();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(date);
     }
 
     public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) {
+                       HttpServletResponse response)
+            throws IOException, ServletException
+    {
+        response.setContentType("text/html;charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+        //baseRequest.setHandled(true);
 
+        if (request.getPathInfo().equals("/auth"))
+        {
+            String name = (String) request.getParameter("login");
+
+            if (name.equals("mist"))
+            {
+                HttpSession session = request.getSession();
+                Long userId = 0L;//(Long) session.getAttribute("userId");
+                //userId = userIdGenerator.getAndIncrement();
+
+                Map<String, Object> pageVariables = new HashMap<>();
+                session.setAttribute("userId", userId);
+                session.setAttribute("userName", name);
+                pageVariables.put("UserID", 0);
+                pageVariables.put("Time", getTime());
+                pageVariables.put("User", name);
+                String sessionId = (String) session.getId();
+                pageVariables.put("Session", sessionId);
+                response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+            }
+            else
+            {
+                response.getWriter().println("Wrong user");
+            }
+        }
     }
+
 
     private AtomicLong userIdGenerator = new AtomicLong();
 

@@ -8,9 +8,12 @@ location.reload();
 </script>
 </head>
 <body>
-User id = ${UserId}
+<h1> Hello, ${User}!</h1>
+Your User ID = ${UserID} !
 <br>
-Current Server Time = ${Time}
+Now time is ${Time}
+<br>
+Session = ${Session}
 <br>
 <img src="v.jpg" alt="A picture :)">
 </body>
