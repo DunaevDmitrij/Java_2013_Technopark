@@ -49,6 +49,7 @@ Thumbs.db
 #For IDEA
 ##################
 *.iws
+*.iml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries/*
