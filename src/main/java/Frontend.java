@@ -59,6 +59,8 @@ public class Frontend extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("UserId", userId);
         pageVariables.put("Time",getTime());
+        response.setContentType("text/html;charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
 
         //response.getWriter().println(responseText);

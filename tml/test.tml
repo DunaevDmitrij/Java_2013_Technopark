@@ -7,9 +7,11 @@ location.reload();
 }
 </script>
 </head>
-<body onload="setInterval(refresh(), 900);">
+<body>
 User id = ${UserId}
 <br>
 Current Server Time = ${Time}
+<br>
+<img src="v.jpg" alt="A picture :)">
 </body>
 </html>
