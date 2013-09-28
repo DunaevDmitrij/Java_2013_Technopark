@@ -22,6 +22,14 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Frontend extends HttpServlet {
 
+    private Map<String, Long> users;
+
+    public Frontend(){
+        users = new HashMap<>();
+        users.put("vasia", 0L);
+        users.put("valera", 1L);
+    }
+
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
@@ -70,16 +78,16 @@ public class Frontend extends HttpServlet {
         {
             String name = (String) request.getParameter("login");
 
-            if (name.equals("mist"))
+            if (users.containsKey(name))
             {
                 HttpSession session = request.getSession();
-                Long userId = 0L;//(Long) session.getAttribute("userId");
+                Long userId = (Long) users.get(name);//(Long) session.getAttribute("userId");
                 //userId = userIdGenerator.getAndIncrement();
 
                 Map<String, Object> pageVariables = new HashMap<>();
                 session.setAttribute("userId", userId);
                 session.setAttribute("userName", name);
-                pageVariables.put("UserID", 0);
+                pageVariables.put("UserID", userId);
                 pageVariables.put("Time", getTime());
                 pageVariables.put("User", name);
                 String sessionId = (String) session.getId();
