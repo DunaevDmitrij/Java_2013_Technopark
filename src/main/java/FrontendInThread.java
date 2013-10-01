@@ -9,5 +9,13 @@ public class FrontendInThread extends Thread {
     @Override
     public void run() {
         System.out.println("Привет из побочного потока. Имя потока:"+this.getName() + ". Id потока:"+this.getId());
+        while (true){
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("Bye-bye from thread id "+this.getId());
+                return;
+            }
+        }
     }
 }

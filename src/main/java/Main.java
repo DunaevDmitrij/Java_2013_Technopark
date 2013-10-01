@@ -46,6 +46,22 @@ public class Main {
         }
 
 
+        try {
+            //ждем секунду, посылаем одному из потоков сигнал завершения
+            Thread.sleep(1000);
+            frontends.get(2).interrupt();
+            //ждем еще секунду, проверяем, что поток завершился, если да, удаляем его из контейнера
+            Thread.sleep(1000);
+            if (!frontends.get(2).isAlive()){
+                frontends.remove(2);
+                System.out.println("Thread removed!");
+            }
+
+        }catch (InterruptedException e){
+
+        }
+
+
         server.start();
         server.join();
     }
