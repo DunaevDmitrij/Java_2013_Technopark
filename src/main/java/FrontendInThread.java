@@ -8,6 +8,12 @@
 public class FrontendInThread extends Thread {
 
     public volatile static int handleCount = 0;
+    public Frontend frontend;
+
+    public FrontendInThread() {
+        super();
+        frontend = new Frontend();
+    }
 
     @Override
     public void run() {
