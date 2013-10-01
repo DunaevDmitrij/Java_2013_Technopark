@@ -20,6 +20,7 @@ public class Main {
     public static String STATIC_DIR = "static";
     public static int SERVER_PORT = 8080;
     private static int FRONTEND_THREADS_COUNT = 3;
+    public static final Object threadsMonitor = new Object();
 
 
     public static void main(String args[ ])throws Exception {
@@ -40,12 +41,19 @@ public class Main {
         //Создаем контейнер с потоками, создаем несколько потоков, запихиваем их в контейнер и стартуем.
         ArrayList<Thread> frontends = new ArrayList<>();
         for (int i=0; i<FRONTEND_THREADS_COUNT;i++){
-            FrontendInThread ft = new FrontendInThread();
-            frontends.add(ft);
-            ft.start();
+            //синзронизированная часть: создаем поток, запускаем его и блокируем объект синхронизации
+            synchronized (threadsMonitor){
+                FrontendInThread ft = new FrontendInThread();
+                frontends.add(ft);
+                ft.start();
+                try{
+                    threadsMonitor.wait();
+                }
+                catch (InterruptedException e){
+                     e.printStackTrace();
+                }
+            }
         }
-
-
         try {
             //ждем секунду, посылаем одному из потоков сигнал завершения
             Thread.sleep(1000);

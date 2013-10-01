@@ -6,12 +6,20 @@
  * To change this template use File | Settings | File Templates.
  */
 public class FrontendInThread extends Thread {
+
+    public volatile static int handleCount = 0;
+
     @Override
     public void run() {
-        System.out.println("Привет из побочного потока. Имя потока:"+this.getName() + ". Id потока:"+this.getId());
+        //синхронизированная часть: выводим имя и отдаем блокировку объукта
+        synchronized (Main.threadsMonitor){
+            System.out.println("Привет из побочного потока. Имя потока:"+this.getName() + ". Id потока:"+this.getId());
+            Main.threadsMonitor.notifyAll();
+        }
+        //асинхронная часть: спим, пока не поймаем InterruptedExseption
         while (true){
             try {
-                sleep(10000);
+                sleep(100000);
             } catch (InterruptedException e) {
                 System.out.println("Bye-bye from thread id "+this.getId());
                 return;
