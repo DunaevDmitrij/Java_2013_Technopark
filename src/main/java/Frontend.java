@@ -55,7 +55,7 @@ public class Frontend extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 
         //если пользователь пришел на страницу авторизации
-        if (request.getPathInfo().equals(AUTH_PAGE_ADDRESS)){
+        if (request.getPathInfo().equals(ADDRESS_AUTH)){
 
             //получаем id http сессии и userId, если его нет
             HttpSession session = request.getSession();
@@ -106,7 +106,7 @@ public class Frontend extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 
         //пользователь пытается авторизоваться
-        if (request.getPathInfo().equals(AUTH_POST_ADDRESS))
+        if (request.getPathInfo().equals(ADDRESS_AUTH))
         {
             String name = (String) request.getParameter("login");
 
@@ -144,8 +144,7 @@ public class Frontend extends HttpServlet {
 
     }
 
-    protected static String AUTH_PAGE_ADDRESS = "/test";
-    protected static String AUTH_POST_ADDRESS = "/auth";
+    protected static String ADDRESS_AUTH = "/auth";
 
     private Map<String, Long> users;
     private AtomicLong userIdGenerator = new AtomicLong();
