@@ -24,7 +24,14 @@ public class Main {
 
 
     public static void main(String args[ ])throws Exception {
+        ThreadPool TPool = new ThreadPool();
         Frontend frontend = new Frontend();
+
+        TPool.StartNew();
+        TPool.StartNew();
+        TPool.StartNew();
+        TPool.StartNew();
+        TPool.StartNew(frontend);
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -38,6 +45,7 @@ public class Main {
         rewriteHandler.setRewriteRequestURI(true);
         rewriteHandler.setRewritePathInfo(true);
         rewriteHandler.setOriginalPathAttribute("requestedPath");
+
         RedirectRegexRule rule = new RedirectRegexRule();
         rule.setRegex("/");//здесь устанавливаем откуда перенаправлять
         rule.setReplacement(MAIN_PAGE_ADDRESS);//а здесь - куда

@@ -18,29 +18,44 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 10:22
  * To change this template use File | Settings | File Templates.
  */
-public class Frontend extends HttpServlet {
+public class Frontend extends HttpServlet implements ExtRunnable {
+
+    protected static String AUTH_PAGE_ADDRESS = "/test";
+    protected static String AUTH_POST_ADDRESS = "/auth";
+
+    private Map<String, Long> users;
+    private AtomicLong userIdGenerator = new AtomicLong();
+
+    private int HandleCount;
+    private ExtThread ThisThread;
+
 
     /**
      * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
      * Добавляет пользователей к Map.
      */
-    public Frontend(){
+    public Frontend() {
         users = new HashMap<>();
+        HandleCount = 0;
+        ThisThread = null;
+
         users.put("vasia", 0L);
         users.put("valera", 1L);
     }
 
-    /**
-     *
-     * @return текущее время в заданном формате.
-     */
-    public static String getTime() {
-        Date date = new Date();
-        date.getTime();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss"); // здесь задаем формат времени
-        return formatter.format(date);
+    @Override
+    public void run() {
+        if (ThisThread != null) {
+            while (ThisThread.isAlive()) {
+                ThisThread.delay(5000);
+                ThisThread.toPool("Текущий handleCount = " + HandleCount);
+            }
+        }
     }
 
+    public void setThread(ExtThread T) {
+        ThisThread = T;
+    }
     /**
      * Обрабатываем GET запрос.
      * @param request запрос
@@ -90,6 +105,7 @@ public class Frontend extends HttpServlet {
             //TODO сделать красивую статическую страничку 404
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+        HandleCount++;
     }
 
     /**
@@ -142,14 +158,17 @@ public class Frontend extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
 
+        HandleCount++;
     }
 
-    protected static String AUTH_PAGE_ADDRESS = "/test";
-    protected static String AUTH_POST_ADDRESS = "/auth";
-
-    private Map<String, Long> users;
-    private AtomicLong userIdGenerator = new AtomicLong();
-
-
-
+    /**
+     *
+     * @return текущее время в заданном формате.
+     */
+    private static String getTime() {
+        Date date = new Date();
+        date.getTime();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss"); // здесь задаем формат времени
+        return formatter.format(date);
+    }
 }
