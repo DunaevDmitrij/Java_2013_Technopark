@@ -8,12 +8,16 @@ import java.util.ArrayList;
  *
  */
 
+//TODO where is it used and why?
 interface ExtRunnable extends Runnable {
+    //TODO does it overrides the same in Runnable?
     public void run();
+    //TODO did I understood right that it means that classes, that implement this interface, must realise passing them to any thread by them self?
     public void setThread(ExtThread T);
 }
 
 //-------------------------------------------------------------------------------------------------
+//TODO what is it used for?
 class ExtThread extends Thread {
     private int ID;
     private ThreadPool TP;
@@ -34,6 +38,7 @@ class ExtThread extends Thread {
         TP = _TP;
     }
 
+    //TODO I think it will be better to enclose in try catch all in this method, than use something like delay()
     @Override
     public void run() {
         if (RunObj == null)
@@ -50,7 +55,7 @@ class ExtThread extends Thread {
         else
             RunObj.run();
     }
-
+    //TODO why function has parametr, but sleep uses constant?
     public void delay(long msec) {
         try {
             sleep(5000);
@@ -62,7 +67,7 @@ class ExtThread extends Thread {
     public void toPool(String Msg) {
         TP.SyncWrite(Msg, ID);
     }
-
+    //TODO use @Override
     public String toString() {
         return "Поток ID = " + ID + " ";
     }
@@ -96,11 +101,11 @@ public class ThreadPool {
         Threads.add(NewT);
         Threads.get(Threads.size() - 1).start();
     }
-
+    //TODO WHAT IS IT? o_O
     public synchronized void SyncWrite(String Msg, int TID) {
         while (TID != NowID)
             try {
-                wait();
+                wait(); //TODO WHAT IS IT? o_O I think, we mustn't wait here, but look over all threads
             } catch (InterruptedException e) {
                 System.out.println("SyncWrite wait() прерван.");
             }
@@ -114,3 +119,8 @@ public class ThreadPool {
         notifyAll();
     }
 }
+
+
+//TODO comments!
+//TODO different classes in different files(except included in other classes) = best practise in java
+//TODO variable names are always written with small letter, classes with big
