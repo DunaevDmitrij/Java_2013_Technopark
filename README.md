@@ -1,11 +1,16 @@
-# Java Project for Technopark year 2013
+Технопарк@Mail.ru
+-----
+ 
+Курс: Углубленное программирование на Java
+ 
+Учебный период: осенний семестр 2013г.
 
-Group 2
 
-Project AviaDB
-
-## Team
+## Team 2
 * Dunaev Dmitrij
 * Lobachev Artem
 * Kislenko Maksim
 * Sidorov Vadim
+
+##Выполнено:
+
