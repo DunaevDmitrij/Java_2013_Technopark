@@ -29,12 +29,12 @@ public class Main {
         Frontend frontend = new Frontend();
 
         // Запуск дочерних потоков
-        TPool.StartNew();
-        TPool.StartNew();
-        TPool.StartNew();
-        TPool.StartNew();
+        TPool.startNew();
+        TPool.startNew();
+        TPool.startNew();
+        TPool.startNew();
         // Frontend в дочернем потоке
-        TPool.StartNew(frontend);
+        TPool.startNew(frontend);
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

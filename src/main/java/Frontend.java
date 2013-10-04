@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created with IntelliJ IDEA.
  * User: artemlobachev
@@ -27,11 +29,11 @@ public class Frontend extends HttpServlet implements ExtRunnable {
     private AtomicLong userIdGenerator = new AtomicLong();
 
     // Счетчик обработанных запросов
-    private int HandleCount;
+    private int handleCount;
 
     // Ссылка на поток, в котором выполняется Frontend.run()
     // Осведомленность
-    private ExtThread ThisThread;
+    private ExtThread thisThread;
 
 
     /**
@@ -41,8 +43,8 @@ public class Frontend extends HttpServlet implements ExtRunnable {
     public Frontend() {
         // Инициализация полей
         users = new HashMap<>();
-        HandleCount = 0;
-        ThisThread = null;
+        handleCount = 0;
+        thisThread = null;
 
         // Добавление записей о пользователях
         users.put("vasia", 0L);
@@ -55,17 +57,21 @@ public class Frontend extends HttpServlet implements ExtRunnable {
     @Override
     public void run() {
         // Проверка существования потока
-        if (ThisThread != null) {
-            while (ThisThread.isAlive()) {
+        if (thisThread != null) {
+            while (thisThread.isAlive()) {
                 // Вывод значения счетчика в лог (отсылка к ThreadPool)
-                ThisThread.delay(5000);
-                ThisThread.toPool("Текущий handleCount = " + HandleCount);
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {
+                    System.out.println("Frontend выполнние прервано.");
+                }
+                thisThread.toPool("Текущий handleCount = " + handleCount);
             }
         }
     }
 
-    public void setThread(ExtThread T) {
-        ThisThread = T;
+    public void setThread(ExtThread thread) {
+        thisThread = thread;
     }
     /**
      * Обрабатываем GET запрос.
@@ -116,7 +122,7 @@ public class Frontend extends HttpServlet implements ExtRunnable {
             //TODO сделать красивую статическую страничку 404
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        HandleCount++;
+        handleCount++;
     }
 
     /**
@@ -169,7 +175,7 @@ public class Frontend extends HttpServlet implements ExtRunnable {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
 
-        HandleCount++;
+        handleCount++;
     }
 
     /**
