@@ -23,14 +23,19 @@ public class Main {
 
     public static void main(String args[ ])throws Exception {
         Frontend frontend = new Frontend();
+        System.out.println("Main thread ID=" +  Thread.currentThread().getId());
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         //тут запускаем фронтенд в другом потоке(см реализацию)
-        FrontendInThread ft = new FrontendInThread();
-        ft.start();
+        //FrontendInThread ft = new FrontendInThread();
+        //ft.start();
+        //создаем пул потоков и добавляем в него наш Frontend
+        ThreadPool threadPool = new ThreadPool();
+        threadPool.add(frontend, "Frontend");
+
         //скармливаем его серверу
-        context.addServlet(new ServletHolder(ft.frontend), "/*");
+        context.addServlet(new ServletHolder(frontend), "/*");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(false); // не показывать содержание директории при переходе по /

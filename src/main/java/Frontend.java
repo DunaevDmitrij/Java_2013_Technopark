@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created with IntelliJ IDEA.
  * User: artemlobachev
@@ -18,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 10:22
  * To change this template use File | Settings | File Templates.
  */
-public class Frontend extends HttpServlet {
+public class Frontend extends HttpServlet implements Runnable {
 
     /**
      * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
@@ -28,6 +30,19 @@ public class Frontend extends HttpServlet {
         users = new HashMap<>();
         users.put("vasia", 0L);
         users.put("valera", 1L);
+    }
+
+    @Override
+    public void run() {
+        try{
+            while (true){
+                System.out.println(handleCounnt);
+                sleep(5000);
+            }
+        }
+        catch (InterruptedException e){
+           e.printStackTrace();
+        }
     }
 
     /**
@@ -51,6 +66,9 @@ public class Frontend extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
+
+        handleCounnt++;
+        System.out.println("Frontend thread ID=" +  Thread.currentThread().getId());
 
         response.setContentType("text/html;charset=utf-8");
 
@@ -148,6 +166,7 @@ public class Frontend extends HttpServlet {
 
     private Map<String, Long> users;
     private AtomicLong userIdGenerator = new AtomicLong();
+    private int handleCounnt = 0;
 
 
 
