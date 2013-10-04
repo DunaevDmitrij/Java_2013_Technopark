@@ -24,13 +24,16 @@ public class Main {
 
 
     public static void main(String args[ ])throws Exception {
+        // Экземпляр контейнера потоков
         ThreadPool TPool = new ThreadPool();
         Frontend frontend = new Frontend();
 
+        // Запуск дочерних потоков
         TPool.StartNew();
         TPool.StartNew();
         TPool.StartNew();
         TPool.StartNew();
+        // Frontend в дочернем потоке
         TPool.StartNew(frontend);
 
         Server server = new Server(SERVER_PORT);

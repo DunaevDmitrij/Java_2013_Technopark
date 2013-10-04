@@ -20,13 +20,17 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Frontend extends HttpServlet implements ExtRunnable {
 
-    protected static String AUTH_PAGE_ADDRESS = "/test";
-    protected static String AUTH_POST_ADDRESS = "/auth";
+    private final static String AUTH_PAGE_ADDRESS = "/test";
+    private final static String AUTH_POST_ADDRESS = "/auth";
 
     private Map<String, Long> users;
     private AtomicLong userIdGenerator = new AtomicLong();
 
+    // Счетчик обработанных запросов
     private int HandleCount;
+
+    // Ссылка на поток, в котором выполняется Frontend.run()
+    // Осведомленность
     private ExtThread ThisThread;
 
 
@@ -35,18 +39,25 @@ public class Frontend extends HttpServlet implements ExtRunnable {
      * Добавляет пользователей к Map.
      */
     public Frontend() {
+        // Инициализация полей
         users = new HashMap<>();
         HandleCount = 0;
         ThisThread = null;
 
+        // Добавление записей о пользователях
         users.put("vasia", 0L);
         users.put("valera", 1L);
     }
 
+    /**
+     * Метод для команд, выполняемых Frontend в собственном потоке
+     */
     @Override
     public void run() {
+        // Проверка существования потока
         if (ThisThread != null) {
             while (ThisThread.isAlive()) {
+                // Вывод значения счетчика в лог (отсылка к ThreadPool)
                 ThisThread.delay(5000);
                 ThisThread.toPool("Текущий handleCount = " + HandleCount);
             }
