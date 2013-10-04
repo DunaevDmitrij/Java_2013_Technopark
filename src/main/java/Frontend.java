@@ -36,7 +36,7 @@ public class Frontend extends HttpServlet implements Runnable {
     public void run() {
         try{
             while (true){
-                System.out.println(handleCounnt);
+                System.out.println("HandleCount = " + handleCounnt + " ThreadID=" + Thread.currentThread().getId());
                 sleep(5000);
             }
         }
