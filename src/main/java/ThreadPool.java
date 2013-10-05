@@ -31,7 +31,7 @@ public class ThreadPool {
         // Инициализация полей
         threads = new ArrayList<>();
         lastID = 1;
-        nowIDWriter = 1;
+        nowWriter = 0;
     }
 
     /**
@@ -62,13 +62,37 @@ public class ThreadPool {
         threads.get(threads.size() - 1).start();
     }
 
-    // Идентификатор текущего потока, который пользуется SyncWrite.
-    private int nowIDWriter;
+    /**
+     * Закрытие потока (вызывается самим потоком) и его исключение из-под надзора.
+     * @param threadID  идентификатор потока
+     */
+    public synchronized void removeThread(int threadID) {
+        int last = threads.size() - 1;
 
-    public synchronized void syncWrite(String msg, long threadID) {
-        while (threadID != nowIDWriter)
+        // Проверка корректности идентификатора
+        if (threads.get(last).getTid() >= threadID) {
+            // Цикл по потокам с конца
+            for (int i = last; i >= 0; --i)
+                if (threads.get(i).getTid() == threadID) {
+                    threads.remove(i);
+
+                    // изменение счетчика ожидания
+                    if (nowWriter > 0) nowWriter--;
+                    else nowWriter = last;
+
+                    // Сообщение
+                    System.out.println("Остановлен " + threadID);
+                    break;
+                }
+        }
+    }
+
+    // Номер в threads текущего потока, который пользуется SyncWrite.
+    private int nowWriter;
+
+    public synchronized void syncWrite(String msg, int threadID) {
+        while (threadID != threads.get(nowWriter).getTid())
             try {
-
                 // Вошедший поток будет ждать, пока его идентификатор и ожидаемый не сравняются
                 wait();
             } catch (InterruptedException e) {
@@ -79,9 +103,9 @@ public class ThreadPool {
         System.out.println(msg);
 
         // Зацикленность ожидания потоков
-        nowIDWriter++;
-        if (nowIDWriter > threads.size())
-            nowIDWriter = 1;
+        nowWriter++;
+        if (nowWriter >= threads.size())
+            nowWriter = 0;
 
         // Пробудить все потоки (все начнут выполнение в wait)
         notifyAll();

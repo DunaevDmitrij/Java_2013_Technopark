@@ -65,7 +65,7 @@ public class Frontend extends HttpServlet implements ExtRunnable {
                 } catch (InterruptedException e) {
                     System.out.println("Frontend выполнние прервано.");
                 }
-                thisThread.toPool("Текущий handleCount = " + handleCount);
+                thisThread.syncWrite("Текущий handleCount = " + handleCount);
             }
         }
     }

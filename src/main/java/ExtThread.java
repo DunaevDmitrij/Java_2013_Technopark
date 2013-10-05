@@ -27,10 +27,10 @@ class ExtThread extends Thread {
     private ThreadPool tPool;         // Ссылка на агрегирующий ThreadPool
     // ( осведомленность )
     private ExtRunnable runObj;       // Ссылка на запускаемый объект (для делегирования в run())
-    private long id;
+    private int id;
 
     // Конструктор потока без курируемого запускаемого объекта.
-    ExtThread (ThreadPool _tPool, long _id) {
+    ExtThread (ThreadPool _tPool, int _id) {
         super();
         // Инициализация полей
         runObj = null;
@@ -39,7 +39,7 @@ class ExtThread extends Thread {
     }
 
     // Конструктор потока с запускаемым объектом
-    ExtThread(ExtRunnable _runObj, ThreadPool _tPool, long _id) {
+    ExtThread(ExtRunnable _runObj, ThreadPool _tPool, int _id) {
         super();
         runObj = _runObj;
         tPool = _tPool;
@@ -52,9 +52,6 @@ class ExtThread extends Thread {
      *  Тело работы потока. Пишет в лог сообщения о тиках, либо делегирует
      *  выполнение курируемому Runnable объекту.
      */
-// =======
-    //TODO I think it will be better to enclose in try catch all in this method, than use something like delay()
-// >>>>>>> d4a653b3aa569191d094e0792b14c5a5471ca7df
     @Override
     public void run() {
         if (runObj == null)
@@ -70,23 +67,28 @@ class ExtThread extends Thread {
                     System.out.println(this + " прерван.");
                 }
                 // Обращение к синхронизируемому коду.
-                toPool(this + " Tick " + tick);
+                syncWrite(this + " Tick " + tick);
                 ++tick;
             }
-            toPool(this + " завершил работу");
+            syncWrite(this + " завершил работу");
         }
         else
             // Делегирование выполнения
             runObj.run();
+
+        tPool.removeThread(id);
     }
-// <<<<<<< HEAD
 
     /**
      * Обращение к синхронизированному коду, с выводом сообщения в лог.
      * @param Msg инфа для вывода
      */
-    public void toPool(String Msg) {
+    public void syncWrite(String Msg) {
         tPool.syncWrite(Msg, id);
+    }
+
+    public long getTid() {
+        return id;
     }
 
     // При конвертировании в строку важен идентификатор потока
