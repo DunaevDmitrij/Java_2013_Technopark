@@ -20,6 +20,8 @@ import static java.lang.Thread.sleep;
  * Time: 10:22
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class Frontend extends HttpServlet implements ExtRunnable {
 
     private final static String AUTH_PAGE_ADDRESS = "/test";

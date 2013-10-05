@@ -62,6 +62,11 @@ public class ThreadPool {
         threads.get(threads.size() - 1).start();
     }
 
+    /**
+     * Метод возвращает ссылку на объект потока в массиве, который определен threadID
+     * @param threadID   идентификатор потока
+     * @return
+     */
     private ExtThread findThread(final int threadID) {
         int last = threads.size() - 1;
 
@@ -83,6 +88,7 @@ public class ThreadPool {
     public synchronized void removeThread(final int threadID) {
         ExtThread threadObj = findThread(threadID);
         if (threadObj != null) {
+            // Удаляем поток из массива.
             threads.remove(threadObj);
 
             // изменение счетчика ожидания
@@ -105,6 +111,11 @@ public class ThreadPool {
     // Номер в threads текущего потока, который пользуется SyncWrite.
     private int nowWriter;
 
+    /**
+     * Синхронизированный метод печати в лог сообщений, в соответствии с их идентификаторами.
+     * @param msg       сообщение для печати
+     * @param threadID        идентификатор вызывающего потока
+     */
     public synchronized void syncWrite(String msg, final int threadID) {
         while (threadID != threads.get(nowWriter).getTid())
             try {
