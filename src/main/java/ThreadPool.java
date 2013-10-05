@@ -62,11 +62,7 @@ public class ThreadPool {
         threads.get(threads.size() - 1).start();
     }
 
-    /**
-     * Закрытие потока (вызывается самим потоком) и его исключение из-под надзора.
-     * @param threadID  идентификатор потока
-     */
-    public synchronized void removeThread(int threadID) {
+    private ExtThread findThread(final int threadID) {
         int last = threads.size() - 1;
 
         // Проверка корректности идентификатора
@@ -74,23 +70,42 @@ public class ThreadPool {
             // Цикл по потокам с конца
             for (int i = last; i >= 0; --i)
                 if (threads.get(i).getTid() == threadID) {
-                    threads.remove(i);
-
-                    // изменение счетчика ожидания
-                    if (nowWriter > 0) nowWriter--;
-                    else nowWriter = last;
-
-                    // Сообщение
-                    System.out.println("Остановлен " + threadID);
-                    break;
+                    return threads.get(i);
                 }
         }
+        return null;
     }
+
+    /**
+     * Закрытие потока (вызывается самим потоком) и его исключение из-под надзора.
+     * @param threadID  идентификатор потока
+     */
+    public synchronized void removeThread(final int threadID) {
+        ExtThread threadObj = findThread(threadID);
+        if (threadObj != null) {
+            threads.remove(threadObj);
+
+            // изменение счетчика ожидания
+            if (nowWriter > 0) nowWriter--;
+            else nowWriter = threads.size() - 1;
+
+            // Сообщение
+            System.out.println("Остановлен " + threadID);
+        }
+    }
+
+    /*
+    private void notify(final int threadID) {
+        ExtThread threadObj = findThread(threadID);
+        if (threadObj != null)
+            threadObj.notify();
+    }
+    */
 
     // Номер в threads текущего потока, который пользуется SyncWrite.
     private int nowWriter;
 
-    public synchronized void syncWrite(String msg, int threadID) {
+    public synchronized void syncWrite(String msg, final int threadID) {
         while (threadID != threads.get(nowWriter).getTid())
             try {
                 // Вошедший поток будет ждать, пока его идентификатор и ожидаемый не сравняются
@@ -109,5 +124,6 @@ public class ThreadPool {
 
         // Пробудить все потоки (все начнут выполнение в wait)
         notifyAll();
+        // notify(nowWriter);
     }
 }
