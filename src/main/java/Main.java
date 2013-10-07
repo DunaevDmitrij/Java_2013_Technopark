@@ -29,7 +29,7 @@ public class Main {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         //создаем пул потоков и добавляем в него наш Frontend
         ThreadPool threadPool = new ThreadPool();
-        threadPool.add(frontend, THREAD_NAME_FRONTEND);
+        threadPool.startThread(frontend, THREAD_NAME_FRONTEND);
 
         //скармливаем его серверу
         context.addServlet(new ServletHolder(frontend), "/*");

@@ -16,11 +16,11 @@ public class ThreadPool {
     }
 
     /**
-     * Создает потока с именем name и запускает его на исполнение.
+     * Создает потока с именем name из Runnable объекта и запускает его на исполнение.
      * @param obj Runnable объект
      * @param name Имя потока
      */
-    public void add(Runnable obj, String name){
+    public void startThread(Runnable obj, String name){
         Thread thread = new Thread(obj, name);
         threads.add(thread);
         thread.start();
