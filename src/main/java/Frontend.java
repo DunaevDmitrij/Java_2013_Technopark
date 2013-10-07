@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Thread.sleep;
@@ -39,7 +40,7 @@ public class Frontend extends HttpServlet implements Runnable {
     public void run() {
         try{
             while (true){
-                System.out.println("HandleCount = " + handleCounnt + " ThreadID=" + Thread.currentThread().getId());
+                System.out.println("HandleCount = " + handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
                 sleep(5000);
             }
         }
@@ -70,7 +71,7 @@ public class Frontend extends HttpServlet implements Runnable {
                       HttpServletResponse response)
             throws IOException, ServletException {
 
-        handleCounnt++;
+        handleCount.getAndIncrement();
         System.out.println("Frontend thread ID=" +  Thread.currentThread().getId());
 
         response.setContentType("text/html;charset=utf-8");
@@ -124,6 +125,7 @@ public class Frontend extends HttpServlet implements Runnable {
                        HttpServletResponse response)
             throws IOException, ServletException
     {
+        handleCount.getAndIncrement();
         response.setContentType("text/html;charset=utf-8");
 
         //пользователь пытается авторизоваться
@@ -168,9 +170,5 @@ public class Frontend extends HttpServlet implements Runnable {
     protected static String ADDRESS_AUTH = "/auth";
 
     private Map<String, Long> users;
-    private AtomicLong userIdGenerator = new AtomicLong();
-    private int handleCounnt = 0;
-
-
-
+    private AtomicInteger handleCount = new AtomicInteger();
 }
