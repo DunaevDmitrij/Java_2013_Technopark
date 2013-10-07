@@ -32,6 +32,9 @@ public class Frontend extends HttpServlet implements Runnable {
         users.put("valera", 1L);
     }
 
+    /**
+     * Выводим количество обращений каждые 5 секунд.
+     */
     @Override
     public void run() {
         try{
