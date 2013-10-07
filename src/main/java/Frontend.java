@@ -9,7 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Time: 10:22
  * To change this template use File | Settings | File Templates.
  */
-public class Frontend extends HttpServlet {
+public class Frontend extends HttpServlet implements Runnable {
 
     /**
      * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
@@ -28,6 +31,22 @@ public class Frontend extends HttpServlet {
         users = new HashMap<>();
         users.put("vasia", 0L);
         users.put("valera", 1L);
+    }
+
+    /**
+     * Выводим количество обращений каждые 5 секунд.
+     */
+    @Override
+    public void run() {
+        try{
+            while (true){
+                System.out.println("HandleCount = " + handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
+                sleep(5000);
+            }
+        }
+        catch (InterruptedException e){
+           e.printStackTrace();
+        }
     }
 
     /**
@@ -52,10 +71,13 @@ public class Frontend extends HttpServlet {
                       HttpServletResponse response)
             throws IOException, ServletException {
 
+        handleCount.getAndIncrement();
+        System.out.println("Frontend thread ID=" +  Thread.currentThread().getId());
+
         response.setContentType("text/html;charset=utf-8");
 
         //если пользователь пришел на страницу авторизации
-        if (request.getPathInfo().equals(AUTH_PAGE_ADDRESS)){
+        if (request.getPathInfo().equals(ADDRESS_AUTH)){
 
             //получаем id http сессии и userId, если его нет
             HttpSession session = request.getSession();
@@ -103,10 +125,11 @@ public class Frontend extends HttpServlet {
                        HttpServletResponse response)
             throws IOException, ServletException
     {
+        handleCount.getAndIncrement();
         response.setContentType("text/html;charset=utf-8");
 
         //пользователь пытается авторизоваться
-        if (request.getPathInfo().equals(AUTH_POST_ADDRESS))
+        if (request.getPathInfo().equals(ADDRESS_AUTH))
         {
             String name = (String) request.getParameter("login");
 
@@ -144,12 +167,8 @@ public class Frontend extends HttpServlet {
 
     }
 
-    protected static String AUTH_PAGE_ADDRESS = "/test";
-    protected static String AUTH_POST_ADDRESS = "/auth";
+    protected static String ADDRESS_AUTH = "/auth";
 
     private Map<String, Long> users;
-    private AtomicLong userIdGenerator = new AtomicLong();
-
-
-
+    private AtomicInteger handleCount = new AtomicInteger();
 }

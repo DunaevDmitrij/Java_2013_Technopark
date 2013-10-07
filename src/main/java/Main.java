@@ -16,18 +16,26 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 
-
 public class Main {
-    public static String STATIC_DIR = "static";
-    public static int SERVER_PORT = 8080;
-    public static String MAIN_PAGE_ADDRESS = "/test";
+
+    public static String MAIN_PAGE_ADDRESS = "/auth";
+    public static final String STATIC_DIR = "static";
+    public static final int SERVER_PORT = 8080;
+    public static final String THREAD_NAME_FRONTEND = "Frontend";
+    public static final Object threadsMonitor = new Object();
 
 
     public static void main(String args[ ])throws Exception {
         Frontend frontend = new Frontend();
+        System.out.println("Main thread ID=" +  Thread.currentThread().getId());
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        //создаем пул потоков и добавляем в него наш Frontend
+        ThreadPool threadPool = new ThreadPool();
+        threadPool.startThread(frontend, THREAD_NAME_FRONTEND);
+
+        //скармливаем его серверу
         context.addServlet(new ServletHolder(frontend), "/*");
 
         ResourceHandler resource_handler = new ResourceHandler();
