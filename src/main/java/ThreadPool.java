@@ -26,12 +26,20 @@ public class ThreadPool {
         thread.start();
     }
 
+    public void interruptThread(String name){
+        getThreadByName(name).interrupt();
+    }
+
+    public boolean isThreadAlive(String name){
+        return getThreadByName(name).isAlive();
+    }
+
     /**
      * Возвращает первый поток с заданным именем.
      * @param name Имя потока.
      * @return Поток с заданным именем.
      */
-    public Thread getThreadByName(String name){
+    private Thread getThreadByName(String name){
         Thread result = null;
         for(int num = 0, threadsCount = threads.size(); num<threadsCount; num++ ){
             if (threads.get(num).getName() == name){
@@ -40,14 +48,6 @@ public class ThreadPool {
         }
 
         return result;
-    }
-
-    public void interruptThread(String name){
-        getThreadByName(name).interrupt();
-    }
-
-    public boolean isThreadAlive(String name){
-        return getThreadByName(name).isAlive();
     }
 
 }
