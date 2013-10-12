@@ -3,6 +3,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -81,5 +82,13 @@ abstract public class WebPage {
      */
     public int getStatus() {
         return Status;
+    }
+
+    protected  Map<String, Object> dataToKey(String[] keys, Object ... values) {
+        Map<String, Object> map = new HashMap<>();
+        for (int I = 0; I < keys.length; ++I) {
+            map.put(keys[I], values[I]);
+        }
+        return map;
     }
 }

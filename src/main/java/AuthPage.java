@@ -42,11 +42,8 @@ class AuthPage extends WebPage {
             String sessionId = (String) session.getId();
 
             // Заполняем контекст
-            pageVariables = new HashMap<>();
-            pageVariables.put("UserID", userId);
-            pageVariables.put("Time", getTime());
-            pageVariables.put("User", name);
-            pageVariables.put("Session", sessionId);
+            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                     userId,  getTime(),  name,   sessionId);
 
             return generatePage("test.tml", pageVariables);
         }
@@ -73,11 +70,10 @@ class AuthPage extends WebPage {
             session.setAttribute("userId", userId);
             session.setAttribute("userName", name);
 
-            Map<String, Object> pageVariables = new HashMap<>();
-            pageVariables.put("UserID", userId);
-            pageVariables.put("Time", getTime());
-            pageVariables.put("User", name);
-            pageVariables.put("Session", sessionId);
+            // Заполнение контекста
+            Map<String, Object> pageVariables;
+            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                     userId,  getTime(),  name,   sessionId);
 
             return generatePage("test.tml", pageVariables);
         } else {
