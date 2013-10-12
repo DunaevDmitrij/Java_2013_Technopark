@@ -10,27 +10,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Thread.sleep;
 
 /**
- * Created with IntelliJ IDEA.
- * User: artemlobachev
+ * Author: artemlobachev
  * Date: 21.09.13
- * Time: 10:22
- * To change this template use File | Settings | File Templates.
  */
 public class Frontend extends HttpServlet implements Runnable {
+
+    protected static final String ADDRESS_AUTH = "/auth";
+    private final Map<String, Long> users;
+    private final AtomicInteger handleCount = new AtomicInteger();
+    private static final int STATISTICS_OUT_PERIOD = 5000;
 
     /**
      * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
      * Добавляет пользователей к Map.
      */
-    public Frontend(){
-        users = new HashMap<>();
-        users.put("vasia", 0L);
-        users.put("valera", 1L);
+    public Frontend() {
+        super();
+        this.users = new HashMap<>();
+        this.users.put("vasia", 0L);
+        this.users.put("valera", 1L);
     }
 
     /**
@@ -40,8 +42,8 @@ public class Frontend extends HttpServlet implements Runnable {
     public void run() {
         try{
             while (true){
-                System.out.println("HandleCount = " + handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
-                sleep(5000);
+                System.out.println("HandleCount = " + this.handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
+                sleep(STATISTICS_OUT_PERIOD);
             }
         }
         catch (InterruptedException e){
@@ -67,12 +69,13 @@ public class Frontend extends HttpServlet implements Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException TODO написать откуда может появиться!
      */
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
 
-        handleCount.getAndIncrement();
-        System.out.println("Frontend thread ID=" +  Thread.currentThread().getId());
+        this.handleCount.getAndIncrement();
+        System.out.println("Frontend thread ID=" + Thread.currentThread().getId());
 
         response.setContentType("text/html;charset=utf-8");
 
@@ -95,7 +98,7 @@ public class Frontend extends HttpServlet implements Runnable {
             {
                 //получаем из сессии имя пользователя и id сессии
                 String name = (String) session.getAttribute("userName");
-                String sessionId = (String) session.getId();
+                String sessionId = session.getId();
                 //отдаем страницу с ними
                 Map<String, Object> pageVariables = new HashMap<>();
                 pageVariables.put("UserID", userId);
@@ -116,31 +119,32 @@ public class Frontend extends HttpServlet implements Runnable {
 
     /**
      * Обрабатываем POST запрос.
-     * @param request
-     * @param response
+     * @param request запрос
+     * @param response ответ
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException  TODO написать откуда может появиться!
      */
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws IOException, ServletException
     {
-        handleCount.getAndIncrement();
+        this.handleCount.getAndIncrement();
         response.setContentType("text/html;charset=utf-8");
 
         //пользователь пытается авторизоваться
         if (request.getPathInfo().equals(ADDRESS_AUTH))
         {
-            String name = (String) request.getParameter("login");
+            String name = request.getParameter("login");
 
             //пользователь с таким именем существует
             //TODO добавить проверку пароля что ли
-            if (users.containsKey(name))
+            if (this.users.containsKey(name))
             {
                 //получаем id сессии и пользователя
                 HttpSession session = request.getSession();
-                String sessionId = (String) session.getId();
-                Long userId = (Long) users.get(name);
+                String sessionId = session.getId();
+                Long userId = this.users.get(name);
                 //добавляем информацию о пользователе в сессию
                 session.setAttribute("userId", userId);
                 session.setAttribute("userName", name);
@@ -166,9 +170,4 @@ public class Frontend extends HttpServlet implements Runnable {
         }
 
     }
-
-    protected static String ADDRESS_AUTH = "/auth";
-
-    private Map<String, Long> users;
-    private AtomicInteger handleCount = new AtomicInteger();
 }

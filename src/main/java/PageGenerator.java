@@ -9,11 +9,8 @@ import java.io.Writer;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: artemlobachev
+ * Author: artemlobachev
  * Date: 26.09.13
- * Time: 10:34
- * To change this template use File | Settings | File Templates.
  */
 public class PageGenerator {
 
