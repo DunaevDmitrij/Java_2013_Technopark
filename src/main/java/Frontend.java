@@ -55,6 +55,18 @@ public class Frontend extends HttpServlet implements Runnable {
     }
 
     /**
+     * Создание объекта страницы в зависимости от переданного URL.
+     * @param Path строка-параметр для сопоставления
+     * @return объект WebPage с нужной реализацией
+     */
+    public static WebPage createPage(String Path) {
+        if (Path.equals("/auth") || Path.equals("/test"))
+            return new AuthPage();
+        else
+            return null;
+    }
+
+    /**
      * Обрабатываем GET запрос.
      * @param request запрос
      * @param response ответ
@@ -70,7 +82,7 @@ public class Frontend extends HttpServlet implements Runnable {
         response.setContentType("text/html;charset=utf-8");
 
         // Создание объекта страницы, в зависимости от запрашиваемого URL
-        WebPage page = WebPage.createPage(request.getPathInfo());
+        WebPage page = createPage(request.getPathInfo());
         if (page == null)
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -81,6 +93,8 @@ public class Frontend extends HttpServlet implements Runnable {
             // Установка статуса после выполнения handleGET
             response.setStatus(page.getStatus());
         }
+
+        handleCount.getAndIncrement();
     }
 
     /**
@@ -97,7 +111,7 @@ public class Frontend extends HttpServlet implements Runnable {
         response.setContentType("text/html;charset=utf-8");
 
         // Создание объекта страницы
-        WebPage page = WebPage.createPage(request.getPathInfo());
+        WebPage page = createPage(request.getPathInfo());
         if (page == null)
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -108,6 +122,8 @@ public class Frontend extends HttpServlet implements Runnable {
             // Установка статуса
             response.setStatus(page.getStatus());
         }
+
+        handleCount.getAndIncrement();
     }
 
 }

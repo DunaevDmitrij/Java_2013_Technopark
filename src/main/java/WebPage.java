@@ -1,5 +1,13 @@
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +33,8 @@ import java.util.Map;
 abstract public class WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;
+    private static final String HTML_DIR = "tml";
+    private static final Configuration CFG = new Configuration();
 
     /** Методы для генерации страниц по соответствующему запросу.
      *  Должны анализировать сессию, создавать контекст и вызывать генерацию (generatePage()).
@@ -44,18 +54,6 @@ abstract public class WebPage {
     }
 
     /**
-     * Создание объекта страницы в зависимости от переданного URL.
-     * @param Path строка-параметр для сопоставления
-     * @return объект WebPage с нужной реализацией
-     */
-    public static WebPage createPage(String Path) {
-        if (Path.equals("/auth") || Path.equals("/test"))
-            return new AuthPage();
-        else
-            return null;
-    }
-
-    /**
      * Метод для сбора информации о текущем моменте времени.
      * @return строка, с текущим значением времени.
      */
@@ -67,13 +65,20 @@ abstract public class WebPage {
     }
 
     /**
-     * Генерация страницы с помощью PageGenerator
+     * Генерация страницы. Наполняет шаблон даннымы и возвращает в виде строки.
      * @param templateName файл шаблона
-     * @param context контекст
-     * @return сгенерированный html
+     * @param context контекст для генерации html
+     * @return Шаблонизированная страница.
      */
     protected String generatePage(String templateName, Map<String, Object> context) {
-        return PageGenerator.getPage(templateName, context);
+        Writer stream = new StringWriter();
+        try {
+            Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
+            template.process(context, stream);
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
+        return stream.toString();
     }
 
     /**
