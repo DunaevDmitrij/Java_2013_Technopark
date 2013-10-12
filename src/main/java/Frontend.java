@@ -21,24 +21,46 @@ import static java.lang.Thread.sleep;
  * Time: 10:22
  * To change this template use File | Settings | File Templates.
  */
-public class Frontend extends HttpServlet implements Runnable {
+public class Frontend extends HttpServlet implements Abonent, Runnable {
+
+    public Frontend(MessageSystem ms) {
+        this.ms = ms;
+        //получаем адрес для Frontend
+        this.address = new Address();
+        //регистрируем Frontend в MessageSystem
+        ms.addService(this);
+    }
 
     /**
      * Выводим количество обращений каждые 5 секунд.
      */
     @Override
     public void run() {
-        try{
-            while (true){
-                //System.out.println("HandleCount = " + handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
-                sleep(5000);
+        while (true) {
+            ms.execForAbonent(this);
+
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-        }
-        catch (InterruptedException e){
-           e.printStackTrace();
         }
     }
 
+    //имплементация интерфейса Abonent
+    public Address getAddress() {
+        return address;
+    }
+
+    //добавление userId в sessionIdToUserSession
+    public void setId(Long sessionId, Long userId) {
+        UserSession userSession = sessionIdToUserSession.get(sessionId);
+        if (userSession == null) {
+            System.out.append("Can't find user session for: " + sessionId);
+            return;
+        }
+        userSession.setUserId(userId);
+    }
 
     /**
      * Обрабатываем GET запрос.
@@ -60,31 +82,45 @@ public class Frontend extends HttpServlet implements Runnable {
             HttpSession session = request.getSession();
             Long sessionId = (Long) session.getAttribute("sessionId");
 
-            //если пользователь не авторизован
+            //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
             if (sessionId == null)
             {
                 //создаем новый sessionId
                 sessionId = sessionIdCounter.getAndIncrement();
-                UserSession userSession = new UserSession();
-                //добавляем в sessionIdToUserSession
-                sessionIdToUserSession.put(sessionId, userSession);
                 //передаем sessionId пользователю
                 session.setAttribute("sessionId", sessionId);
                 //TODO: тут что-то было раньше :)
                 response.getWriter().println(PageGenerator.getPage("auth.tml", new HashMap<String, Object>()));
             }
-            //пользователь авторизован (не факт, может он просто кукисы подделал)
+            //пользователь заходит еще раз
             else
             {
-                if (sessionIdToUserSession.get(sessionId).userId != -1L)
+                if (sessionIdToUserSession.get(sessionId) != null)
                 {
-                    Map<String, Object> pageVariables = new HashMap<>();
-                    pageVariables.put("UserId", sessionIdToUserSession.get(sessionId).userId);
-                    pageVariables.put("UserName", sessionIdToUserSession.get(sessionId).userName);
-                    response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+                    //если AccountService еще не отработал, userId = -1L
+                    if (sessionIdToUserSession.get(sessionId).getUserId() > -1L)
+                    {
+                        Map<String, Object> pageVariables = new HashMap<>();
+                        pageVariables.put("UserId", sessionIdToUserSession.get(sessionId).getUserId());
+                        pageVariables.put("UserName", sessionIdToUserSession.get(sessionId).getName());
+                        response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+                    }
+                    else if (sessionIdToUserSession.get(sessionId).getUserId() == -1L)
+                    {
+                        //такого пользователя нет
+                        response.getWriter().println("Такого пользователя нету");
+                    }
+                    else
+                    {
+                        //просим пользователя подождать
+                        response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
+                    }
                 }
-                else
-                    response.getWriter().println("Такого пользователя нету");
+                else //пользователь не ввел имя (например просто обновил страницу)
+                {
+                    //требуем ввода имени
+                    response.getWriter().println(PageGenerator.getPage("auth.tml", new HashMap<String, Object>()));
+                }
             }
 
             response.setStatus(HttpServletResponse.SC_OK);
@@ -107,8 +143,6 @@ public class Frontend extends HttpServlet implements Runnable {
                        HttpServletResponse response)
             throws IOException, ServletException
     {
-
-        //FIXME: можно обратиться к странице не обращаеясь предварительно через GET и все упадет ^^
         //получаем sessionId
         HttpSession session = request.getSession();
         Long sessionId = (Long) session.getAttribute("sessionId");
@@ -119,28 +153,17 @@ public class Frontend extends HttpServlet implements Runnable {
         if (request.getPathInfo().equals(ADDRESS_AUTH))
         {
             String userName = (String) request.getParameter("name");
+            //Создаем новую запись userSession
+            UserSession userSession = new UserSession(sessionId, userName);
+            //добавляем в sessionIdToUserSession
+            sessionIdToUserSession.put(sessionId, userSession);
 
-            if (sessionIdToUserSession.containsKey(sessionId))
-            {
-                //FIXME: это должно работать не так, сначало запрос у AccountService, а затем отдача страницы
+            Address frontendAddress = getAddress();
+            Address accountServiceAddress = ms.getAddressService().getAccountService();
 
-                sessionIdToUserSession.get(sessionId).userName = userName;
+            ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
 
-                //делаем запрос у AccountService и зависаем
-                try {
-                    sessionIdToUserSession.get(sessionId).userId = accountService.getUserIdByUserName(userName);
-                    System.out.println("HandleCount = " + sessionIdToUserSession.get(sessionId).userId);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-
-                response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
-            }
-            //пользователя не существует
-            else
-            {
-                //FIXME: а что делать иначе, я не знаю.
-            }
+            response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
 
             response.setStatus(HttpServletResponse.SC_OK);
         }
@@ -154,17 +177,9 @@ public class Frontend extends HttpServlet implements Runnable {
     //FIXME: определится со стилем, либо переменные в начале файла, либо в конце
     protected static String ADDRESS_AUTH = "/auth";
 
+    private MessageSystem ms;
     private Map<String, Long> users;
-
-    private AccountService accountService = new AccountService();
-
     private AtomicLong sessionIdCounter = new AtomicLong();
-
-    //FIXME: разобраться как это правильно делается в говноJave
-    private class UserSession
-    {
-        public String userName;
-        public Long userId;
-    }
     private Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
+    private Address address;
 }

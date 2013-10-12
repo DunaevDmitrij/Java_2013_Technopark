@@ -26,8 +26,13 @@ public class Main {
 
 
     public static void main(String args[ ])throws Exception {
-        Frontend frontend = new Frontend();
-        System.out.println("Main thread ID=" +  Thread.currentThread().getId());
+        MessageSystem ms = new MessageSystem();
+
+        Frontend frontend = new Frontend(ms);
+        AccountService accountService = new AccountService(ms);
+
+        (new Thread(frontend)).start();
+        (new Thread(accountService)).start();
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
