@@ -6,10 +6,9 @@ import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
- * User: max
+ * User: Kislenko Maksim
  * Date: 12.10.13
  * Time: 11:02
- * To change this template use File | Settings | File Templates.
  */
 
 /**
@@ -35,17 +34,17 @@ class AuthPage extends WebPage {
         if (userId == null) {
             // Пользователь не авторизован
             pageVariables = new HashMap<>();
-            return this.generatePage("auth.tml", pageVariables);
+            return generatePage("auth.tml", pageVariables);
         } else {
             // Авторизация прошла
             String name = (String) session.getAttribute("userName");
             String sessionId = session.getId();
 
             // Заполняем контекст
-            pageVariables = this.dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                          userId,  getTime(),  name,   sessionId);
+            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                     userId,  getTime(),  name,   sessionId);
 
-            return this.generatePage("test.tml", pageVariables);
+            return generatePage("test.tml", pageVariables);
         }
     }
 
@@ -72,10 +71,10 @@ class AuthPage extends WebPage {
 
             // Заполнение контекста
             Map<String, Object> pageVariables;
-            pageVariables = this.dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                          userId,  getTime(),  name,   sessionId);
+            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                     userId,  getTime(),  name,   sessionId);
 
-            return this.generatePage("test.tml", pageVariables);
+            return generatePage("test.tml", pageVariables);
         } else {
             return "Wrong username or password";
         }

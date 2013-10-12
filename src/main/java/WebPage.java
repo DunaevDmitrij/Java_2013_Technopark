@@ -16,10 +16,9 @@ import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
- * User: max
+ * User: Kislenko Maksim
  * Date: 12.10.13
  * Time: 8:47
- * To change this template use File | Settings | File Templates.
  */
 
 /**

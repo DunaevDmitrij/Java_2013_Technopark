@@ -3,7 +3,6 @@
  * User: artemlobachev
  * Date: 20.09.13
  * Time: 23:27
- * To change this template use File | Settings | File Templates.
  */
 
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
@@ -18,10 +17,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class Main {
 
-    public static String MAIN_PAGE_ADDRESS = "/auth";
+    public static final String MAIN_PAGE_ADDRESS = "/auth";
     public static final String STATIC_DIR = "static";
     public static final int SERVER_PORT = 8080;
     public static final String THREAD_NAME_FRONTEND = "Frontend";
+    @SuppressWarnings("UnusedDeclaration")
     public static final Object threadsMonitor = new Object();
 
 

@@ -19,7 +19,6 @@ import static java.lang.Thread.sleep;
  * User: artemlobachev
  * Date: 21.09.13
  * Time: 10:22
- * To change this template use File | Settings | File Templates.
  */
 public class Frontend extends HttpServlet implements Runnable {
 
@@ -43,9 +42,10 @@ public class Frontend extends HttpServlet implements Runnable {
     @Override
     public void run() {
         try{
+            final int fiveSec = 5*1000;
             while (true){
                 System.out.println("HandleCount = " + this.handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
-                sleep(5000);
+                sleep(fiveSec);
             }
         }
         catch (InterruptedException e){
