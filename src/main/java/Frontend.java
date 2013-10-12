@@ -24,16 +24,6 @@ import static java.lang.Thread.sleep;
 public class Frontend extends HttpServlet implements Runnable {
 
     /**
-     * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
-     * Добавляет пользователей к Map.
-     */
-    public Frontend(){
-        users = new HashMap<>();
-        users.put("vasia", 0L);
-        users.put("valera", 1L);
-    }
-
-    /**
      * Выводим количество обращений каждые 5 секунд.
      */
     @Override
@@ -86,10 +76,15 @@ public class Frontend extends HttpServlet implements Runnable {
             //пользователь авторизован (не факт, может он просто кукисы подделал)
             else
             {
-                Map<String, Object> pageVariables = new HashMap<>();
-                pageVariables.put("UserId", sessionIdToUserSession.get(sessionId).userId);
-                pageVariables.put("UserName", sessionIdToUserSession.get(sessionId).userName);
-                response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+                if (sessionIdToUserSession.get(sessionId).userId != -1L)
+                {
+                    Map<String, Object> pageVariables = new HashMap<>();
+                    pageVariables.put("UserId", sessionIdToUserSession.get(sessionId).userId);
+                    pageVariables.put("UserName", sessionIdToUserSession.get(sessionId).userName);
+                    response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+                }
+                else
+                    response.getWriter().println("Такого пользователя нету");
             }
 
             response.setStatus(HttpServletResponse.SC_OK);
@@ -166,7 +161,7 @@ public class Frontend extends HttpServlet implements Runnable {
     private AtomicLong sessionIdCounter = new AtomicLong();
 
     //FIXME: разобраться как это правильно делается в говноJave
-    static class UserSession
+    private class UserSession
     {
         public String userName;
         public Long userId;
