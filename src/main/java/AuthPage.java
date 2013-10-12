@@ -35,17 +35,17 @@ class AuthPage extends WebPage {
         if (userId == null) {
             // Пользователь не авторизован
             pageVariables = new HashMap<>();
-            return generatePage("auth.tml", pageVariables);
+            return this.generatePage("auth.tml", pageVariables);
         } else {
             // Авторизация прошла
             String name = (String) session.getAttribute("userName");
-            String sessionId = (String) session.getId();
+            String sessionId = session.getId();
 
             // Заполняем контекст
-            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                     userId,  getTime(),  name,   sessionId);
+            pageVariables = this.dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                          userId,  getTime(),  name,   sessionId);
 
-            return generatePage("test.tml", pageVariables);
+            return this.generatePage("test.tml", pageVariables);
         }
     }
 
@@ -57,14 +57,14 @@ class AuthPage extends WebPage {
      */
     @Override
     public String handlePOST(HttpServletRequest request, Map<String, Long> users) {
-        String name = (String) request.getParameter("login");
+        String name = request.getParameter("login");
 
         // Проверка введенных данных
         if (users.containsKey(name)) {
             //получаем id сессии и пользователя
             HttpSession session = request.getSession();
-            String sessionId = (String) session.getId();
-            Long userId = (Long) users.get(name);
+            String sessionId = session.getId();
+            Long userId = users.get(name);
 
             //добавляем информацию о пользователе в сессию
             session.setAttribute("userId", userId);
@@ -72,10 +72,10 @@ class AuthPage extends WebPage {
 
             // Заполнение контекста
             Map<String, Object> pageVariables;
-            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                     userId,  getTime(),  name,   sessionId);
+            pageVariables = this.dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
+                                                          userId,  getTime(),  name,   sessionId);
 
-            return generatePage("test.tml", pageVariables);
+            return this.generatePage("test.tml", pageVariables);
         } else {
             return "Wrong username or password";
         }

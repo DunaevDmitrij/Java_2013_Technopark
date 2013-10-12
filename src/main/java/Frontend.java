@@ -23,19 +23,18 @@ import static java.lang.Thread.sleep;
  */
 public class Frontend extends HttpServlet implements Runnable {
 
-    protected static String ADDRESS_AUTH = "/auth";
-
-    private Map<String, Long> users;
-    private AtomicInteger handleCount = new AtomicInteger();
+    private final Map<String, Long> users;
+    private final AtomicInteger handleCount = new AtomicInteger();
 
     /**
      * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
      * Добавляет пользователей к Map.
      */
-    public Frontend(){
-        users = new HashMap<>();
-        users.put("vasia", 0L);
-        users.put("valera", 1L);
+    public Frontend() {
+        super();
+        this.users = new HashMap<>();
+        this.users.put("vasia", 0L);
+        this.users.put("valera", 1L);
     }
 
     /**
@@ -45,7 +44,7 @@ public class Frontend extends HttpServlet implements Runnable {
     public void run() {
         try{
             while (true){
-                System.out.println("HandleCount = " + handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
+                System.out.println("HandleCount = " + this.handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
                 sleep(5000);
             }
         }
@@ -60,10 +59,11 @@ public class Frontend extends HttpServlet implements Runnable {
      * @return объект WebPage с нужной реализацией
      */
     public static WebPage createPage(String Path) {
-        if (Path.equals("/auth") || Path.equals("/test"))
+        if (Path.equals("/auth") || Path.equals("/test")) {
             return new AuthPage();
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -73,6 +73,7 @@ public class Frontend extends HttpServlet implements Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException TODO написать откуда может появиться!
      */
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
@@ -83,27 +84,28 @@ public class Frontend extends HttpServlet implements Runnable {
 
         // Создание объекта страницы, в зависимости от запрашиваемого URL
         WebPage page = createPage(request.getPathInfo());
-        if (page == null)
+        if (page == null) {
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        else {
+        } else {
             // Получение страницы строкой. Выполняет анализ сессии, выборку контента и генерацию страницы.
-            String pageStr = page.handleGET(request, users);
+            String pageStr = page.handleGET(request, this.users);
             response.getWriter().println(pageStr);
             // Установка статуса после выполнения handleGET
             response.setStatus(page.getStatus());
         }
 
-        handleCount.getAndIncrement();
+        this.handleCount.getAndIncrement();
     }
 
     /**
      * Обрабатываем POST запрос.
-     * @param request
-     * @param response
+     * @param request объект запроса
+     * @param response объект ответа сервера
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException  TODO написать откуда может появиться!
      */
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws IOException, ServletException
@@ -112,18 +114,18 @@ public class Frontend extends HttpServlet implements Runnable {
 
         // Создание объекта страницы
         WebPage page = createPage(request.getPathInfo());
-        if (page == null)
+        if (page == null) {
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        else {
+        } else {
             // Генерация страницы
-            String pageStr = page.handlePOST(request, users);
+            String pageStr = page.handlePOST(request, this.users);
             response.getWriter().println(pageStr);
             // Установка статуса
             response.setStatus(page.getStatus());
         }
 
-        handleCount.getAndIncrement();
+        this.handleCount.getAndIncrement();
     }
 
 }

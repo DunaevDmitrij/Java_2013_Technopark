@@ -30,9 +30,11 @@ import java.util.Map;
  *
  *  Содержит в себе метод для создания объектов страниц.
  */
-abstract public class WebPage {
+@SuppressWarnings({"UnusedDeclaration", "ImplicitCallToSuper"})
+abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
-    protected int Status;
+    @SuppressWarnings("CanBeFinal")
+    protected int Status;      // нельзя final - наследуется
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
 
@@ -42,8 +44,8 @@ abstract public class WebPage {
      * @param users  контейнер пользователей для проверки прав
      * @return  возвращает сгенерированную страницу
      */
-    abstract public String handleGET(HttpServletRequest request, Map<String, Long> users);
-    abstract public String handlePOST(HttpServletRequest request, Map<String, Long> users);
+    abstract String handleGET(HttpServletRequest request, Map<String, Long> users);
+    abstract String handlePOST(HttpServletRequest request, Map<String, Long> users);
 
     /**
      * Конструктор без параметров. Используется для инициализации полей.
@@ -57,7 +59,7 @@ abstract public class WebPage {
      * Метод для сбора информации о текущем моменте времени.
      * @return строка, с текущим значением времени.
      */
-    protected String getTime() {
+    protected static String getTime() {
         Date date = new Date();
         date.getTime();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss"); // здесь задаем формат времени
@@ -70,7 +72,7 @@ abstract public class WebPage {
      * @param context контекст для генерации html
      * @return Шаблонизированная страница.
      */
-    protected String generatePage(String templateName, Map<String, Object> context) {
+    protected static String generatePage(String templateName, Map<String, Object> context) {
         Writer stream = new StringWriter();
         try {
             Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
@@ -86,10 +88,10 @@ abstract public class WebPage {
      * @return значение статуса (HttpServletResponse.SC_#)
      */
     public int getStatus() {
-        return Status;
+        return this.Status;
     }
 
-    protected  Map<String, Object> dataToKey(String[] keys, Object ... values) {
+    protected  static Map<String, Object> dataToKey(String[] keys, Object ... values) {
         Map<String, Object> map = new HashMap<>();
         for (int I = 0; I < keys.length; ++I) {
             map.put(keys[I], values[I]);
