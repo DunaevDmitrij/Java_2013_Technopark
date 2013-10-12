@@ -65,14 +65,20 @@ public class Frontend extends HttpServlet implements Runnable {
                       HttpServletResponse response)
             throws IOException, ServletException {
 
+        // TODO: Пока предполагается, что всегда возвращаем html.
+        // TODO: Если иначе, то перенести в WebPage
         response.setContentType("text/html;charset=utf-8");
 
+        // Создание объекта страницы, в зависимости от запрашиваемого URL
         WebPage page = WebPage.createPage(request.getPathInfo());
         if (page == null)
+            // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         else {
+            // Получение страницы строкой. Выполняет анализ сессии, выборку контента и генерацию страницы.
             String pageStr = page.handleGET(request, users);
             response.getWriter().println(pageStr);
+            // Установка статуса после выполнения handleGET
             response.setStatus(page.getStatus());
         }
     }
@@ -89,12 +95,17 @@ public class Frontend extends HttpServlet implements Runnable {
             throws IOException, ServletException
     {
         response.setContentType("text/html;charset=utf-8");
+
+        // Создание объекта страницы
         WebPage page = WebPage.createPage(request.getPathInfo());
         if (page == null)
+            // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         else {
+            // Генерация страницы
             String pageStr = page.handlePOST(request, users);
             response.getWriter().println(pageStr);
+            // Установка статуса
             response.setStatus(page.getStatus());
         }
     }
