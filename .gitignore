@@ -52,5 +52,7 @@ Thumbs.db
 *.iml
 .idea/workspace.xml
 .idea/tasks.xml
+.idea/misc.xml
 .idea/dictionaries/*
+.idea/.name
 target/
