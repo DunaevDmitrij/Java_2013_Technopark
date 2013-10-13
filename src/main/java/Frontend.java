@@ -48,6 +48,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     }
 
     //имплементация интерфейса Abonent
+    @Override
     public Address getAddress() {
         return address;
     }
@@ -69,6 +70,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException TODO написать откуда может появиться!
      */
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
@@ -139,6 +141,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException  TODO написать откуда может появиться!
      */
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws IOException, ServletException
@@ -152,7 +155,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         //пользователь пытается авторизоваться
         if (request.getPathInfo().equals(ADDRESS_AUTH))
         {
-            String userName = (String) request.getParameter("name");
+            String userName = request.getParameter("name");
             //Создаем новую запись userSession
             UserSession userSession = new UserSession(sessionId, userName);
             //добавляем в sessionIdToUserSession

@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * To change this template use File | Settings | File Templates.
  */
 public class MessageSystem {
-    private Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<Address, ConcurrentLinkedQueue<Msg>>();
+    private Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<>();
     private AddressService addressService = new AddressService();
 
     public void addService(Abonent abonent){

@@ -32,10 +32,12 @@ public class AccountService implements Abonent, Runnable {
     }
 
     //имплементация интерфейса Abonent
+    @Override
     public Address getAddress() {
         return address;
     }
 
+    @Override
     public void run(){
         while(true){
             ms.execForAbonent(this);
@@ -67,9 +69,12 @@ public class AccountService implements Abonent, Runnable {
         //FIXME: -1L заменить на константу
         //возвращаем userId, если найден
         if (userNameToUserId.containsKey(userName))
+        {
             return userNameToUserId.get(userName);
-        else
+        }
+        {
             return -1L;
+        }
     }
 
     public MessageSystem getMessageSystem(){

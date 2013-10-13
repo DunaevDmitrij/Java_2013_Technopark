@@ -12,6 +12,7 @@ public abstract class MsgToFrontend extends Msg{
     }
 
     //проверяем что Abonent принадлежит Frontend
+    @Override
     public void exec(Abonent abonent) {
         if(abonent instanceof Frontend){
             exec((Frontend)abonent);

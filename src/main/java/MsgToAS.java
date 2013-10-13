@@ -14,6 +14,7 @@ public abstract class MsgToAS extends Msg{
     }
 
     //проверяем что Abonent принадлежит AccountService
+    @Override
     void exec(Abonent abonent) {
         if(abonent instanceof AccountService){
             //вызываем выполнение сообщения для AccountService

@@ -16,6 +16,7 @@ public class MsgUpdateUserId extends MsgToFrontend {
         this.id = id;
     }
 
+    @Override
     void exec(Frontend frontend) {
         frontend.setId(sessionId, id);
     }
