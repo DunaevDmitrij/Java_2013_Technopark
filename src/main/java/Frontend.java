@@ -61,6 +61,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             return;
         }
         userSession.setUserId(userId);
+        userSession.setComplete(); //процесс получения userId завершен
     }
 
     /**
@@ -99,18 +100,21 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             {
                 if (this.sessionIdToUserSession.get(sessionId) != null)
                 {
-                    //если AccountService еще не отработал, userId = -1L
-                    if (this.sessionIdToUserSession.get(sessionId).getUserId() > -1L)
+                    //ожидаем пока AccountService вернет данные
+                    if (this.sessionIdToUserSession.get(sessionId).isComplete())
                     {
-                        Map<String, Object> pageVariables = new HashMap<>();
-                        pageVariables.put("UserId", this.sessionIdToUserSession.get(sessionId).getUserId());
-                        pageVariables.put("UserName", this.sessionIdToUserSession.get(sessionId).getName());
-                        response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
-                    }
-                    else if (this.sessionIdToUserSession.get(sessionId).getUserId() == -1L)
-                    {
-                        //такого пользователя нет
-                        response.getWriter().println("Такого пользователя нету");
+                        //проверяем, что пользователь существует
+                        if (!this.sessionIdToUserSession.get(sessionId).getUserId().equals(AccountService.USER_NOT_EXIST))
+                        {
+                            Map<String, Object> pageVariables = new HashMap<>();
+                            pageVariables.put("UserId", this.sessionIdToUserSession.get(sessionId).getUserId());
+                            pageVariables.put("UserName", this.sessionIdToUserSession.get(sessionId).getName());
+                            response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
+                        }
+                        else
+                        {
+                            response.getWriter().println("Такого пользователя нету"); //такого пользователя нет
+                        }
                     }
                     else
                     {

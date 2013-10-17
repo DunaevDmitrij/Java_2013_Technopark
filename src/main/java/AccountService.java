@@ -15,6 +15,8 @@ public class AccountService implements Abonent, Runnable {
     private final Map<String, Long> userNameToUserId;
     private final MessageSystem ms;
 
+    public static final Long USER_NOT_EXIST = -1L;
+
     public AccountService(MessageSystem ms) {
         super();
         this.ms = ms;
@@ -53,7 +55,7 @@ public class AccountService implements Abonent, Runnable {
     /**
      *  Получение UserID по User Name
      * @param userName Имя пользователя
-     * @return UserID
+     * @return UserID или USER_NOT_EXIST если пользователь не существует
      */
 
     public Long getUserIdByUserName(String userName)
@@ -65,14 +67,13 @@ public class AccountService implements Abonent, Runnable {
             e.printStackTrace();
         }
 
-        //FIXME: -1L заменить на константу
         //возвращаем userId, если найден
         if (this.userNameToUserId.containsKey(userName))
         {
             return this.userNameToUserId.get(userName);
         }
         {
-            return -1L;
+            return USER_NOT_EXIST;
         }
     }
 

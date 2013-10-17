@@ -9,12 +9,14 @@ public class UserSession
     private final String name;
     private final Long sessionId;
     private Long userId;
+    private Boolean isComplete; //устанавливается в true, когда AccountService завершит обработку
 
     public UserSession(Long sessionId, String name) {
         super();
         this.sessionId = sessionId;
         this.name = name;
-        this.userId = -2L; //FIXME: const
+        this.userId = AccountService.USER_NOT_EXIST;
+        this.isComplete = false;
     }
 
     public Long getSessionId(){
@@ -25,11 +27,19 @@ public class UserSession
         return this.name;
     }
 
-    public Long getUserId() {
+    public Long getUserId(){
         return this.userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Long userId){
         this.userId = userId;
+    }
+
+    public Boolean isComplete(){
+        return this.isComplete;
+    }
+
+    public void setComplete(){
+        this.isComplete = true;
     }
 }
