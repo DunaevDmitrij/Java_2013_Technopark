@@ -19,11 +19,11 @@ import static java.lang.Thread.sleep;
  * User: artemlobachev
  * Date: 21.09.13
  * Time: 10:22
- * To change this template use File | Settings | File Templates.
  */
 public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     public Frontend(MessageSystem ms) {
+        super();
         this.ms = ms;
         //получаем адрес для Frontend
         this.address = new Address();
@@ -37,12 +37,12 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     @Override
     public void run() {
         while (true) {
-            ms.execForAbonent(this);
+            this.ms.execForAbonent(this);
 
             try {
                 sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
     }
@@ -50,14 +50,14 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     //имплементация интерфейса Abonent
     @Override
     public Address getAddress() {
-        return address;
+        return this.address;
     }
 
     //добавление userId в sessionIdToUserSession
     public void setId(Long sessionId, Long userId) {
-        UserSession userSession = sessionIdToUserSession.get(sessionId);
+        UserSession userSession = this.sessionIdToUserSession.get(sessionId);
         if (userSession == null) {
-            System.out.append("Can't find user session for: " + sessionId);
+            System.out.append("Can't find user session for: ").append(sessionId.toString());
             return;
         }
         userSession.setUserId(userId);
@@ -88,7 +88,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             if (sessionId == null)
             {
                 //создаем новый sessionId
-                sessionId = sessionIdCounter.getAndIncrement();
+                sessionId = this.sessionIdCounter.getAndIncrement();
                 //передаем sessionId пользователю
                 session.setAttribute("sessionId", sessionId);
                 //TODO: тут что-то было раньше :)
@@ -97,17 +97,17 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             //пользователь заходит еще раз
             else
             {
-                if (sessionIdToUserSession.get(sessionId) != null)
+                if (this.sessionIdToUserSession.get(sessionId) != null)
                 {
                     //если AccountService еще не отработал, userId = -1L
-                    if (sessionIdToUserSession.get(sessionId).getUserId() > -1L)
+                    if (this.sessionIdToUserSession.get(sessionId).getUserId() > -1L)
                     {
                         Map<String, Object> pageVariables = new HashMap<>();
-                        pageVariables.put("UserId", sessionIdToUserSession.get(sessionId).getUserId());
-                        pageVariables.put("UserName", sessionIdToUserSession.get(sessionId).getName());
+                        pageVariables.put("UserId", this.sessionIdToUserSession.get(sessionId).getUserId());
+                        pageVariables.put("UserName", this.sessionIdToUserSession.get(sessionId).getName());
                         response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
                     }
-                    else if (sessionIdToUserSession.get(sessionId).getUserId() == -1L)
+                    else if (this.sessionIdToUserSession.get(sessionId).getUserId() == -1L)
                     {
                         //такого пользователя нет
                         response.getWriter().println("Такого пользователя нету");
@@ -159,12 +159,12 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             //Создаем новую запись userSession
             UserSession userSession = new UserSession(sessionId, userName);
             //добавляем в sessionIdToUserSession
-            sessionIdToUserSession.put(sessionId, userSession);
+            this.sessionIdToUserSession.put(sessionId, userSession);
 
-            Address frontendAddress = getAddress();
-            Address accountServiceAddress = ms.getAddressService().getAccountService();
+            Address frontendAddress = this.getAddress();
+            Address accountServiceAddress = this.ms.getAddressService().getAccountService();
 
-            ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
+            this.ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
 
             response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
 
@@ -177,12 +177,11 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     }
 
-    //FIXME: определится со стилем, либо переменные в начале файла, либо в конце
-    protected static String ADDRESS_AUTH = "/auth";
+    //TODO: определится со стилем, либо переменные в начале файла, либо в конце
+    protected static final String ADDRESS_AUTH = "/auth";
 
-    private MessageSystem ms;
-    private Map<String, Long> users;
-    private AtomicLong sessionIdCounter = new AtomicLong();
-    private Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
-    private Address address;
+    private final MessageSystem ms;
+    private final AtomicLong sessionIdCounter = new AtomicLong();
+    private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
+    private final Address address;
 }

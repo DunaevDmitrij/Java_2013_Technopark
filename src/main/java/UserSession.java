@@ -3,30 +3,30 @@
  * User: Sidorov Vadim
  * Date: 12.10.13
  * Time: 10:18
- * To change this template use File | Settings | File Templates.
  */
 public class UserSession
 {
-    private String name;
-    private Long sessionId;
+    private final String name;
+    private final Long sessionId;
     private Long userId;
 
     public UserSession(Long sessionId, String name) {
+        super();
         this.sessionId = sessionId;
         this.name = name;
         this.userId = -2L; //FIXME: const
     }
 
-    public String getName(){
-        return name;
+    public Long getSessionId(){
+        return this.sessionId;
     }
 
-    public Long getSessionId() {
-        return sessionId;
+    public String getName(){
+        return this.name;
     }
 
     public Long getUserId() {
-        return userId;
+        return this.userId;
     }
 
     public void setUserId(Long userId) {

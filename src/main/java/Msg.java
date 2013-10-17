@@ -3,25 +3,24 @@
  * User: Sidorov Vadim
  * Date: 12.10.13
  * Time: 10:16
- * To change this template use File | Settings | File Templates.
  */
-
 //абстрактный класс Msg
 public abstract class Msg {
-    private Address from;
-    private Address to;
+    private final Address from;
+    private final Address to;
 
-    public Msg(Address from, Address to){
+    public Msg(Address from, Address to) {
+        super();
         this.from = from;
         this.to = to;
     }
 
     protected Address getFrom(){
-        return from;
+        return this.from;
     }
 
     protected Address getTo(){
-        return to;
+        return this.to;
     }
 
     //функция которую будет вызывать MessageSystem, без привязки к конкретному Abonent

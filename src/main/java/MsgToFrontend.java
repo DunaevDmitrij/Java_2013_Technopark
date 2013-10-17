@@ -3,7 +3,6 @@
  * User: Sidorov Vaidm
  * Date: 12.10.13
  * Time: 11:05
- * To change this template use File | Settings | File Templates.
  */
 public abstract class MsgToFrontend extends Msg{
 
@@ -15,7 +14,7 @@ public abstract class MsgToFrontend extends Msg{
     @Override
     public void exec(Abonent abonent) {
         if(abonent instanceof Frontend){
-            exec((Frontend)abonent);
+            this.exec((Frontend)abonent);
         }
     }
 

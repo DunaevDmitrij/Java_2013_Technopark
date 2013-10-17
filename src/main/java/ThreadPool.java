@@ -5,14 +5,14 @@ import java.util.ArrayList;
  * User: artemlobachev
  * Date: 04.10.13
  * Time: 21:29
- * To change this template use File | Settings | File Templates.
  */
 public class ThreadPool {
 
-    private ArrayList<Thread>  threads;
+    private final ArrayList<Thread>  threads;
 
-    public ThreadPool(){
-        threads = new ArrayList<>();
+    public ThreadPool() {
+        super();
+        this.threads = new ArrayList<>();
     }
 
     /**
@@ -22,16 +22,16 @@ public class ThreadPool {
      */
     public void startThread(Runnable obj, String name){
         Thread thread = new Thread(obj, name);
-        threads.add(thread);
+        this.threads.add(thread);
         thread.start();
     }
 
     public void interruptThread(String name){
-        getThreadByName(name).interrupt();
+        this.getThreadByName(name).interrupt();
     }
 
     public boolean isThreadAlive(String name){
-        return getThreadByName(name).isAlive();
+        return this.getThreadByName(name).isAlive();
     }
 
     /**
@@ -41,9 +41,9 @@ public class ThreadPool {
      */
     private Thread getThreadByName(String name){
         Thread result = null;
-        for(int num = 0, threadsCount = threads.size(); num<threadsCount; num++ ){
-            if (threads.get(num).getName() == name){
-                result = threads.get(num);
+        for (Thread thread : this.threads) {
+            if (thread.getName() == name) {
+                result = thread;
             }
         }
 

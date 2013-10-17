@@ -3,9 +3,7 @@
  * User: Sidorov Vadim
  * Date: 12.10.13
  * Time: 10:27
- * To change this template use File | Settings | File Templates.
  */
-
 //абстрактный класс,
 public abstract class MsgToAS extends Msg{
 
@@ -18,7 +16,7 @@ public abstract class MsgToAS extends Msg{
     void exec(Abonent abonent) {
         if(abonent instanceof AccountService){
             //вызываем выполнение сообщения для AccountService
-            exec((AccountService) abonent);
+            this.exec((AccountService) abonent);
         }
     }
 

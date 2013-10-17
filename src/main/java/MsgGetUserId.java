@@ -3,12 +3,10 @@
  * User: Sidorov Vadim
  * Date: 12.10.13
  * Time: 10:26
- * To change this template use File | Settings | File Templates.
  */
-
 public class MsgGetUserId extends MsgToAS {
-    private String name;
-    private Long sessionId;
+    private final String name;
+    private final Long sessionId;
 
     public MsgGetUserId(Address from, Address to, String name, Long sessionId) {
         super(from, to);
@@ -18,8 +16,8 @@ public class MsgGetUserId extends MsgToAS {
 
     @Override
     void exec(AccountService accountService) {
-        Long id = accountService.getUserIdByUserName(name);
-        accountService.getMessageSystem().sendMessage(new MsgUpdateUserId(getTo(), getFrom(), sessionId, id));
+        Long id = accountService.getUserIdByUserName(this.name);
+        accountService.getMessageSystem().sendMessage(new MsgUpdateUserId(this.getTo(), this.getFrom(), this.sessionId, id));
     }
 }
 
