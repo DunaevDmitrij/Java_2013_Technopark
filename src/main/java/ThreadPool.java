@@ -26,10 +26,12 @@ public class ThreadPool {
         thread.start();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void interruptThread(String name){
         this.getThreadByName(name).interrupt();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public boolean isThreadAlive(String name){
         return this.getThreadByName(name).isAlive();
     }
@@ -42,7 +44,7 @@ public class ThreadPool {
     private Thread getThreadByName(String name){
         Thread result = null;
         for (Thread thread : this.threads) {
-            if (thread.getName() == name) {
+            if (thread.getName().equals(name)) {
                 result = thread;
             }
         }
