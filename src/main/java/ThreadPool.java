@@ -29,6 +29,7 @@ public class ThreadPool {
         this.getThreadByName(name).interrupt();
     }
 
+
     @SuppressWarnings("UnusedDeclaration") //will be used in nearest feature
     public boolean isThreadAlive(String name){
         return this.getThreadByName(name).isAlive();

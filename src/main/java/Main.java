@@ -18,18 +18,22 @@ public class Main {
     public static final String STATIC_DIR = "static";
     public static final int SERVER_PORT = 8080;
     public static final String THREAD_NAME_FRONTEND = "Frontend";
+    public static final String THREAD_NAME_ACCOUNT_SERVICE = "AS";
     // --Commented out by Inspection (12.10.13, 21:08):public static final Object threadsMonitor = new Object();
 
 
     public static void main(String args[ ])throws Exception {
-        Frontend frontend = new Frontend();
-        System.out.println("Main thread ID=" +  Thread.currentThread().getId());
+        MessageSystem ms = new MessageSystem();
+
+        Frontend frontend = new Frontend(ms);
+        AccountService accountService = new AccountService(ms);
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        //создаем пул потоков и добавляем в него наш Frontend
+        //создаем пул потоков и добавляем в него наших Frontend и Account Service
         ThreadPool threadPool = new ThreadPool();
         threadPool.startThread(frontend, THREAD_NAME_FRONTEND);
+        threadPool.startThread(accountService, THREAD_NAME_ACCOUNT_SERVICE);
 
         //скармливаем его серверу
         context.addServlet(new ServletHolder(frontend), "/*");

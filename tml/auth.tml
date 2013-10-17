@@ -1,8 +1,7 @@
 <html>
 <body>
 <form method="post" action="/auth">
-name : <input type="text" name="login"> <br>
-password: <input type="password" name="password"> <br>
+name : <input type="text" name="name"> <br>
 <input type="submit">
 </form>
 </body>
