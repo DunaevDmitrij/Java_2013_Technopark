@@ -18,6 +18,13 @@ import static java.lang.Thread.sleep;
  */
 public class Frontend extends HttpServlet implements Abonent, Runnable {
 
+    protected static final String ADDRESS_AUTH = "/auth";
+
+    private final MessageSystem ms;
+    private final AtomicLong sessionIdCounter = new AtomicLong();
+    private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
+    private final Address address;
+
     public Frontend(MessageSystem ms) {
         super();
         this.ms = ms;
@@ -177,11 +184,4 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     }
 
-    //TODO: определится со стилем, либо переменные в начале файла, либо в конце
-    protected static final String ADDRESS_AUTH = "/auth";
-
-    private final MessageSystem ms;
-    private final AtomicLong sessionIdCounter = new AtomicLong();
-    private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
-    private final Address address;
 }
