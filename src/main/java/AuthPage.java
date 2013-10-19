@@ -12,12 +12,14 @@ import java.util.Map;
  */
 
 /**
- * Страница авторизации пользователя.
+ * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionService.
  * Наследует абстрактную веб-страницу.
  */
 class AuthPage extends WebPage {
+    // Осведомленность. Используется для выборки данных пользователь--сессия
     private SessionService SS;
 
+    // конструктор
     public AuthPage(SessionService SS) {
         super();
         this.SS = SS;
@@ -26,7 +28,7 @@ class AuthPage extends WebPage {
     /**
      * Переопределенный метод обработки GET запроса.
      * @param request объект запроса, для получения данных сессии
-     * @return сгенерированная страница
+     * @return сгенерированная страница авторизации.
      */
     @Override
     public String handleGET(HttpServletRequest request) {
@@ -65,7 +67,7 @@ class AuthPage extends WebPage {
 
                     } else {
                         SS.closeSession(sessionId); //удаляем текущую сессию
-                        return textPage("Такого пользователя нету");
+                        return "Такого пользователя нет";
                     }
                 } else {
                     //просим пользователя подождать
@@ -83,17 +85,21 @@ class AuthPage extends WebPage {
     /**
      * Переопределенный метод обработки POST запроса.
      * @param request параметр с данными запроса
-     * @return сгенерированная страница
+     * @return сгенерированная страница авторизации
      */
     @Override
     public String handlePOST(HttpServletRequest request) {
         String userName = request.getParameter("name");
 
-        //получаем sessionId
+        // получаем sessionId
         HttpSession session = request.getSession();
         Long sessionId = (Long) session.getAttribute("sessionId");
 
+        // Отправляем sessionId для построения нового объекта UserSession
+        //TODO: здесь надо проверить пароль
         SS.createUserSession(sessionId, userName);
+
+        // Отдаем страницу ожидания.
         return generatePage("wait.tml");
     }
 }

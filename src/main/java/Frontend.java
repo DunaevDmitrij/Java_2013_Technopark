@@ -17,10 +17,13 @@ import static java.lang.Thread.sleep;
 */
 public class Frontend extends HttpServlet implements Abonent, Runnable {
 
+    // Здесь и далее: все URL-ы записываются как константы.
     protected static final String ADDRESS_AUTH = "/auth";
 
     private final MessageSystem ms;
     private final Address address;
+
+    // Объект-контейнер для UserSession.
     private SessionService sessionService;
 
     public Frontend(MessageSystem ms) {
@@ -31,6 +34,8 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         //регистрируем Frontend в MessageSystem
         ms.addService(this);
 
+        // Объект ServiceSession выполняется в том же потоке что и Frontend.
+        // Имеет право отсылать запросы к MessageSystem от адреса Frontend.
         this.sessionService = new SessionService(this.ms, address);
     }
 
@@ -128,6 +133,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         }
     }
 
+    // Оболочка над SessionService.updateUserId, для передачи управления из MsgUpdateUserId
     public void updateUserId(Long sessionId, Long id) {
         sessionService.updateUserId(sessionId, id);
     }

@@ -65,7 +65,7 @@ abstract class WebPage {
     }
 
     /**
-     * Генерация страницы. Наполняет шаблон даннымы и возвращает в виде строки.
+     * Генерация страницы. Наполняет шаблон даннымы и возвращает в виде строк,содержащей XML.
      * @param templateName файл шаблона
      * @param context контекст для генерации html
      * @return Шаблонизированная страница.
@@ -82,6 +82,11 @@ abstract class WebPage {
     }
 
 
+    /**
+     * Генерация страницы с пустым контекстом (отдача простого HTML файла).
+     * @param templateName Имя шаблона.
+     * @return Сгенерированная страница.
+     */
     protected static String generatePage(String templateName) {
         Writer stream = new StringWriter();
         try {
@@ -93,12 +98,6 @@ abstract class WebPage {
         return stream.toString();
     }
 
-
-    protected static String textPage(String text) {
-        Writer stream = new StringWriter();
-        return stream.toString();
-    }
-
     /**
      * Метод возвращает текущий статус объекта страницы.
      * @return значение статуса (HttpServletResponse.SC_#)
@@ -107,8 +106,15 @@ abstract class WebPage {
         return this.Status;
     }
 
+    /**
+     * Метод для линеаризации процесса занесения данных в Map<>.
+     * @param keys массив строковых ключей
+     * @param values соответствующие значения полей в контейнере (любой тип)
+     * @return Новосозданный контейнер
+     */
     protected  static Map<String, Object> dataToKey(String[] keys, Object ... values) {
         Map<String, Object> map = new HashMap<>();
+        // Цикл по элементам массива ключей
         for (int I = 0; I < keys.length; ++I) {
             map.put(keys[I], values[I]);
         }
