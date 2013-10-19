@@ -1,20 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<script type="text/javascript">
-function refresh(){
-location.reload();
-}
-</script>
 </head>
 <body>
-<h1> Hello, ${User}!</h1>
-Your User ID = ${UserID} !
-<br>
-Now time is ${Time}
-<br>
-Session = ${Session}
-<br>
-<img src="v.jpg" alt="A picture :)">
+Здравствуйте, ${UserName}, ваш userId: ${UserId}.
 </body>
 </html>

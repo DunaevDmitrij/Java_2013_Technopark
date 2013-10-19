@@ -4,36 +4,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Thread.sleep;
 
 /**
- * Created with IntelliJ IDEA.
- * User: artemlobachev
+ * Author: artemlobachev
  * Date: 21.09.13
  * Time: 10:22
- */
-public class Frontend extends HttpServlet implements Runnable {
+*/
+public class Frontend extends HttpServlet implements Abonent, Runnable {
 
-    private final Map<String, Long> users;
-    private final AtomicInteger handleCount = new AtomicInteger();
+    protected static final String ADDRESS_AUTH = "/auth";
 
-    /**
-     * Инициализирует подключение к БД пользователей, или пока имитирующему Map.
-     * Добавляет пользователей к Map.
-     */
-    public Frontend() {
+    private final MessageSystem ms;
+    private final Address address;
+    private SessionService sessionService;
+
+    public Frontend(MessageSystem ms) {
         super();
-        this.users = new HashMap<>();
-        this.users.put("vasia", 0L);
-        this.users.put("valera", 1L);
+        this.ms = ms;
+        //получаем адрес для Frontend
+        this.address = new Address();
+        //регистрируем Frontend в MessageSystem
+        ms.addService(this);
+
+        this.sessionService = new SessionService(this.ms, address);
     }
 
     /**
@@ -41,15 +39,14 @@ public class Frontend extends HttpServlet implements Runnable {
      */
     @Override
     public void run() {
-        try{
-            final int fiveSec = 5*1000;
-            while (true){
-                System.out.println("HandleCount = " + this.handleCount.get() + " ThreadID=" + Thread.currentThread().getId());
-                sleep(fiveSec);
+        while (true) {
+            this.ms.execForAbonent(this);
+
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
-        catch (InterruptedException e){
-           e.printStackTrace();
         }
     }
 
@@ -58,12 +55,18 @@ public class Frontend extends HttpServlet implements Runnable {
      * @param Path строка-параметр для сопоставления
      * @return объект WebPage с нужной реализацией
      */
-    public static WebPage createPage(String Path) {
-        if (Path.equals("/auth") || Path.equals("/test")) {
-            return new AuthPage();
+    public WebPage createPage(String Path) {
+        if (Path.equals(ADDRESS_AUTH)) {
+            return new AuthPage(this.sessionService);
         } else {
             return null;
         }
+    }
+
+    //имплементация интерфейса Abonent
+    @Override
+    public Address getAddress() {
+        return this.address;
     }
 
     /**
@@ -73,10 +76,11 @@ public class Frontend extends HttpServlet implements Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException TODO написать откуда может появиться!
      */
-    @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws IOException, ServletException {
+     @Override
+     public void doGet(HttpServletRequest request,
+                HttpServletResponse response)
+                throws IOException, ServletException {
+
 
         // TODO: Пока предполагается, что всегда возвращаем html.
         // TODO: Если иначе, то перенести в WebPage
@@ -89,13 +93,11 @@ public class Frontend extends HttpServlet implements Runnable {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             // Получение страницы строкой. Выполняет анализ сессии, выборку контента и генерацию страницы.
-            String pageStr = page.handleGET(request, this.users);
+            String pageStr = page.handleGET(request);
             response.getWriter().println(pageStr);
             // Установка статуса после выполнения handleGET
             response.setStatus(page.getStatus());
         }
-
-        this.handleCount.getAndIncrement();
     }
 
     /**
@@ -105,11 +107,11 @@ public class Frontend extends HttpServlet implements Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException  TODO написать откуда может появиться!
      */
-    @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response)
-            throws IOException, ServletException
-    {
+     @Override
+     public void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+     throws IOException, ServletException
+     {
         response.setContentType("text/html;charset=utf-8");
 
         // Создание объекта страницы
@@ -119,13 +121,14 @@ public class Frontend extends HttpServlet implements Runnable {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             // Генерация страницы
-            String pageStr = page.handlePOST(request, this.users);
+            String pageStr = page.handlePOST(request);
             response.getWriter().println(pageStr);
             // Установка статуса
             response.setStatus(page.getStatus());
         }
-
-        this.handleCount.getAndIncrement();
     }
 
+    public void updateUserId(Long sessionId, Long id) {
+        sessionService.updateUserId(sessionId, id);
+    }
 }

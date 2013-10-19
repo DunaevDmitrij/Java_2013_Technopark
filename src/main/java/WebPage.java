@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,10 +30,9 @@ import java.util.Map;
  *
  *  Содержит в себе метод для создания объектов страниц.
  */
-@SuppressWarnings({"UnusedDeclaration", "ImplicitCallToSuper"})
+
 abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
-    @SuppressWarnings("CanBeFinal")
     protected int Status;      // нельзя final - наследуется
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
@@ -40,11 +40,10 @@ abstract class WebPage {
     /** Методы для генерации страниц по соответствующему запросу.
      *  Должны анализировать сессию, создавать контекст и вызывать генерацию (generatePage()).
      * @param request объект запроса, для получения данных сессии
-     * @param users  контейнер пользователей для проверки прав
      * @return  возвращает сгенерированную страницу
      */
-    abstract String handleGET(HttpServletRequest request, Map<String, Long> users);
-    abstract String handlePOST(HttpServletRequest request, Map<String, Long> users);
+    abstract String handleGET(HttpServletRequest request);
+    abstract String handlePOST(HttpServletRequest request);
 
     /**
      * Конструктор без параметров. Используется для инициализации полей.
@@ -79,6 +78,24 @@ abstract class WebPage {
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
+        return stream.toString();
+    }
+
+
+    protected static String generatePage(String templateName) {
+        Writer stream = new StringWriter();
+        try {
+            Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
+            template.process(new HashMap<>(), stream);
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
+        return stream.toString();
+    }
+
+
+    protected static String textPage(String text) {
+        Writer stream = new StringWriter();
         return stream.toString();
     }
 

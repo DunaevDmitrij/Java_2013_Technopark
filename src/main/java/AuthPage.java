@@ -16,67 +16,84 @@ import java.util.Map;
  * Наследует абстрактную веб-страницу.
  */
 class AuthPage extends WebPage {
+    private SessionService SS;
+
+    public AuthPage(SessionService SS) {
+        super();
+        this.SS = SS;
+    }
 
     /**
      * Переопределенный метод обработки GET запроса.
      * @param request объект запроса, для получения данных сессии
-     * @param users  контейнер пользователей для проверки прав
      * @return сгенерированная страница
      */
     @Override
-    public String handleGET(HttpServletRequest request, Map<String, Long> users) {
+    public String handleGET(HttpServletRequest request) {
         // Объект с данными сессии
         HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute("userId");
+        Long sessionId = (Long) session.getAttribute("sessionId");
 
         // Контейнер с контекстом страницы
         Map<String, Object> pageVariables;
-        if (userId == null) {
+
+        //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
+        if (sessionId == null) {
+            sessionId = SS.getSessionId();
+            //передаем новый sessionId пользователю
+            session.setAttribute("sessionId", sessionId);
             // Пользователь не авторизован
             pageVariables = new HashMap<>();
+
             return generatePage("auth.tml", pageVariables);
+
         } else {
-            // Авторизация прошла
-            String name = (String) session.getAttribute("userName");
-            String sessionId = session.getId();
+            //пользователь заходит еще раз
+            UserSession userSession = SS.getUserInfo(sessionId);
 
-            // Заполняем контекст
-            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                     userId,  getTime(),  name,   sessionId);
+            if (userSession != null) {
+                //ожидаем пока AccountService вернет данные
+                if (userSession.isComplete()) {
+                    //проверяем, что пользователь существует
+                    if (! userSession.getUserId().equals(AccountService.USER_NOT_EXIST)) {
+                        // Заполняем контекст
+                        System.out.println("Session Id: " + sessionId);
 
-            return generatePage("test.tml", pageVariables);
+                        pageVariables = dataToKey(new String[] {"UserId", "UserName", "Time", "Session"},
+                                userSession.getUserId(), userSession.getName(), getTime(), sessionId);
+                        return generatePage("test.tml", pageVariables);
+
+                    } else {
+                        SS.closeSession(sessionId); //удаляем текущую сессию
+                        return textPage("Такого пользователя нету");
+                    }
+                } else {
+                    //просим пользователя подождать
+                    return generatePage("wait.tml", new HashMap<String, Object>());
+                    //TODO: отправлять тут код ошибки с пустым телом или JSON, сообщающий, что идет поиск,
+                    //TODO: сделать на клиенте циклический опрос ограниченное кол-во раз, если ответа нет - сообщение
+                    //TODO: пользователю об ошибке/
+                }
+            } else {
+                return generatePage("auth.tml");
+            }
         }
     }
 
     /**
      * Переопределенный метод обработки POST запроса.
      * @param request параметр с данными запроса
-     * @param users контейнер с учетными данными пользователей
      * @return сгенерированная страница
      */
     @Override
-    public String handlePOST(HttpServletRequest request, Map<String, Long> users) {
-        String name = request.getParameter("login");
+    public String handlePOST(HttpServletRequest request) {
+        String userName = request.getParameter("name");
 
-        // Проверка введенных данных
-        if (users.containsKey(name)) {
-            //получаем id сессии и пользователя
-            HttpSession session = request.getSession();
-            String sessionId = session.getId();
-            Long userId = users.get(name);
+        //получаем sessionId
+        HttpSession session = request.getSession();
+        Long sessionId = (Long) session.getAttribute("sessionId");
 
-            //добавляем информацию о пользователе в сессию
-            session.setAttribute("userId", userId);
-            session.setAttribute("userName", name);
-
-            // Заполнение контекста
-            Map<String, Object> pageVariables;
-            pageVariables = dataToKey(new String[] {"UserID", "Time",    "User", "Session"},
-                                                     userId,  getTime(),  name,   sessionId);
-
-            return generatePage("test.tml", pageVariables);
-        } else {
-            return "Wrong username or password";
-        }
+        SS.createUserSession(sessionId, userName);
+        return generatePage("wait.tml");
     }
 }
