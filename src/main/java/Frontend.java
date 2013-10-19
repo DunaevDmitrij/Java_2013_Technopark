@@ -24,7 +24,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     private final Address address;
 
     // Объект-контейнер для UserSession.
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
     public Frontend(MessageSystem ms) {
         super();
@@ -36,7 +36,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
         // Объект ServiceSession выполняется в том же потоке что и Frontend.
         // Имеет право отсылать запросы к MessageSystem от адреса Frontend.
-        this.sessionService = new SessionService(this.ms, address);
+        this.sessionService = new SessionService(this.ms, this.address);
     }
 
     /**
@@ -92,7 +92,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         response.setContentType("text/html;charset=utf-8");
 
         // Создание объекта страницы, в зависимости от запрашиваемого URL
-        WebPage page = createPage(request.getPathInfo());
+        WebPage page = this.createPage(request.getPathInfo());
         if (page == null) {
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -120,7 +120,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         response.setContentType("text/html;charset=utf-8");
 
         // Создание объекта страницы
-        WebPage page = createPage(request.getPathInfo());
+        WebPage page = this.createPage(request.getPathInfo());
         if (page == null) {
             // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -135,6 +135,6 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     // Оболочка над SessionService.updateUserId, для передачи управления из MsgUpdateUserId
     public void updateUserId(Long sessionId, Long id) {
-        sessionService.updateUserId(sessionId, id);
+        this.sessionService.updateUserId(sessionId, id);
     }
 }

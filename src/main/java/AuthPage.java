@@ -17,12 +17,12 @@ import java.util.Map;
  */
 class AuthPage extends WebPage {
     // Осведомленность. Используется для выборки данных пользователь--сессия
-    private SessionService SS;
+    private final SessionService sS;
 
     // конструктор
-    public AuthPage(SessionService SS) {
+    public AuthPage(SessionService sS) {
         super();
-        this.SS = SS;
+        this.sS = sS;
     }
 
     /**
@@ -41,7 +41,7 @@ class AuthPage extends WebPage {
 
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
         if (sessionId == null) {
-            sessionId = SS.getSessionId();
+            sessionId = this.sS.getSessionId();
             //передаем новый sessionId пользователю
             session.setAttribute("sessionId", sessionId);
             // Пользователь не авторизован
@@ -51,7 +51,7 @@ class AuthPage extends WebPage {
 
         } else {
             //пользователь заходит еще раз
-            UserSession userSession = SS.getUserInfo(sessionId);
+            UserSession userSession = this.sS.getUserInfo(sessionId);
 
             if (userSession != null) {
                 //ожидаем пока AccountService вернет данные
@@ -66,7 +66,7 @@ class AuthPage extends WebPage {
                         return generatePage("test.tml", pageVariables);
 
                     } else {
-                        SS.closeSession(sessionId); //удаляем текущую сессию
+                        this.sS.closeSession(sessionId); //удаляем текущую сессию
                         return "Такого пользователя нет";
                     }
                 } else {
@@ -97,7 +97,7 @@ class AuthPage extends WebPage {
 
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль
-        SS.createUserSession(sessionId, userName);
+        this.sS.createUserSession(sessionId, userName);
 
         // Отдаем страницу ожидания.
         return generatePage("wait.tml");

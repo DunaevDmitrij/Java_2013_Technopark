@@ -17,8 +17,8 @@ import static java.lang.Thread.sleep;
  */
 public class SessionService {
     // Сервису дано право отсылать сообщения от имени Frontend-а.
-    private Address frontendAddress;
-    private MessageSystem ms;
+    private final Address frontendAddress;
+    private final MessageSystem ms;
 
     // Счетчик для раздачи идентификаторов новым сессиям.
     private final AtomicLong sessionIdCounter = new AtomicLong();
@@ -26,6 +26,7 @@ public class SessionService {
     private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
 
     public SessionService(MessageSystem ms, Address address) {
+        super();
         this.frontendAddress = address;
         this.ms = ms;
     }

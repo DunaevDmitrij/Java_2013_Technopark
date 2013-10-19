@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *  Содержит в себе метод для создания объектов страниц.
  */
 
+@SuppressWarnings("CanBeFinal")
 abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
@@ -49,6 +50,7 @@ abstract class WebPage {
      * Конструктор без параметров. Используется для инициализации полей.
      */
     protected WebPage() {
+        super();
         // Статус по умолчанию
         this.Status = HttpServletResponse.SC_OK;
     }
