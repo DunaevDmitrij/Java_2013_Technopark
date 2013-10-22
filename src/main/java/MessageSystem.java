@@ -18,6 +18,8 @@ public class MessageSystem implements MessageSystemI {
         this.messages.put(abonent.getAddress(), new ConcurrentLinkedQueue<Msg>());
     }
 
+    //TODO: what to do if message.getTo is null or is wrong
+    //TODO: make test on situation if message.getTo is null or wrong
     @Override
     public void sendMessage(Msg message){
         Queue<Msg> messageQueue = this.messages.get(message.getTo());

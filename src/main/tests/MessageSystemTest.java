@@ -15,7 +15,6 @@ public class MessageSystemTest {
     @Before
     public void setUp() throws Exception {
         this.ms = new MessageSystem();
-        this.reciver = new Reciver(this.ms);
     }
 
     @Test
@@ -28,6 +27,7 @@ public class MessageSystemTest {
     public void testSendMessage() throws Exception {
         final String tstMessage = "Hello!";
         final String ErrText = "Error in sendMessage() or execForAbonent()!";
+        this.reciver = new Reciver(this.ms);
         this.ms.sendMessage(new MsgToReciver(null, this.reciver.getAddress(),tstMessage));
         this.ms.execForAbonent(this.reciver);
 
