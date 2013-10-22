@@ -9,21 +9,66 @@ import junit.framework.Assert;
 public class MessageSystemTest {
 
     private MessageSystem ms;
+    private Reciver reciver;
 
     @Before
     public void setUp() throws Exception {
         this.ms = new MessageSystem();
-        Abonent tstAbonentSender = new AccountService(this.ms);
-        Abonent tstAbonentResiver = new Frontend(this.ms);
-        this.ms.addService(tstAbonentSender);
-        this.ms.addService(tstAbonentResiver);
-        this.ms.getAddressService().setAccountService(tstAbonentSender.getAddress());
+        this.reciver = new Reciver(this.ms);
     }
 
     @Test
     public void testSendMessage() throws Exception {
-        this.ms.sendMessage(new MsgGetUserId(this.ms.getAddressService().getAccountService(),this.ms.getAddressService().getAccountService(),"vasia",0L));
-        Assert.assertTrue(true);
+        final String tstMessage = "Hello!";
+        final String ErrText = "Error in sendMessage() or execForAbonent()!";
+        this.ms.sendMessage(new MsgToReciver(null, this.reciver.getAddress(),tstMessage));
+        this.ms.execForAbonent(this.reciver);
 
+        Assert.assertEquals(ErrText, this.reciver.getMessage(), tstMessage);
+
+    }
+
+    private class MsgToReciver extends Msg{
+
+        private String message;
+
+        private MsgToReciver(Address from, Address to, String message) {
+            super(from, to);
+            this.message = message;
+        }
+
+        @Override
+        void exec(Abonent abonent) {
+            if(abonent instanceof Reciver){
+                ((Reciver) abonent).setMessage(message);
+            }
+        }
+    }
+
+    private class Reciver implements Abonent{
+        private Address address;
+        private String message;
+        private MessageSystem ms;
+
+        public Reciver(MessageSystem ms){
+            super();
+            this.address = new Address();
+            this.ms = ms;
+            ms.addService(this);
+        }
+
+        public String getMessage() {
+            return this.message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+
+        @Override
+        public Address getAddress() {
+            return this.address;
+        }
     }
 }
