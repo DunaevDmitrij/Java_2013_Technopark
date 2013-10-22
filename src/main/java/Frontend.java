@@ -28,6 +28,8 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         this.ms = ms;
         //получаем адрес для Frontend
         this.address = new Address();
+        // регистрируем Frontend в AddressService
+        this.ms.getAddressService().setFrontend(this.address);
         //регистрируем Frontend в MessageSystem
         ms.addService(this);
 
