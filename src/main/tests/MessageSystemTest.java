@@ -36,8 +36,8 @@ public class MessageSystemTest {
 
     @Test
     public void testSendMessage() throws Exception {
-        final String tstMessage = "Hello!";
         final String ErrText = "Error in sendMessage() or execForAbonent()!";
+        final String tstMessage = "Hello!";
         Reciver reciver = new Reciver(this.ms);
         this.ms.sendMessage(new MsgToReciver(null, reciver.getAddress(),tstMessage));
         this.ms.execForAbonent(reciver);
@@ -46,6 +46,9 @@ public class MessageSystemTest {
 
     }
 
+    /**
+     * Message class for tests.
+     */
     private class MsgToReciver extends Msg{
 
         private final String message;
@@ -55,6 +58,10 @@ public class MessageSystemTest {
             this.message = message;
         }
 
+        /**
+         * Checks if addressee is instance of Reciver and if is, calls it's setMessage with this.message.
+         * @param abonent addressee
+         */
         @Override
         void exec(Abonent abonent) {
             if(abonent instanceof Reciver){
@@ -63,6 +70,9 @@ public class MessageSystemTest {
         }
     }
 
+    /**
+     * Test reciver class. Used for getting messages and doing something depending on it.
+     */
     private class Reciver implements Abonent{
         private final Address address;
         private String message;
@@ -83,7 +93,6 @@ public class MessageSystemTest {
         public void setMessage(String message) {
             this.message = message;
         }
-
 
         @Override
         public Address getAddress() {
