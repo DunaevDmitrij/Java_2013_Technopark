@@ -6,6 +6,7 @@ import junit.framework.Assert;
  * Author: artemlobachev
  * Date: 19.10.13
  */
+@SuppressWarnings("deprecation") //JUnit 4 doesn't like class Assert.
 public class MessageSystemTest {
 
     private MessageSystem ms;
@@ -20,7 +21,7 @@ public class MessageSystemTest {
     @Test
     public void testGetAddressService(){
         final String ErrText = "AddressService is null";
-        Assert.assertNotNull(ErrText, ms.getAddressService());
+        Assert.assertNotNull(ErrText, this.ms.getAddressService());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class MessageSystemTest {
 
     private class MsgToReciver extends Msg{
 
-        private String message;
+        private final String message;
 
         private MsgToReciver(Address from, Address to, String message) {
             super(from, to);
@@ -46,15 +47,16 @@ public class MessageSystemTest {
         @Override
         void exec(Abonent abonent) {
             if(abonent instanceof Reciver){
-                ((Reciver) abonent).setMessage(message);
+                ((Reciver) abonent).setMessage(this.message);
             }
         }
     }
 
     private class Reciver implements Abonent{
-        private Address address;
+        private final Address address;
         private String message;
-        private MessageSystem ms;
+        @SuppressWarnings("UnusedDeclaration")
+        private final MessageSystem ms;
 
         public Reciver(MessageSystem ms){
             super();
