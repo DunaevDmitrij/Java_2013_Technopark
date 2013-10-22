@@ -18,6 +18,12 @@ public class MessageSystemTest {
     }
 
     @Test
+    public void testGetAddressService(){
+        final String ErrText = "AddressService is null";
+        Assert.assertNotNull(ErrText, ms.getAddressService());
+    }
+
+    @Test
     public void testSendMessage() throws Exception {
         final String tstMessage = "Hello!";
         final String ErrText = "Error in sendMessage() or execForAbonent()!";
