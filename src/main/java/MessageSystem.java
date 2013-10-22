@@ -21,9 +21,16 @@ public class MessageSystem implements MessageSystemI {
     //TODO: what to do if message.getTo is null or is wrong
     //TODO: make test on situation if message.getTo is null or wrong
     @Override
-    public void sendMessage(Msg message){
+    public boolean sendMessage(Msg message){
+        boolean result;
         Queue<Msg> messageQueue = this.messages.get(message.getTo());
-        messageQueue.add(message);
+        try {
+            messageQueue.add(message);
+            result = true;
+        }catch (Exception e){
+           result = false;
+        }
+        return result;
     }
 
     @Override

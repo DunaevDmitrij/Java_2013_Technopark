@@ -10,7 +10,6 @@ import junit.framework.Assert;
 public class MessageSystemTest {
 
     private MessageSystem ms;
-    private Reciver reciver;
 
     @Before
     public void setUp() throws Exception {
@@ -24,14 +23,26 @@ public class MessageSystemTest {
     }
 
     @Test
+    public void testSendMessageToNullAddress(){
+        final String ErrText = "Bad processing for null address";
+        Assert.assertFalse(ErrText, this.ms.sendMessage(new MsgToReciver(null, null, null)));
+    }
+
+    @Test
+    public void testSendMessageToUnknownAddress(){
+        final String ErrText = "Bad processing for unknown address";
+        Assert.assertFalse(ErrText, this.ms.sendMessage(new MsgToReciver(null, new Address(), null)));
+    }
+
+    @Test
     public void testSendMessage() throws Exception {
         final String tstMessage = "Hello!";
         final String ErrText = "Error in sendMessage() or execForAbonent()!";
-        this.reciver = new Reciver(this.ms);
-        this.ms.sendMessage(new MsgToReciver(null, this.reciver.getAddress(),tstMessage));
-        this.ms.execForAbonent(this.reciver);
+        Reciver reciver = new Reciver(this.ms);
+        this.ms.sendMessage(new MsgToReciver(null, reciver.getAddress(),tstMessage));
+        this.ms.execForAbonent(reciver);
 
-        Assert.assertEquals(ErrText, this.reciver.getMessage(), tstMessage);
+        Assert.assertEquals(ErrText, reciver.getMessage(), tstMessage);
 
     }
 

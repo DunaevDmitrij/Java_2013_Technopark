@@ -6,7 +6,7 @@
 public interface MessageSystemI {
     void addService(Abonent abonent);
 
-    void sendMessage(Msg message);
+    boolean sendMessage(Msg message);
 
     void execForAbonent(Abonent abonent);
 
