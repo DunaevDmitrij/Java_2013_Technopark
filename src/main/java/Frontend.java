@@ -22,21 +22,16 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     private final MessageSystem ms;
     private final Address address;
-
-    // Объект-контейнер для UserSession.
     private final SessionService sessionService;
 
-    public Frontend(MessageSystem ms) {
+    public Frontend(MessageSystem ms, SessionService SS) {
         super();
         this.ms = ms;
         //получаем адрес для Frontend
         this.address = new Address();
         //регистрируем Frontend в MessageSystem
         ms.addService(this);
-
-        // Объект ServiceSession выполняется в том же потоке что и Frontend.
-        // Имеет право отсылать запросы к MessageSystem от адреса Frontend.
-        this.sessionService = new SessionService(this.ms, this.address);
+        this.sessionService = SS;
     }
 
     /**
@@ -133,8 +128,4 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         }
     }
 
-    // Оболочка над SessionService.updateUserId, для передачи управления из MsgUpdateUserId
-    public void updateUserId(Long sessionId, Long id) {
-        this.sessionService.updateUserId(sessionId, id);
-    }
 }

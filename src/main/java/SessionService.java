@@ -15,20 +15,42 @@ import static java.lang.Thread.sleep;
 /**
  * Абстракция - контейнер для UserSession. Хранит, создает и делает выборку.
  */
-public class SessionService {
-    // Сервису дано право отсылать сообщения от имени Frontend-а.
-    private final Address frontendAddress;
-    private final MessageSystem ms;
+public class SessionService implements Abonent, Runnable {
 
+    private final MessageSystem ms;
+    private final Address address;
     // Счетчик для раздачи идентификаторов новым сессиям.
     private final AtomicLong sessionIdCounter = new AtomicLong();
     // Контейнер - отображение sessionId на UserSession.
     private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
 
-    public SessionService(MessageSystem ms, Address address) {
+    public SessionService(MessageSystem ms) {
         super();
-        this.frontendAddress = address;
+
         this.ms = ms;
+        this.address= new Address();
+        //регистрируем в MessageSystem
+        ms.addService(this);
+        //регестрируем в AddressService, чтобы каждый мог обратиться к SessionSerivice
+        ms.getAddressService().setAccountService(this.address);
+    }
+
+    @Override
+    public Address getAddress() {
+        return this.address;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            this.ms.execForAbonent(this);
+
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -37,6 +59,7 @@ public class SessionService {
      * @param userId новый идентификатор пользователя
      */
     public void updateUserId(Long sessionId, Long userId) {
+
         UserSession userSession = this.sessionIdToUserSession.get(sessionId);
         if (userSession == null) {
             // Обработка неожиданности
@@ -69,14 +92,14 @@ public class SessionService {
      * @param userName новое имя пользователя.
      */
     public void createUserSession(Long sessionId, String userName) {
+
         UserSession userSession = new UserSession(sessionId, userName);
         //добавляем в sessionIdToUserSession
         this.sessionIdToUserSession.put(sessionId, userSession);
 
-        // Отправка сообщения AccauntService, для создания новой записи пользователя и выделения под неё идентификатора.
-        Address serviceAddress = this.frontendAddress;
+        // Отправляем сообщение к AccountService.
         Address accountServiceAddress = this.ms.getAddressService().getAccountService();
-
+        Address serviceAddress = this.address;
         this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId));
     }
 }
