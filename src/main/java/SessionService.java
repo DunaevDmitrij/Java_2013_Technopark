@@ -71,7 +71,7 @@ public class SessionService implements Abonent, Runnable {
     }
 
     // Получить идентификатор для новой сессии.
-    public Long getSessionId() {
+    public Long getNewSessionId() {
         // Одновременно инкремент
         return this.sessionIdCounter.getAndIncrement();
     }

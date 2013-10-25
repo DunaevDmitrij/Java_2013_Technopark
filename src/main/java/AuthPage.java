@@ -41,7 +41,7 @@ class AuthPage extends WebPage {
 
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
         if (sessionId == null) {
-            sessionId = this.sS.getSessionId();
+            sessionId = this.sS.getNewSessionId();
             //передаем новый sessionId пользователю
             session.setAttribute("sessionId", sessionId);
             // Пользователь не авторизован
