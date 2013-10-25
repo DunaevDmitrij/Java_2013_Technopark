@@ -7,6 +7,16 @@
 //класс, отвечающий за получение адресов всех основных сервисов
 public class AddressService {
     private Address accountService;
+    private Address frontend;
+
+    @SuppressWarnings("UnusedDeclaration")
+    public Address getFrontend() {
+        return this.frontend;
+    }
+
+    public void setFrontend(Address frontend) {
+        this.frontend = frontend;
+    }
 
     //получение адреса сервиса аккаунтов (AccountService)
     public Address getAccountService() {
