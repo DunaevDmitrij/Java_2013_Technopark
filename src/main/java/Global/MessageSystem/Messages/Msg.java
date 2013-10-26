@@ -1,3 +1,8 @@
+package Global.MessageSystem.Messages;
+
+import Global.MessageSystem.Abonent;
+import Global.MessageSystem.Address;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim

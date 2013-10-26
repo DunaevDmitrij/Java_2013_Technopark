@@ -1,3 +1,5 @@
+package Global.WebPages;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -13,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,7 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @SuppressWarnings("CanBeFinal")
-abstract class WebPage {
+public abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
     private static final String HTML_DIR = "tml";

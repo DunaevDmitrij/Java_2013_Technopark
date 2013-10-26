@@ -1,3 +1,5 @@
+package Global.MessageSystem;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

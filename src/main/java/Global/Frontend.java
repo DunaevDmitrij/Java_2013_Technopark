@@ -1,12 +1,16 @@
+package Global;
+
+import Global.MessageSystem.MessageSystem;
+import Global.MessageSystem.Address;
+import Global.MessageSystem.Abonent;
+import Global.WebPages.WebPage;
+import Global.WebPages.AuthPage;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Thread.sleep;
 

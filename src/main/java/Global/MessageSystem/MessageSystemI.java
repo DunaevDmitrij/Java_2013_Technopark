@@ -1,3 +1,5 @@
+package Global.MessageSystem;
+
 /**
  * Author: artemlobachev
  * Date: 19.10.13

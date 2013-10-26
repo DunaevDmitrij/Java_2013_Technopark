@@ -1,8 +1,9 @@
-/**
+package Global; /**
  * Author: artemlobachev
  * Date: 20.09.13
  * Time: 23:27
  */
+import Global.MessageSystem.MessageSystem;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;
@@ -29,7 +30,7 @@ public class Main {
 
         SessionService sessionService = new SessionService(ms);
         Frontend frontend = new Frontend(ms, sessionService);
-        AccountService accountService = new AccountService(ms);
+        MessageSystem.AccountService accountService = new MessageSystem.AccountService(ms);
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

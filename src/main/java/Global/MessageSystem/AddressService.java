@@ -1,3 +1,5 @@
+package Global.MessageSystem;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim
