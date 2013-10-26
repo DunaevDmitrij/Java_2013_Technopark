@@ -1,5 +1,7 @@
 package Global.MessageSystem;
 
+import Global.MessageSystem.Messages.Msg;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;

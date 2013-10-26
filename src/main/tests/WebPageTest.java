@@ -1,9 +1,9 @@
+import Global.WebPages.WebPage;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,5 @@
 package Global.MessageSystem.Messages;
+import Global.SessionService;
 
 import Global.MessageSystem.Abonent;
 import Global.MessageSystem.Address;
@@ -17,7 +18,7 @@ public abstract class MsgToSS extends Msg{
 
     //проверяем что Abonent принадлежит SessionService
     @Override
-    void exec(Abonent abonent) {
+    public void exec(Abonent abonent) {
         if(abonent instanceof SessionService){
             //вызываем выполнение сообщения для SessionService
             this.exec((SessionService) abonent);

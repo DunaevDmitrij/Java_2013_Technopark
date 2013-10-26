@@ -44,8 +44,8 @@ public abstract class WebPage {
      * @param request объект запроса, для получения данных сессии
      * @return  возвращает сгенерированную страницу
      */
-    abstract String handleGET(HttpServletRequest request);
-    abstract String handlePOST(HttpServletRequest request);
+    public abstract String handleGET(HttpServletRequest request);
+    public abstract String handlePOST(HttpServletRequest request);
 
     /**
      * Конструктор без параметров. Используется для инициализации полей.

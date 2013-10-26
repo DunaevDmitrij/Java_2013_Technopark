@@ -3,6 +3,7 @@ package Global; /**
  * Date: 20.09.13
  * Time: 23:27
  */
+import Global.MessageSystem.AccountService;
 import Global.MessageSystem.MessageSystem;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
@@ -30,7 +31,7 @@ public class Main {
 
         SessionService sessionService = new SessionService(ms);
         Frontend frontend = new Frontend(ms, sessionService);
-        MessageSystem.AccountService accountService = new MessageSystem.AccountService(ms);
+        AccountService accountService = new AccountService(ms);
 
         Server server = new Server(SERVER_PORT);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

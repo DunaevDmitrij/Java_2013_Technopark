@@ -3,7 +3,7 @@ package Global;
 import Global.MessageSystem.MessageSystem;
 import Global.MessageSystem.Abonent;
 import Global.MessageSystem.Address;
-import Global.MessageSystem.MsgGetUserId;
+import Global.MessageSystem.Messages.MsgGetUserId;
 
 import java.util.HashMap;
 import java.util.Map;

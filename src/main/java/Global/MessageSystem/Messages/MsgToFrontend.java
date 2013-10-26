@@ -1,5 +1,6 @@
 package Global.MessageSystem.Messages;
 
+import Global.Frontend;
 import Global.MessageSystem.Abonent;
 import Global.MessageSystem.Address;
 
