@@ -79,6 +79,7 @@ abstract class WebPage {
             template.process(context, stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
+            return null;
         }
         return stream.toString();
     }
@@ -96,6 +97,7 @@ abstract class WebPage {
             template.process(new HashMap<>(), stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
+            return null;
         }
         return stream.toString();
     }
