@@ -4,7 +4,7 @@
  * Date: 12.10.13
  * Time: 11:06
  */
-public class MsgUpdateUserId extends MsgToFrontend {
+public class MsgUpdateUserId extends MsgToSS {
 
     private final Long sessionId;
     private final Long id;
@@ -16,8 +16,8 @@ public class MsgUpdateUserId extends MsgToFrontend {
     }
 
     @Override
-    void exec(Frontend frontend) {
-        frontend.setId(this.sessionId, this.id);
+    void exec(SessionService sessionService) {
+        sessionService.updateUserId(this.sessionId, this.id);
     }
 
 }

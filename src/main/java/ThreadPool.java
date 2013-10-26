@@ -3,7 +3,9 @@ import java.util.ArrayList;
 /**
  * Author: artemlobachev
  * Date: 04.10.13
- */
+ * Time: 21:29
+*/
+@SuppressWarnings("UnusedDeclaration")
 public class ThreadPool {
 
     private final ArrayList<Thread>  threads;

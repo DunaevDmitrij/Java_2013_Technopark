@@ -4,7 +4,7 @@
  * Date: 12.10.13
  * Time: 11:05
  */
-public abstract class MsgToFrontend extends Msg{
+public abstract class MsgToFrontend extends Msg {
 
     public MsgToFrontend(Address from, Address to) {
         super(from, to);

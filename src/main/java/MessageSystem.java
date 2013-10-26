@@ -34,7 +34,7 @@ public class MessageSystem implements MessageSystemI {
     @Override
     public void execForAbonent(Abonent abonent) {
         Queue<Msg> messageQueue = this.messages.get(abonent.getAddress());
-        if(messageQueue == null){
+        if(messageQueue == null) {
             return;
         }
         while(!messageQueue.isEmpty()){

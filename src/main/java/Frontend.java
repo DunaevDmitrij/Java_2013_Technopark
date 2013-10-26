@@ -13,17 +13,18 @@ import static java.lang.Thread.sleep;
 /**
  * Author: artemlobachev
  * Date: 21.09.13
- */
+ * Time: 10:22
+*/
 public class Frontend extends HttpServlet implements Abonent, Runnable {
 
+    // Здесь и далее: все URL-ы записываются как константы.
     protected static final String ADDRESS_AUTH = "/auth";
 
     private final MessageSystem ms;
-    private final AtomicLong sessionIdCounter = new AtomicLong();
-    private final Map<Long, UserSession> sessionIdToUserSession = new HashMap<>();
     private final Address address;
+    private final SessionService sessionService;
 
-    public Frontend(MessageSystem ms) {
+    public Frontend(MessageSystem ms, SessionService SS) {
         super();
         this.ms = ms;
         //получаем адрес для Frontend
@@ -32,7 +33,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         this.ms.getAddressService().setFrontend(this.address);
         //регистрируем Frontend в MessageSystem
         ms.addService(this);
-
+        this.sessionService = SS;
     }
 
     /**
@@ -51,21 +52,23 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         }
     }
 
+    /**
+     * Создание объекта страницы в зависимости от переданного URL.
+     * @param Path строка-параметр для сопоставления
+     * @return объект WebPage с нужной реализацией
+     */
+    public WebPage createPage(String Path) {
+        if (Path.equals(ADDRESS_AUTH)) {
+            return new AuthPage(this.sessionService);
+        } else {
+            return null;
+        }
+    }
+
     //имплементация интерфейса Abonent
     @Override
     public Address getAddress() {
         return this.address;
-    }
-
-    //добавление userId в sessionIdToUserSession
-    public void setId(Long sessionId, Long userId) {
-        UserSession userSession = this.sessionIdToUserSession.get(sessionId);
-        if (userSession == null) {
-            System.out.append("Can't find user session for: ").append(sessionId.toString());
-            return;
-        }
-        userSession.setUserId(userId);
-        userSession.setComplete(); //процесс получения userId завершен
     }
 
     /**
@@ -75,115 +78,56 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException TODO написать откуда может появиться!
      */
-    @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws IOException, ServletException {
+     @Override
+     public void doGet(HttpServletRequest request,
+                HttpServletResponse response)
+                throws IOException, ServletException {
 
+
+        // TODO: Пока предполагается, что всегда возвращаем html.
+        // TODO: Если иначе, то перенести в WebPage
         response.setContentType("text/html;charset=utf-8");
 
-        //если пользователь пришел на страницу авторизации
-        if (request.getPathInfo().equals(ADDRESS_AUTH))
-        {
-            //получаем sessionId
-            HttpSession session = request.getSession();
-            Long sessionId = (Long) session.getAttribute("sessionId");
-
-            //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
-            if (sessionId == null)
-            {
-                //создаем новый sessionId
-                sessionId = this.sessionIdCounter.getAndIncrement();
-                //передаем sessionId пользователю
-                session.setAttribute("sessionId", sessionId);
-                //TODO: тут что-то было раньше :)
-                response.getWriter().println(PageGenerator.getPage("auth.tml", new HashMap<String, Object>()));
-            }
-            //пользователь заходит еще раз
-            else
-            {
-                if (this.sessionIdToUserSession.get(sessionId) != null)
-                {
-                    //ожидаем пока AccountService вернет данные
-                    if (this.sessionIdToUserSession.get(sessionId).isComplete())
-                    {
-                        //проверяем, что пользователь существует
-                        if (!this.sessionIdToUserSession.get(sessionId).getUserId().equals(AccountService.USER_NOT_EXIST))
-                        {
-                            Map<String, Object> pageVariables = new HashMap<>();
-                            pageVariables.put("UserId", this.sessionIdToUserSession.get(sessionId).getUserId());
-                            pageVariables.put("UserName", this.sessionIdToUserSession.get(sessionId).getName());
-                            response.getWriter().println(PageGenerator.getPage("test.tml", pageVariables));
-                        }
-                        else
-                        {
-                            response.getWriter().println("Такого пользователя нету"); //такого пользователя нет
-                            this.sessionIdToUserSession.remove(sessionId); //удаляем текущую сессию
-                        }
-                    }
-                    else
-                    {
-                        //просим пользователя подождать
-                        response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
-                        //TODO: отпавлять тут код ошибки с пустым телом или JSON, сообщающий, что идет поиск, сделать на клиенте циклический опрос ограниченное кол-во раз, если ответа нет - сообщение пользователю об ошибке
-                    }
-                }
-                else //пользователь не ввел имя (например просто обновил страницу)
-                {
-                    //требуем ввода имени
-                    response.getWriter().println(PageGenerator.getPage("auth.tml", new HashMap<String, Object>()));
-                }
-            }
-
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        //пользователь пришел на необрабатываемый адрес
-        else{
-            //TODO сделать красивую статическую страничку 404
+        // Создание объекта страницы, в зависимости от запрашиваемого URL
+        WebPage page = this.createPage(request.getPathInfo());
+        if (page == null) {
+            // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            // Получение страницы строкой. Выполняет анализ сессии, выборку контента и генерацию страницы.
+            String pageStr = page.handleGET(request);
+            response.getWriter().println(pageStr);
+            // Установка статуса после выполнения handleGET
+            response.setStatus(page.getStatus());
         }
     }
 
     /**
      * Обрабатываем POST запрос.
-     * @param request запрос
-     * @param response ответ
+     * @param request объект запроса
+     * @param response объект ответа сервера
      * @throws IOException TODO написать откуда может появиться!
      * @throws ServletException  TODO написать откуда может появиться!
      */
-    @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        //получаем sessionId
-        HttpSession session = request.getSession();
-        Long sessionId = (Long) session.getAttribute("sessionId");
-
+     @Override
+     public void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+     throws IOException, ServletException
+     {
         response.setContentType("text/html;charset=utf-8");
 
-        //пользователь пытается авторизоваться
-        if (request.getPathInfo().equals(ADDRESS_AUTH))
-        {
-            String userName = request.getParameter("name");
-            //Создаем новую запись userSession
-            UserSession userSession = new UserSession(sessionId, userName);
-            //добавляем в sessionIdToUserSession
-            this.sessionIdToUserSession.put(sessionId, userSession);
-
-            Address frontendAddress = this.getAddress();
-            Address accountServiceAddress = this.ms.getAddressService().getAccountService();
-
-            this.ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
-
-            response.getWriter().println(PageGenerator.getPage("wait.tml", new HashMap<String, Object>()));
-
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        //обращение к несуществующему адресу
-        else{
+        // Создание объекта страницы
+        WebPage page = this.createPage(request.getPathInfo());
+        if (page == null) {
+            // Обработка неизвестного URL
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            // Генерация страницы
+            String pageStr = page.handlePOST(request);
+            response.getWriter().println(pageStr);
+            // Установка статуса
+            response.setStatus(page.getStatus());
         }
-
     }
+
 }
