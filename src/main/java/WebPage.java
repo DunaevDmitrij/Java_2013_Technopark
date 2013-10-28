@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,6 +91,7 @@ abstract class WebPage {
      */
     protected static String generatePage(String templateName) {
         Writer stream = new StringWriter();
+        //FIXME: думаю, тут надо без шаблонизатора обойтись, просто отдавать статические страницы
         try {
             Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
             template.process(new HashMap<>(), stream);
