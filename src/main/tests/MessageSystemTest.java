@@ -1,3 +1,8 @@
+import Global.MessageSystem.MessageSystem;
+import Global.MessageSystem.Address;
+import Global.MessageSystem.Abonent;
+import Global.MessageSystem.Messages.Msg;
+
 import org.junit.Before;
 import org.junit.Test;
 import junit.framework.Assert;
@@ -49,7 +54,7 @@ public class MessageSystemTest {
     /**
      * Message class for tests.
      */
-    private class MsgToReciver extends Msg{
+    private class MsgToReciver extends Msg {
 
         private final String message;
 
@@ -63,7 +68,7 @@ public class MessageSystemTest {
          * @param abonent addressee
          */
         @Override
-        void exec(Abonent abonent) {
+        public void exec(Abonent abonent) {
             if(abonent instanceof Reciver){
                 ((Reciver) abonent).setMessage(this.message);
             }
@@ -73,7 +78,7 @@ public class MessageSystemTest {
     /**
      * Test reciver class. Used for getting messages and doing something depending on it.
      */
-    private class Reciver implements Abonent{
+    private class Reciver implements Abonent {
         private final Address address;
         private String message;
         @SuppressWarnings("UnusedDeclaration")

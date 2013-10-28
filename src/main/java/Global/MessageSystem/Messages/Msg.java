@@ -1,3 +1,8 @@
+package Global.MessageSystem.Messages;
+
+import Global.MessageSystem.Abonent;
+import Global.MessageSystem.Address;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim
@@ -15,15 +20,15 @@ public abstract class Msg {
         this.to = to;
     }
 
-    protected Address getFrom(){
+    public Address getFrom(){
         return this.from;
     }
 
-    protected Address getTo(){
+    public Address getTo(){
         return this.to;
     }
 
     //функция которую будет вызывать MessageSystem, без привязки к конкретному Abonent
-    abstract void exec(Abonent abonent);
+    public abstract void exec(Abonent abonent);
 }
 

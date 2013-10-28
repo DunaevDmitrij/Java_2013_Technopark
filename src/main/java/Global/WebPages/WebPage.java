@@ -1,3 +1,5 @@
+package Global.WebPages;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 
 @SuppressWarnings("CanBeFinal")
-abstract class WebPage {
+public abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
     private static final String HTML_DIR = "tml";
@@ -42,8 +44,8 @@ abstract class WebPage {
      * @param request объект запроса, для получения данных сессии
      * @return  возвращает сгенерированную страницу
      */
-    abstract String handleGET(HttpServletRequest request);
-    abstract String handlePOST(HttpServletRequest request);
+    public abstract String handleGET(HttpServletRequest request);
+    public abstract String handlePOST(HttpServletRequest request);
 
     /**
      * Конструктор без параметров. Используется для инициализации полей.

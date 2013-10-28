@@ -1,3 +1,7 @@
+package Global.MessageSystem;
+
+import Global.MessageSystem.Messages.Msg;
+
 /**
  * Author: artemlobachev
  * Date: 19.10.13

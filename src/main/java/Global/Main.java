@@ -1,8 +1,10 @@
-/**
+package Global; /**
  * Author: artemlobachev
  * Date: 20.09.13
  * Time: 23:27
  */
+import Global.MessageSystem.AccountService;
+import Global.MessageSystem.MessageSystem;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;

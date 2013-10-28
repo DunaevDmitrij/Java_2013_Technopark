@@ -1,3 +1,8 @@
+package Global.MessageSystem.Messages;
+
+import Global.MessageSystem.AccountService;
+import Global.MessageSystem.Address;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim

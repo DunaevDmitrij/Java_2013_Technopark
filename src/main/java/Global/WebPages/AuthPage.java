@@ -1,5 +1,10 @@
+package Global.WebPages;
+
+import Global.MessageSystem.AccountService;
+import Global.SessionService;
+import Global.UserSession;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +20,7 @@ import java.util.Map;
  * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionService.
  * Наследует абстрактную веб-страницу.
  */
-class AuthPage extends WebPage {
+public class AuthPage extends WebPage {
     // Осведомленность. Используется для выборки данных пользователь--сессия
     private final SessionService sS;
 
