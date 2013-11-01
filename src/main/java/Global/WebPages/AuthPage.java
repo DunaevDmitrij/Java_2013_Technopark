@@ -22,12 +22,12 @@ import java.util.Map;
  */
 public class AuthPage extends WebPage {
     // Осведомленность. Используется для выборки данных пользователь--сессия
-    private final SessionService sS;
+    private final SessionService sessionService;
 
     // конструктор
-    public AuthPage(SessionService sS) {
+    public AuthPage(SessionService sessionService) {
         super();
-        this.sS = sS;
+        this.sessionService = sessionService;
     }
 
     /**
@@ -46,7 +46,7 @@ public class AuthPage extends WebPage {
 
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
         if (sessionId == null) {
-            sessionId = this.sS.getNewSessionId();
+            sessionId = this.sessionService.getNewSessionId();
             //передаем новый sessionId пользователю
             session.setAttribute("sessionId", sessionId);
             // Пользователь не авторизован
@@ -56,7 +56,7 @@ public class AuthPage extends WebPage {
 
         } else {
             //пользователь заходит еще раз
-            UserSession userSession = this.sS.getUserInfo(sessionId);
+            UserSession userSession = this.sessionService.getUserInfo(sessionId);
 
             if (userSession != null) {
                 //ожидаем пока AccountService вернет данные
@@ -71,7 +71,7 @@ public class AuthPage extends WebPage {
                         return generatePage("test.tml", pageVariables);
 
                     } else {
-                        this.sS.closeSession(sessionId); //удаляем текущую сессию
+                        this.sessionService.closeSession(sessionId); //удаляем текущую сессию
                         return "Такого пользователя нет";
                     }
                 } else {
@@ -102,7 +102,7 @@ public class AuthPage extends WebPage {
 
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль
-        this.sS.createUserSession(sessionId, userName);
+        this.sessionService.createUserSession(sessionId, userName);
 
         // Отдаем страницу ожидания.
         return generatePage("wait.tml");

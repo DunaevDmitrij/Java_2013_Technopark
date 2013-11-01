@@ -6,10 +6,7 @@ import freemarker.template.TemplateException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,20 +85,25 @@ public abstract class WebPage {
 
     /**
      * Генерация страницы с пустым контекстом (отдача простого HTML файла).
-     * @param templateName Имя шаблона.
+     * @param fileName Имя шаблона.
      * @return Сгенерированная страница.
      */
-    protected static String generatePage(String templateName) {
-        Writer stream = new StringWriter();
-        //FIXME: думаю, тут надо без шаблонизатора обойтись, просто отдавать статические страницы
-        try {
-            Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
-            template.process(new HashMap<>(), stream);
-        } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-            return null;
+    protected static String generatePage(String fileName) {
+        // Строка с результатом
+        StringBuilder fileContent = new StringBuilder();
+
+        // Открытие файла (try с ресурсами)
+        try (FileReader file = new FileReader(HTML_DIR + File.separator + fileName)) {
+            int Symbol = file.read();
+            // Посимвольное чтение из файла в строку
+            while (Symbol != -1) {
+                fileContent.append((char) Symbol);
+                Symbol = file.read();
+            }
+        } catch (IOException exc) {
+            System.out.println("IO Error: " + exc);
         }
-        return stream.toString();
+        return fileContent.toString();
     }
 
     /**
