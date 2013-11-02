@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>Admin Page</title>
+</head>
+<body>
+<form>
+<input type="text" id="shutdown" name="shutdown"/>
+<button type="submit">Убить, нельзя помиловать!</button>
+</form>
+</body>
+</html>

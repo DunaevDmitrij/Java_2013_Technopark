@@ -42,6 +42,9 @@ public class Main {
         threadPool.startThread(sessionService, THREAD_NAME_SESSION_SERVICE);
 
         //скармливаем его серверу
+
+        AdminPageServlet adminPageServlet = new AdminPageServlet();
+        context.addServlet(new ServletHolder(adminPageServlet), "/admin");
         context.addServlet(new ServletHolder(frontend), "/*");
 
         ResourceHandler resource_handler = new ResourceHandler();

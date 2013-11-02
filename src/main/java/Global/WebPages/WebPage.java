@@ -70,7 +70,7 @@ public abstract class WebPage {
      * @param context контекст для генерации html
      * @return Шаблонизированная страница.
      */
-    protected static String generatePage(String templateName, Map<String, Object> context) {
+    public static String generatePage(String templateName, Map<String, Object> context) {
         Writer stream = new StringWriter();
         try {
             Template template = CFG.getTemplate(HTML_DIR + File.separator + templateName);
@@ -88,7 +88,7 @@ public abstract class WebPage {
      * @param fileName Имя шаблона.
      * @return Сгенерированная страница.
      */
-    protected static String generatePage(String fileName) {
+    public static String generatePage(String fileName) {
         // Строка с результатом
         StringBuilder fileContent = new StringBuilder();
 
