@@ -73,7 +73,7 @@ public class WebPageTest {
         Map<String, Integer> checkArr = checkPage(result);
         // Печать результата
         for (String current : checkArr.keySet()) {
-            Assert.assertNotSame(ErrText + current, checkArr.get(current).intValue(), -1);
+            Assert.assertNotSame(ErrText + current, checkArr.get(current), -1);
         }
     }
 
@@ -92,7 +92,7 @@ public class WebPageTest {
         Map<String, Integer> checkArr = checkPage(result);
         // Вывод
         for (String current : checkArr.keySet()) {
-            Assert.assertNotSame(ErrText + current, checkArr.get(current).intValue(), -1);
+            Assert.assertNotSame(ErrText + current, checkArr.get(current), -1);
         }
     }
 

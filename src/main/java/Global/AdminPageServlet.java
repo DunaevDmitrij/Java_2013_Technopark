@@ -17,6 +17,7 @@ import java.util.Map;
 public class AdminPageServlet extends HttpServlet {
     public static final String adminPageURL = "/admin";
 
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
@@ -37,18 +38,19 @@ public class AdminPageServlet extends HttpServlet {
     }
 
     private class ShutdownTask implements Runnable {
-        int sleepTime;
+        final int sleepTime;
 
         public ShutdownTask(int sleepTime) {
+            super();
             this.sleepTime = sleepTime;
         }
 
         @Override
         public void run() {
             try {
-                Thread.sleep(sleepTime);
+                Thread.sleep(this.sleepTime);
             } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();  //TODO make class Utils
             }
             System.out.append("Shutdown requested");
             System.exit(0);

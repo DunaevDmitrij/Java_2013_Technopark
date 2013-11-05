@@ -19,7 +19,7 @@ public class Main {
 
     public static final String MAIN_PAGE_ADDRESS = "/auth";
     public static final String STATIC_DIR = "static";
-    public static final int SERVER_PORT = 8080;
+    public static final int DEFAULT_SERVER_PORT = 8080;
 
     public static final String THREAD_NAME_FRONTEND = "Frontend";
     public static final String THREAD_NAME_ACCOUNT_SERVICE = "AS";
@@ -27,13 +27,24 @@ public class Main {
 
 
     public static void main(String args[ ])throws Exception {
+        //проверяем наличие параметра порт. Если не передан - запускаемся на порту по умолчанию(переменная DEFAULT_SERVER_PORT).
+        int port;
+        if (args.length < 1) {
+            System.out.append("No port in parametrs. Using default port " + DEFAULT_SERVER_PORT + ".\n");
+            port = DEFAULT_SERVER_PORT;
+        }else{
+            String portString = args[0];
+            port = Integer.valueOf(portString);
+            System.out.append("Starting at port: ").append(portString).append('\n');
+        }
+
         MessageSystem ms = new MessageSystem();
 
         SessionService sessionService = new SessionService(ms);
         Frontend frontend = new Frontend(ms, sessionService);
         AccountService accountService = new AccountService(ms);
 
-        Server server = new Server(SERVER_PORT);
+        Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         //создаем пул потоков и добавляем в него наши Frontend, Account Service и Session Service
         ThreadPool threadPool = new ThreadPool();
@@ -44,7 +55,7 @@ public class Main {
         //скармливаем его серверу
 
         AdminPageServlet adminPageServlet = new AdminPageServlet();
-        context.addServlet(new ServletHolder(adminPageServlet), "/admin");
+        context.addServlet(new ServletHolder(adminPageServlet), AdminPageServlet.adminPageURL);
         context.addServlet(new ServletHolder(frontend), "/*");
 
         ResourceHandler resource_handler = new ResourceHandler();

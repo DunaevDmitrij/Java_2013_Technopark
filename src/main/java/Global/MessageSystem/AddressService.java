@@ -30,10 +30,12 @@ public class AddressService {
         this.accountService = accountService;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public Address getSessionService() {
         return this.sessionService;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setSessionService(Address sessionService) {
         this.sessionService = sessionService;
     }

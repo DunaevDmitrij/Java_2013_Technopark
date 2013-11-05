@@ -1,11 +1,10 @@
-import Global.MessageSystem.MessageSystem;
-import Global.MessageSystem.Address;
 import Global.MessageSystem.Abonent;
+import Global.MessageSystem.Address;
+import Global.MessageSystem.MessageSystem;
 import Global.MessageSystem.Messages.Msg;
-
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import junit.framework.Assert;
 
 /**
  * Author: artemlobachev
