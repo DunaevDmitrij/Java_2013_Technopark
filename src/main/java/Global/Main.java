@@ -23,14 +23,12 @@ public class Main {
 
     public static final String THREAD_NAME_FRONTEND = "Frontend";
     public static final String THREAD_NAME_ACCOUNT_SERVICE = "AS";
-    public static final String THREAD_NAME_SESSION_SERVICE = "SS";
 
 
     public static void main(String args[ ])throws Exception {
         MessageSystem ms = new MessageSystem();
 
-        SessionService sessionService = new SessionService(ms);
-        Frontend frontend = new Frontend(ms, sessionService);
+        Frontend frontend = new Frontend(ms);
         AccountService accountService = new AccountService(ms);
 
         Server server = new Server(SERVER_PORT);
@@ -39,7 +37,6 @@ public class Main {
         ThreadPool threadPool = new ThreadPool();
         threadPool.startThread(frontend, THREAD_NAME_FRONTEND);
         threadPool.startThread(accountService, THREAD_NAME_ACCOUNT_SERVICE);
-        threadPool.startThread(sessionService, THREAD_NAME_SESSION_SERVICE);
 
         //скармливаем его серверу
         context.addServlet(new ServletHolder(frontend), "/*");

@@ -28,7 +28,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     private final Address address;
     private final SessionService sessionService;
 
-    public Frontend(MessageSystem ms, SessionService SS) {
+    public Frontend(MessageSystem ms) {
         super();
         this.ms = ms;
         //получаем адрес для Frontend
@@ -37,7 +37,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         this.ms.getAddressService().setFrontend(this.address);
         //регистрируем Frontend в MessageSystem
         ms.addService(this);
-        this.sessionService = SS;
+        this.sessionService = new SessionService(ms);
     }
 
     /**

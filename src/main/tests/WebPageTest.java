@@ -30,13 +30,13 @@ public class WebPageTest {
     protected class TestPage extends WebPage {
         // Заглушки абстрактных методов
         @Override
-        public String handleGET(HttpServletRequest request) {
-            return null;
+        public int analyzeRequestGET(HttpServletRequest request) {
+            return 0;
         }
 
         @Override
-        public String handlePOST(HttpServletRequest request) {
-            return null;
+        public int analyzeRequestPOST(HttpServletRequest request) {
+            return 0;
         }
 
         // Обертки для методов, которые будем тестировать
@@ -73,7 +73,7 @@ public class WebPageTest {
         Map<String, Integer> checkArr = checkPage(result);
         // Печать результата
         for (String current : checkArr.keySet()) {
-            Assert.assertNotSame(ErrText + current, checkArr.get(current).intValue(), -1);
+            Assert.assertNotSame(ErrText + current, checkArr.get(current), -1);
         }
     }
 
@@ -92,7 +92,7 @@ public class WebPageTest {
         Map<String, Integer> checkArr = checkPage(result);
         // Вывод
         for (String current : checkArr.keySet()) {
-            Assert.assertNotSame(ErrText + current, checkArr.get(current).intValue(), -1);
+            Assert.assertNotSame(ErrText + current, checkArr.get(current), -1);
         }
     }
 

@@ -10,7 +10,6 @@ package Global.MessageSystem;
 public class AddressService {
     private Address accountService;
     private Address frontend;
-    private Address sessionService;
 
     @SuppressWarnings("UnusedDeclaration")
     public Address getFrontend() {
@@ -28,13 +27,5 @@ public class AddressService {
 
     public void setAccountService(Address accountService) {
         this.accountService = accountService;
-    }
-
-    public Address getSessionService() {
-        return this.sessionService;
-    }
-
-    public void setSessionService(Address sessionService) {
-        this.sessionService = sessionService;
     }
 }

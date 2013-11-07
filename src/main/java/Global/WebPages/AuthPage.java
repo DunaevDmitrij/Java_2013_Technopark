@@ -20,9 +20,31 @@ import java.util.Map;
  * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionService.
  * Наследует абстрактную веб-страницу.
  */
+
+/**
+ * Варианты обработки запросов.
+ * Допускаются только целочисленные константы.
+ */
+
 public class AuthPage extends WebPage {
+    /**
+     * Подзадачи обработки запроса на авторизацию.
+     */
+    interface Routines {
+        int FIRST_LOOK = 0;    // Первый вход на сайт
+        int ENTRY = 1;         // Вход с существующей сессией
+        int CHECK_AUTH = 2;    // Отправка данных авторизации
+    }
+
     // Осведомленность. Используется для выборки данных пользователь--сессия
     private final SessionService sessionService;
+
+    // Параметры-связки между анализом и исполнением запроса
+    private HttpSession session;
+    private Long sessionId;
+    private UserSession userSession = null;
+    private String userName;
+    private Map<String, Object> pageVariables;
 
     // конструктор
     public AuthPage(SessionService sessionService) {
@@ -31,78 +53,102 @@ public class AuthPage extends WebPage {
     }
 
     /**
-     * Переопределенный метод обработки GET запроса.
-     * @param request объект запроса, для получения данных сессии
-     * @return сгенерированная страница авторизации.
+     * Анализ GET запроса и выборка параметров к его обработке.
+     * @param request объект исследуемого запроса
+     * @return необходимый вариант обработки
      */
     @Override
-    public String handleGET(HttpServletRequest request) {
-        // Объект с данными сессии
-        HttpSession session = request.getSession();
-        Long sessionId = (Long) session.getAttribute("sessionId");
+    protected int analyzeRequestGET(HttpServletRequest request) {
+        this.session = request.getSession();
+        this.sessionId = (Long) this.session.getAttribute("sessionId");
 
-        // Контейнер с контекстом страницы
-        Map<String, Object> pageVariables;
-
-        //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
-        if (sessionId == null) {
-            sessionId = this.sessionService.getNewSessionId();
-            //передаем новый sessionId пользователю
-            session.setAttribute("sessionId", sessionId);
-            // Пользователь не авторизован
-            pageVariables = new HashMap<>();
-
-            return generatePage("auth.tml", pageVariables);
-
+        if (this.sessionId == null) {
+            // первый заход пользователя на сайт
+            return Routines.FIRST_LOOK;
         } else {
-            //пользователь заходит еще раз
-            UserSession userSession = this.sessionService.getUserInfo(sessionId);
-
-            if (userSession != null) {
-                //ожидаем пока AccountService вернет данные
-                if (userSession.isComplete()) {
-                    //проверяем, что пользователь существует
-                    if (! userSession.getUserId().equals(AccountService.USER_NOT_EXIST)) {
-                        // Заполняем контекст
-                        System.out.println("Session Id: " + sessionId);
-
-                        pageVariables = dataToKey(new String[] {"UserId", "UserName", "Time", "Session"},
-                                userSession.getUserId(), userSession.getName(), getTime(), sessionId);
-                        return generatePage("test.tml", pageVariables);
-
-                    } else {
-                        this.sessionService.closeSession(sessionId); //удаляем текущую сессию
-                        return "Такого пользователя нет";
-                    }
-                } else {
-                    //просим пользователя подождать
-                    return generatePage("wait.tml", new HashMap<String, Object>());
-                    //TODO: отправлять тут код ошибки с пустым телом или JSON, сообщающий, что идет поиск,
-                    //TODO: сделать на клиенте циклический опрос ограниченное кол-во раз, если ответа нет - сообщение
-                    //TODO: пользователю об ошибке/
-                }
-            } else {
-                return generatePage("auth.tml");
-            }
+            this.userSession = this.sessionService.getUserInfo(this.sessionId);
+            return Routines.ENTRY;
         }
     }
 
     /**
-     * Переопределенный метод обработки POST запроса.
-     * @param request параметр с данными запроса
-     * @return сгенерированная страница авторизации
+     * Анализ GET запроса и выборка параметров к его обработке.
+     * @param request объект исследуемого запроса
+     * @return необходимый вариант обработки
      */
     @Override
-    public String handlePOST(HttpServletRequest request) {
-        String userName = request.getParameter("name");
-
-        // получаем sessionId
+    protected int analyzeRequestPOST(HttpServletRequest request) {
+        // Пользователь послал свои данные на авторизацию
         HttpSession session = request.getSession();
-        Long sessionId = (Long) session.getAttribute("sessionId");
+        this.userName = request.getParameter("name");
+        this.sessionId = (Long) session.getAttribute("sessionId");
 
+        return Routines.CHECK_AUTH;
+    }
+
+    /**
+     * Обработка первого входа.
+     * @return Будет возвращена страница с формочкой авторизации
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    @CaseHandler(routine = Routines.FIRST_LOOK, reqType = RequestType.GET)
+    public String handleFirstLook() {
+        //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
+        this.sessionId = this.sessionService.getNewSessionId();
+
+        //передаем новый sessionId пользователю
+        this.session.setAttribute("sessionId", this.sessionId);
+
+        // Пользователь не авторизован
+        return generatePage("auth.tml", this.pageVariables);
+    }
+
+    /**
+     * Обработчик попытки входа на сайт с уже существующей сессией.
+     * Внутри опрос userSession о готовности.
+     * @return либо главная страница, либо ошибка, либо ожидание
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    @CaseHandler(routine = Routines.ENTRY, reqType = RequestType.GET)
+    public String handleEntry() {
+        if (this.userSession != null) {
+            //ожидаем пока AccountService вернет данные
+            if (this.userSession.isComplete()) {
+                //проверяем, что пользователь существует
+                if (! this.userSession.getUserId().equals(AccountService.USER_NOT_EXIST)) {
+                    System.out.println("Session Id: " + this.sessionId);
+
+                    // Заполняем контекст
+                    this.pageVariables = dataToKey(new String[] {"UserId", "UserName", "Time", "Session"},
+                            this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
+                    return generatePage("test.tml", this.pageVariables);
+
+                } else {
+                    this.sessionService.closeSession(this.sessionId); //удаляем текущую сессию
+                    return "Ошибка. Такого пользователя нет";
+                }
+            } else {
+                //просим пользователя подождать
+                return generatePage("wait.tml", new HashMap<String, Object>());
+                //TODO: отправлять тут код ошибки с пустым телом или JSON, сообщающий, что идет поиск,
+                //TODO: сделать на клиенте циклический опрос ограниченное кол-во раз, если ответа нет - сообщение
+                //TODO: пользователю об ошибке/
+            }
+        } else {
+            return generatePage("auth.tml");
+        }
+    }
+
+    /**
+     * Проверка введенных пользователем данных.
+     * @return страница ожидания
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    @CaseHandler(routine = Routines.CHECK_AUTH, reqType = RequestType.POST)
+    public String handleCheckAuth() {
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль
-        this.sessionService.createUserSession(sessionId, userName);
+        this.sessionService.createUserSession(this.sessionId, this.userName);
 
         // Отдаем страницу ожидания.
         return generatePage("wait.tml");

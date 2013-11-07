@@ -22,7 +22,7 @@ import static java.lang.Thread.sleep;
 /**
  * Абстракция - контейнер для UserSession. Хранит, создает и делает выборку.
  */
-public class SessionService implements Abonent, Runnable {
+public class SessionService implements Abonent {
 
     private final MessageSystem ms;
     private final Address address;
@@ -47,25 +47,12 @@ public class SessionService implements Abonent, Runnable {
         return this.address;
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            this.ms.execForAbonent(this);
-
-            try {
-                sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * Обновление идентификатора пользователя в конкретной UserSession.
      * @param sessionId идентификатор сессии нужного пользователя
      * @param userId новый идентификатор пользователя
      */
-    public void updateUserId(Long sessionId, Long userId) {
+    public synchronized void updateUserId(Long sessionId, Long userId) {
 
         UserSession userSession = this.sessionIdToUserSession.get(sessionId);
         if (userSession == null) {
@@ -107,6 +94,6 @@ public class SessionService implements Abonent, Runnable {
         // Отправляем сообщение к AccountService.
         Address accountServiceAddress = this.ms.getAddressService().getAccountService();
         Address serviceAddress = this.address;
-        this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId));
+        this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId, this));
     }
 }
