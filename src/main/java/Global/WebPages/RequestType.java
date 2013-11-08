@@ -12,5 +12,6 @@ package Global.WebPages;
  */
 enum RequestType {
     GET,
-    POST
+    POST,
+    ANY
 }

@@ -33,6 +33,7 @@ import java.util.Map;
 public abstract class WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
+
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
 
@@ -84,7 +85,8 @@ public abstract class WebPage {
             CaseHandler anno = curMethod.getAnnotation(CaseHandler.class);
 
             // Выборка нужного обработчика
-            if (anno != null && anno.routine() == routine && anno.reqType() == reqType) {
+            if (anno != null && anno.routine() == routine &&
+                    (anno.reqType() == RequestType.ANY || anno.reqType() == reqType)) {
                 try {
                     // Вызов обработчика
                     result = (String) curMethod.invoke(this);
