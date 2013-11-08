@@ -1,4 +1,4 @@
-package Global.MessageSystem;
+package Global.MsgSystem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +21,7 @@ public class AddressService {
         this.frontend = frontend;
     }
 
-    //получение адреса сервиса аккаунтов (AccountService)
+    //получение адреса сервиса аккаунтов (AccountServiceImp)
     public Address getAccountService() {
         return this.accountService;
     }

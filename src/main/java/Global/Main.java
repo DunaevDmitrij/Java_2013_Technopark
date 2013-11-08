@@ -3,8 +3,8 @@ package Global; /**
  * Date: 20.09.13
  * Time: 23:27
  */
-import Global.MessageSystem.AccountService;
-import Global.MessageSystem.MessageSystem;
+import Global.Imps.*;
+import Global.MsgSystem.MessageSystemImp;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;
@@ -38,16 +38,16 @@ public class Main {
             System.out.append("Starting at port: ").append(portString).append('\n');
         }
 
-        MessageSystem ms = new MessageSystem();
+        MessageSystem ms = new MessageSystemImp();
 
-        SessionService sessionService = new SessionService(ms);
+        SessionService sessionService = new SessionServiceImp(ms);
         Frontend frontend = new Frontend(ms, sessionService);
-        AccountService accountService = new AccountService(ms);
+        AccountService accountService = new AccountServiceImp(ms);
 
         Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         //создаем пул потоков и добавляем в него наши Frontend, Account Service и Session Service
-        ThreadPool threadPool = new ThreadPool();
+        ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, THREAD_NAME_FRONTEND);
         threadPool.startThread(accountService, THREAD_NAME_ACCOUNT_SERVICE);
         threadPool.startThread(sessionService, THREAD_NAME_SESSION_SERVICE);

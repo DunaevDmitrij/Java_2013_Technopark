@@ -1,7 +1,7 @@
-package Global.MessageSystem.Messages;
+package Global.MsgSystem.Messages;
 
-import Global.MessageSystem.Abonent;
-import Global.MessageSystem.Address;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +28,7 @@ public abstract class Msg {
         return this.to;
     }
 
-    //функция которую будет вызывать MessageSystem, без привязки к конкретному Abonent
+    //функция которую будет вызывать MsgSystem, без привязки к конкретному Abonent
     public abstract void exec(Abonent abonent);
 }
 

@@ -1,4 +1,9 @@
-package Global.MessageSystem;
+package Global.Imps;
+
+import Global.AccountService;
+import Global.MessageSystem;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +16,7 @@ import static java.lang.Thread.sleep;
  * Date: 11.10.13
  * Time: 20:21
  */
-public class AccountService implements Abonent, Runnable {
+public class AccountServiceImp implements AccountService {
 
     private final Address address;
     private final Map<String, Long> userNameToUserId;
@@ -20,13 +25,13 @@ public class AccountService implements Abonent, Runnable {
 
     public static final Long USER_NOT_EXIST = -1L;
 
-    public AccountService(MessageSystem ms) {
+    public AccountServiceImp(MessageSystem ms) {
         super();
         this.ms = ms;
         this.address = new Address();
-        //регистрируем AccountService в MessageSystem
+        //регистрируем AccountServiceImp в MsgSystem
         ms.addService(this);
-        //регестрируем AccountService в AddressService, что бы каждый мог обратиться к AccountSerivice
+        //регестрируем AccountServiceImp в AddressService, что бы каждый мог обратиться к AccountSerivice
         ms.getAddressService().setAccountService(this.address);
 
         //добавляем пользователей
@@ -43,7 +48,7 @@ public class AccountService implements Abonent, Runnable {
     }
 
     @Override
-    public void run(){
+    public void run() {
         while(true){
             this.ms.execForAbonent(this);
 
@@ -61,6 +66,7 @@ public class AccountService implements Abonent, Runnable {
      * @return UserID или USER_NOT_EXIST если пользователь не существует
      */
 
+    @Override
     public Long getUserIdByUserName(String userName)
     {
         //имитация поиска
@@ -80,7 +86,8 @@ public class AccountService implements Abonent, Runnable {
         }
     }
 
-    public MessageSystem getMessageSystem(){
+    @Override
+    public MessageSystem getMessageSystem() {
         return this.ms;
     }
 }

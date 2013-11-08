@@ -1,6 +1,7 @@
-package Global.MessageSystem;
+package Global.MsgSystem;
 
-import Global.MessageSystem.Messages.Msg;
+import Global.MessageSystem;
+import Global.MsgSystem.Messages.Msg;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Date: 12.10.13
  * Time: 10:14
  */
-public class MessageSystem implements MessageSystemI {
+public class MessageSystemImp implements MessageSystem {
     private final Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<>();
     private final AddressService addressService = new AddressService();
 

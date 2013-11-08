@@ -1,8 +1,9 @@
 package Global.WebPages;
 
-import Global.MessageSystem.AccountService;
+import Global.Imps.AccountServiceImp;
+import Global.Imps.SessionServiceImp;
+import Global.Imps.UserSession;
 import Global.SessionService;
-import Global.UserSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 
 /**
- * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionService.
+ * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionServiceImp.
  * Наследует абстрактную веб-страницу.
  */
 public class AuthPage extends WebPage {
@@ -59,10 +60,10 @@ public class AuthPage extends WebPage {
             UserSession userSession = this.sessionService.getUserInfo(sessionId);
 
             if (userSession != null) {
-                //ожидаем пока AccountService вернет данные
+                //ожидаем пока AccountServiceImp вернет данные
                 if (userSession.isComplete()) {
                     //проверяем, что пользователь существует
-                    if (! userSession.getUserId().equals(AccountService.USER_NOT_EXIST)) {
+                    if (! userSession.getUserId().equals(AccountServiceImp.USER_NOT_EXIST)) {
                         // Заполняем контекст
                         System.out.println("Session Id: " + sessionId);
 

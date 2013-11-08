@@ -1,4 +1,4 @@
-package Global.MessageSystem;
+package Global.MsgSystem;
 
 /**
  * Created with IntelliJ IDEA.

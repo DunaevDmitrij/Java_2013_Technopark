@@ -1,8 +1,8 @@
-package Global.MessageSystem.Messages;
+package Global.MsgSystem.Messages;
 
-import Global.Frontend;
-import Global.MessageSystem.Abonent;
-import Global.MessageSystem.Address;
+import Global.Imps.Frontend;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,7 +1,8 @@
-package Global.MessageSystem.Messages;
+package Global.MsgSystem.Messages;
 
-import Global.MessageSystem.AccountService;
-import Global.MessageSystem.Address;
+import Global.AccountService;
+import Global.Imps.AccountServiceImp;
+import Global.MsgSystem.Address;
 
 /**
  * Created with IntelliJ IDEA.

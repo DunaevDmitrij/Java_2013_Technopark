@@ -1,8 +1,9 @@
-package Global.MessageSystem.Messages;
-import Global.SessionService;
+package Global.MsgSystem.Messages;
+import Global.Imps.SessionServiceImp;
 
-import Global.MessageSystem.Abonent;
-import Global.MessageSystem.Address;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
+import Global.SessionService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,11 +17,11 @@ public abstract class MsgToSS extends Msg{
         super(from, to);
     }
 
-    //проверяем что Abonent принадлежит SessionService
+    //проверяем что Abonent принадлежит SessionServiceImp
     @Override
     public void exec(Abonent abonent) {
         if(abonent instanceof SessionService){
-            //вызываем выполнение сообщения для SessionService
+            //вызываем выполнение сообщения для SessionServiceImp
             this.exec((SessionService) abonent);
         }
     }

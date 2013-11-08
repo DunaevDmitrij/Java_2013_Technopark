@@ -1,7 +1,8 @@
-import Global.MessageSystem.Abonent;
-import Global.MessageSystem.Address;
-import Global.MessageSystem.MessageSystem;
-import Global.MessageSystem.Messages.Msg;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
+import Global.MessageSystem;
+import Global.MsgSystem.MessageSystemImp;
+import Global.MsgSystem.Messages.Msg;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class MessageSystemTest {
 
     @Before
     public void setUp() throws Exception {
-        this.ms = new MessageSystem();
+        this.ms = new MessageSystemImp();
     }
 
     @Test

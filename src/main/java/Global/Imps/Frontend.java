@@ -1,8 +1,9 @@
-package Global;
+package Global.Imps;
 
-import Global.MessageSystem.MessageSystem;
-import Global.MessageSystem.Address;
-import Global.MessageSystem.Abonent;
+import Global.MessageSystem;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
+import Global.SessionService;
 import Global.WebPages.WebPage;
 import Global.WebPages.AuthPage;
 
@@ -35,7 +36,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         this.address = new Address();
         // регистрируем Frontend в AddressService
         this.ms.getAddressService().setFrontend(this.address);
-        //регистрируем Frontend в MessageSystem
+        //регистрируем Frontend в MsgSystem
         ms.addService(this);
         this.sessionService = SS;
     }

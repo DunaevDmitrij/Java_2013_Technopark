@@ -1,6 +1,4 @@
-package Global;
-
-import Global.MessageSystem.AccountService;
+package Global.Imps;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,13 +11,13 @@ public class UserSession
     private final String name;
     private final Long sessionId;
     private Long userId;
-    private Boolean isComplete; //устанавливается в true, когда AccountService завершит обработку
+    private Boolean isComplete; //устанавливается в true, когда AccountServiceImp завершит обработку
 
     public UserSession(Long sessionId, String name) {
         super();
         this.sessionId = sessionId;
         this.name = name;
-        this.userId = AccountService.USER_NOT_EXIST;
+        this.userId = AccountServiceImp.USER_NOT_EXIST;
         this.isComplete = false;
     }
 

@@ -1,13 +1,14 @@
-package Global.MessageSystem;
+package Global;
 
-import Global.MessageSystem.Messages.Msg;
-
+import Global.MsgSystem.Messages.Msg;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.AddressService;
 /**
  * Author: artemlobachev
  * Date: 19.10.13
  */
 @SuppressWarnings("UnusedDeclaration")//Created for tests and will be used in tests.
-public interface MessageSystemI {
+public interface MessageSystem {
     void addService(Abonent abonent);
 
     boolean sendMessage(Msg message);

@@ -22,8 +22,10 @@ public class AdminPageServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
+
         Map<String, Object> pageVariables = new HashMap<>();
         String timeString = request.getParameter("shutdown");
+
         if (timeString != null) {
             int timeMS = Integer.valueOf(timeString);
             new Thread(new ShutdownTask(timeMS)).start();
@@ -33,6 +35,7 @@ public class AdminPageServlet extends HttpServlet {
             response.getWriter().println(WebPage.generatePage("admin.tml", pageVariables));
             return;
         }
+
         pageVariables.put("status", "run");
         response.getWriter().println(WebPage.generatePage("admin.tml", pageVariables));
     }

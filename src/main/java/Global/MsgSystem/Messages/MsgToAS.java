@@ -1,8 +1,9 @@
-package Global.MessageSystem.Messages;
+package Global.MsgSystem.Messages;
 
-import Global.MessageSystem.Abonent;
-import Global.MessageSystem.AccountService;
-import Global.MessageSystem.Address;
+import Global.AccountService;
+import Global.Imps.AccountServiceImp;
+import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Address;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,11 +18,11 @@ public abstract class MsgToAS extends Msg{
         super(from, to);
     }
 
-    //проверяем что Abonent принадлежит AccountService
+    //проверяем что Abonent принадлежит AccountServiceImp
     @Override
     public void exec(Abonent abonent) {
         if(abonent instanceof AccountService){
-            //вызываем выполнение сообщения для AccountService
+            //вызываем выполнение сообщения для AccountServiceImp
             this.exec((AccountService) abonent);
         }
     }
