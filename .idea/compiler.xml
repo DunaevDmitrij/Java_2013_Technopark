@@ -25,6 +25,9 @@
         <module name="Java_2013_Technopark" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Java_2013_Technopark" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 
