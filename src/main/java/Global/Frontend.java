@@ -5,7 +5,6 @@ import Global.MessageSystem.Address;
 import Global.MessageSystem.Abonent;
 import Global.WebPages.PageDispatcher;
 import Global.WebPages.WebPage;
-import Global.WebPages.AuthPage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

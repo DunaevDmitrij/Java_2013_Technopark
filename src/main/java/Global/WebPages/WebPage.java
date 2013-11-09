@@ -78,7 +78,6 @@ public abstract class WebPage {
      */
     protected String chooseCaseHandler(int routine, RequestType reqType) {
         Method[] methods = this.getClass().getDeclaredMethods();
-        String result = null;
 
         // Цикл по всем методам текущего класса
         for (Method curMethod : methods) {
@@ -89,14 +88,17 @@ public abstract class WebPage {
                     (anno.reqType() == RequestType.ANY || anno.reqType() == reqType)) {
                 try {
                     // Вызов обработчика
-                    result = (String) curMethod.invoke(this);
+                    return (String) curMethod.invoke(this);
                 } catch (Exception e) {
-                    System.out.println("Error: in chooseCaseHandlerGet. " + routine + "\n" + this.getClass());
+                    System.out.println("Error: invoke  " + routine + " routine"+ "\n" + this.getClass());
+                    this.Status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
                 }
-                break;
             }
         }
-        return result;
+        this.Status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        System.out.println("Error: routine " + routine + " " + reqType + " not found\n");
+
+        return "";
     }
 
     /**

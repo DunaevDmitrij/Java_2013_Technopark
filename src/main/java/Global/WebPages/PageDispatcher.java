@@ -4,6 +4,7 @@ import Global.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,14 +27,15 @@ public class PageDispatcher {
 
 
     public PageDispatcher(SessionService sessionService) {
+        super();
         this.sessionService = sessionService;
-        createPages();
+        this.createPages();
     }
 
     private void createPages() {
         this.pages = new HashMap<>();
-        pages.put(Urls.HOME_ADRS, new HomePage());
-        pages.put(Urls.AUTH_ADRS, new AuthPage(this.sessionService));
+        this.pages.put(Urls.HOME_ADRS, new HomePage());
+        this.pages.put(Urls.AUTH_ADRS, new AuthPage(this.sessionService));
     }
 
     public WebPage getPage(String url) {
@@ -41,7 +43,7 @@ public class PageDispatcher {
     }
 
     public String redirect(String url, HttpServletRequest request) {
-        WebPage target = getPage(url);
+        WebPage target = this.getPage(url);
         return target.handleGET(request);
     }
 
