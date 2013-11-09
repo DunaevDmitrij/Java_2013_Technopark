@@ -80,6 +80,7 @@ public class Main {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(adminPageServlet), AdminPageServletImp.adminPageURL);
+
         context.addServlet(new ServletHolder(frontend), "/*");
 
         HandlerList handlers = makeServerHandlers();

@@ -1,9 +1,6 @@
 package Global.WebPages;
 
 import Global.SessionService;
-import Global.WebPages.AuthPage;
-import Global.WebPages.HomePage;
-import Global.WebPages.WebPageImp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
