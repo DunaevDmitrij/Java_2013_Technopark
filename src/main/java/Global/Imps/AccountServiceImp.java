@@ -22,8 +22,6 @@ public class AccountServiceImp implements AccountService {
     private final MessageSystem ms;
     private static final int WAIT_BEFORE_ANSWER = 5000;
 
-    public static final Long USER_NOT_EXIST = -1L;
-
     public AccountServiceImp(MessageSystem ms) {
         super();
         this.ms = ms;

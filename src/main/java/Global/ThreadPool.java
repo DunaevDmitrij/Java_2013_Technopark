@@ -2,7 +2,7 @@ package Global;
 
 /**
  * Created with IntelliJ IDEA.
- * User: max
+ * User: Kislenko Maksim
  * Date: 08.11.13
  * Time: 22:18
  */

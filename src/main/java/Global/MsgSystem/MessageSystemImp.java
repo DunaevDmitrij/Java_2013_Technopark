@@ -1,6 +1,8 @@
 package Global.MsgSystem;
 
+import Global.AccountService;
 import Global.Address;
+import Global.Imps.AccountServiceImp;
 import Global.MessageSystem;
 import Global.MsgSystem.Messages.Msg;
 
@@ -31,7 +33,7 @@ public class MessageSystemImp implements MessageSystem {
         try {
             messageQueue.add(message);
             result = true;
-        }catch (Exception e){
+        } catch (Exception e) {
            result = false;
         }
         return result;
@@ -40,9 +42,7 @@ public class MessageSystemImp implements MessageSystem {
     @Override
     public void execForAbonent(Abonent abonent) {
         Queue<Msg> messageQueue = this.messages.get(abonent.getAddress());
-        if(messageQueue == null) {
-            return;
-        }
+
         while(!messageQueue.isEmpty()){
             Msg message = messageQueue.poll();
             message.exec(abonent);

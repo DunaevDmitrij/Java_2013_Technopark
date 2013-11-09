@@ -1,6 +1,7 @@
 package Global.MsgSystem.Messages;
 
 import Global.AccountService;
+import Global.Imps.AccountServiceImp;
 import Global.MsgSystem.Abonent;
 import Global.Address;
 
@@ -17,11 +18,11 @@ public abstract class MsgToAS extends Msg{
         super(from, to);
     }
 
-    //проверяем что Abonent принадлежит AccountServiceImp
+    //проверяем что Abonent принадлежит AccountService
     @Override
     public void exec(Abonent abonent) {
         if(abonent instanceof AccountService){
-            //вызываем выполнение сообщения для AccountServiceImp
+            //вызываем выполнение сообщения для AccountService
             this.exec((AccountService) abonent);
         }
     }

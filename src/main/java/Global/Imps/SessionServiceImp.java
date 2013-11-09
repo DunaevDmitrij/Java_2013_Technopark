@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Kislenko Maksim
@@ -35,29 +33,14 @@ public class SessionServiceImp implements SessionService {
         super();
 
         this.ms = ms;
-        this.address= new Address();
+        this.address = new Address();
         //регистрируем в MsgSystem
         ms.addService(this);
-        //регестрируем в AddressService, чтобы каждый мог обратиться к SessionSerivice
-        ms.getAddressService().setAccountService(this.address);
     }
 
     @Override
     public Address getAddress() {
         return this.address;
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            this.ms.execForAbonent(this);
-
-            try {
-                sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -66,8 +49,7 @@ public class SessionServiceImp implements SessionService {
      * @param userId новый идентификатор пользователя
      */
     @Override
-    public void updateUserId(Long sessionId, Long userId) {
-
+    public synchronized void updateUserId(Long sessionId, Long userId) {
         UserSession userSession = this.sessionIdToUserSession.get(sessionId);
         if (userSession == null) {
             // Обработка неожиданности
@@ -104,7 +86,6 @@ public class SessionServiceImp implements SessionService {
      */
     @Override
     public void createUserSession(Long sessionId, String userName) {
-
         UserSession userSession = new UserSession(sessionId, userName);
         //добавляем в sessionIdToUserSession
         this.sessionIdToUserSession.put(sessionId, userSession);
@@ -112,6 +93,6 @@ public class SessionServiceImp implements SessionService {
         // Отправляем сообщение к AccountServiceImp.
         Address accountServiceAddress = this.ms.getAddressService().getAccountService();
         Address serviceAddress = this.address;
-        this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId));
+        this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId, this));
     }
 }

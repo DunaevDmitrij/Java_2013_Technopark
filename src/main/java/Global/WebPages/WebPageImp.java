@@ -5,8 +5,10 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,16 +25,16 @@ import java.util.Map;
 /**
  *  Абстрактная веб-страница.
  *  Содержит в себе общие методы (к примеру: возврат текущего времени), и методы,
- *  которые требуется переопределить в потомках (генерация страниц по запросу).
+ *  которые требуется переопределить в потомках (анализ запроса).
  *  Является прародителем всех остальных классов страниц.
- *
- *  Содержит в себе метод для создания объектов страниц.
  */
 
+//-------------------------------------------------------------------------------------------------
 @SuppressWarnings("CanBeFinal")
 public abstract class WebPageImp implements WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
+
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
 
@@ -43,6 +45,63 @@ public abstract class WebPageImp implements WebPage {
         super();
         // Статус по умолчанию
         this.Status = HttpServletResponse.SC_OK;
+    }
+
+    /**
+     * Методы анализа http запроса. Соответственно для GET и POST.
+     * @param request сам запрос
+     * @return возвращают вариант обработки
+     */
+    protected abstract int analyzeRequestGET(HttpServletRequest request);
+    protected abstract int analyzeRequestPOST(HttpServletRequest request);
+
+
+    /** Методы для генерации страниц по запросу соответствующего типа.
+     * @param request объект запроса, для получения данных сессии
+     * @return  возвращают сгенерированную страницу
+     */
+    @Override
+    public String handleGET(HttpServletRequest request) {
+        int routine = this.analyzeRequestGET(request);
+        return this.chooseCaseHandler(routine, RequestType.GET);
+    }
+
+    @Override
+    public String handlePOST(HttpServletRequest request) {
+        int routine = this.analyzeRequestPOST(request);
+        return this.chooseCaseHandler(routine, RequestType.POST);
+    }
+
+    /**
+     * Рефлексивный вызов обработчика для соответствующего варианта routine,
+     * определенного при анализе запроса. Метод наследуется.
+     * @param routine путь обработки
+     * @param reqType тип запроса
+     * @return страница, полученная от обработчика
+     */
+    protected String chooseCaseHandler(int routine, RequestType reqType) {
+        Method[] methods = this.getClass().getDeclaredMethods();
+
+        // Цикл по всем методам текущего класса
+        for (Method curMethod : methods) {
+            CaseHandler anno = curMethod.getAnnotation(CaseHandler.class);
+
+            // Выборка нужного обработчика
+            if (anno != null && anno.routine() == routine &&
+                    (anno.reqType() == RequestType.ANY || anno.reqType() == reqType)) {
+                try {
+                    // Вызов обработчика
+                    return (String) curMethod.invoke(this);
+                } catch (Exception e) {
+                    System.out.println("Error: invoke  " + routine + " routine"+ "\n" + this.getClass());
+                    this.Status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                }
+            }
+        }
+        this.Status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        System.out.println("Error: routine " + routine + " " + reqType + " not found\n");
+
+        return "";
     }
 
     /**

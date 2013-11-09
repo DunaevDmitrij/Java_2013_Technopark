@@ -12,7 +12,6 @@ import Global.Address;
 public class AddressService {
     private Address accountService;
     private Address frontend;
-    private Address sessionService;
 
     @SuppressWarnings("UnusedDeclaration")
     public Address getFrontend() {
@@ -30,15 +29,5 @@ public class AddressService {
 
     public void setAccountService(Address accountService) {
         this.accountService = accountService;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public Address getSessionService() {
-        return this.sessionService;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void setSessionService(Address sessionService) {
-        this.sessionService = sessionService;
     }
 }

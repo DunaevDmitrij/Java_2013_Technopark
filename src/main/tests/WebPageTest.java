@@ -30,13 +30,13 @@ public class WebPageTest {
     protected class TestPage extends WebPageImp {
         // Заглушки абстрактных методов
         @Override
-        public String handleGET(HttpServletRequest request) {
-            return null;
+        public int analyzeRequestGET(HttpServletRequest request) {
+            return 0;
         }
 
         @Override
-        public String handlePOST(HttpServletRequest request) {
-            return null;
+        public int analyzeRequestPOST(HttpServletRequest request) {
+            return 0;
         }
 
         // Обертки для методов, которые будем тестировать
