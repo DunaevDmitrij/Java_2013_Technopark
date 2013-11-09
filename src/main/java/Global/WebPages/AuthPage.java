@@ -30,11 +30,9 @@ public class AuthPage extends WebPage {
     /**
      * Подзадачи обработки запроса на авторизацию.
      */
-    interface Routines {
-        int FIRST_LOOK = 0;    // Первый вход на сайт
-        int ENTRY = 1;         // Вход с существующей сессией
-        int CHECK_AUTH = 2;    // Отправка данных авторизации
-    }
+    private static final int FIRST_LOOK = 0;    // Первый вход на сайт
+    private static final int ENTRY = 1;         // Вход с существующей сессией
+    private static final int CHECK_AUTH = 2;    // Отправка данных авторизации
 
     // Осведомленность. Используется для выборки данных пользователь--сессия
     private final SessionService sessionService;
@@ -64,10 +62,10 @@ public class AuthPage extends WebPage {
 
         if (this.sessionId == null) {
             // первый заход пользователя на сайт
-            return Routines.FIRST_LOOK;
+            return FIRST_LOOK;
         } else {
             this.userSession = this.sessionService.getUserInfo(this.sessionId);
-            return Routines.ENTRY;
+            return ENTRY;
         }
     }
 
@@ -83,7 +81,7 @@ public class AuthPage extends WebPage {
         this.userName = request.getParameter("name");
         this.sessionId = (Long) session.getAttribute("sessionId");
 
-        return Routines.CHECK_AUTH;
+        return CHECK_AUTH;
     }
 
     /**
@@ -91,7 +89,7 @@ public class AuthPage extends WebPage {
      * @return Будет возвращена страница с формочкой авторизации
      */
     @SuppressWarnings("UnusedDeclaration")
-    @CaseHandler(routine = Routines.FIRST_LOOK, reqType = RequestType.GET)
+    @CaseHandler(routine = FIRST_LOOK, reqType = RequestType.GET)
     public String handleFirstLook() {
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
         this.sessionId = this.sessionService.getNewSessionId();
@@ -109,7 +107,7 @@ public class AuthPage extends WebPage {
      * @return либо главная страница, либо ошибка, либо ожидание
      */
     @SuppressWarnings("UnusedDeclaration")
-    @CaseHandler(routine = Routines.ENTRY, reqType = RequestType.GET)
+    @CaseHandler(routine = ENTRY, reqType = RequestType.GET)
     public String handleEntry() {
         if (this.userSession != null) {
             //ожидаем пока AccountService вернет данные
@@ -144,7 +142,7 @@ public class AuthPage extends WebPage {
      * @return страница ожидания
      */
     @SuppressWarnings("UnusedDeclaration")
-    @CaseHandler(routine = Routines.CHECK_AUTH, reqType = RequestType.POST)
+    @CaseHandler(routine = CHECK_AUTH, reqType = RequestType.POST)
     public String handleCheckAuth() {
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль

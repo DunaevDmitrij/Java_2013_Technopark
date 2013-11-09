@@ -10,21 +10,19 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HomePage extends WebPage {
 
-    interface Routines {
-        int ENTRY = 0;
-    }
+    private static final int ENTRY = 0;
 
     @Override
     protected int analyzeRequestGET(HttpServletRequest request) {
-        return Routines.ENTRY;
+        return ENTRY;
     }
 
     @Override
     protected int analyzeRequestPOST(HttpServletRequest request) {
-        return Routines.ENTRY;
+        return ENTRY;
     }
 
-    @CaseHandler(routine = Routines.ENTRY, reqType = RequestType.ANY)
+    @CaseHandler(routine = ENTRY, reqType = RequestType.ANY)
     public String handleEntry() {
         return generatePage("home.tml");
     }
