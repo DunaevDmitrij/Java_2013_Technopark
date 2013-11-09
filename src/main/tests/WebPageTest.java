@@ -1,4 +1,4 @@
-import Global.WebPages.WebPage;
+import Global.WebPages.WebPageImp;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class WebPageTest {
      * Класс, наследник WbPage, для тестирования.
      * Используется для локального вскрытия закрытых и защищенных методов WebPage.
      */
-    protected class TestPage extends WebPage {
+    protected class TestPage extends WebPageImp {
         // Заглушки абстрактных методов
         @Override
         public String handleGET(HttpServletRequest request) {

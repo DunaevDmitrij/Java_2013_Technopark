@@ -1,5 +1,7 @@
 package Global.MsgSystem;
 
+import Global.Address;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim

@@ -1,6 +1,6 @@
 package Global;
 
-import Global.WebPages.WebPage;
+import Global.WebPages.WebPageImp;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,12 +32,12 @@ public class AdminPageServlet extends HttpServlet {
 
 
             pageVariables.put("status", "Server will be down after: " + timeMS + " ms");
-            response.getWriter().println(WebPage.generatePage("admin.tml", pageVariables));
+            response.getWriter().println(WebPageImp.generatePage("admin.tml", pageVariables));
             return;
         }
 
         pageVariables.put("status", "run");
-        response.getWriter().println(WebPage.generatePage("admin.tml", pageVariables));
+        response.getWriter().println(WebPageImp.generatePage("admin.tml", pageVariables));
     }
 
     private class ShutdownTask implements Runnable {

@@ -1,5 +1,6 @@
 package Global.MsgSystem;
 
+import Global.Address;
 import Global.MessageSystem;
 import Global.MsgSystem.Messages.Msg;
 

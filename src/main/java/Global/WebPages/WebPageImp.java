@@ -1,10 +1,10 @@
 package Global.WebPages;
 
+import Global.WebPage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.DateFormat;
@@ -30,24 +30,16 @@ import java.util.Map;
  */
 
 @SuppressWarnings("CanBeFinal")
-public abstract class WebPage {
+public abstract class WebPageImp implements WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();
 
-    /** Методы для генерации страниц по соответствующему запросу.
-     *  Должны анализировать сессию, создавать контекст и вызывать генерацию (generatePage()).
-     * @param request объект запроса, для получения данных сессии
-     * @return  возвращает сгенерированную страницу
-     */
-    public abstract String handleGET(HttpServletRequest request);
-    public abstract String handlePOST(HttpServletRequest request);
-
     /**
      * Конструктор без параметров. Используется для инициализации полей.
      */
-    protected WebPage() {
+    protected WebPageImp() {
         super();
         // Статус по умолчанию
         this.Status = HttpServletResponse.SC_OK;
@@ -110,6 +102,7 @@ public abstract class WebPage {
      * Метод возвращает текущий статус объекта страницы.
      * @return значение статуса (HttpServletResponse.SC_#)
      */
+    @Override
     public int getStatus() {
         return this.Status;
     }

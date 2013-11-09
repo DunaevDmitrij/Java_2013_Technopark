@@ -1,7 +1,6 @@
 package Global.MsgSystem.Messages;
 
-import Global.Imps.SessionServiceImp;
-import Global.MsgSystem.Address;
+import Global.Address;
 import Global.SessionService;
 
 /**

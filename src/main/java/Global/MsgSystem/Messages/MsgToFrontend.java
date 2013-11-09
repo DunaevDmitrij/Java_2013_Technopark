@@ -2,7 +2,7 @@ package Global.MsgSystem.Messages;
 
 import Global.Imps.Frontend;
 import Global.MsgSystem.Abonent;
-import Global.MsgSystem.Address;
+import Global.Address;
 
 /**
  * Created with IntelliJ IDEA.

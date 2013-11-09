@@ -2,9 +2,9 @@ package Global.Imps;
 
 import Global.MessageSystem;
 import Global.MsgSystem.Abonent;
-import Global.MsgSystem.Address;
+import Global.Address;
 import Global.SessionService;
-import Global.WebPages.WebPage;
+import Global.WebPage;
 import Global.WebPages.AuthPage;
 
 import javax.servlet.ServletException;

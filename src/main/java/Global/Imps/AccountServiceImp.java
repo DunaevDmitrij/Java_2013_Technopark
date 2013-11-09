@@ -2,8 +2,7 @@ package Global.Imps;
 
 import Global.AccountService;
 import Global.MessageSystem;
-import Global.MsgSystem.Abonent;
-import Global.MsgSystem.Address;
+import Global.Address;
 
 import java.util.HashMap;
 import java.util.Map;

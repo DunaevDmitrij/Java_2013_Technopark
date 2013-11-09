@@ -1,7 +1,6 @@
 package Global.WebPages;
 
 import Global.Imps.AccountServiceImp;
-import Global.Imps.SessionServiceImp;
 import Global.Imps.UserSession;
 import Global.SessionService;
 
@@ -21,7 +20,7 @@ import java.util.Map;
  * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionServiceImp.
  * Наследует абстрактную веб-страницу.
  */
-public class AuthPage extends WebPage {
+public class AuthPage extends WebPageImp {
     // Осведомленность. Используется для выборки данных пользователь--сессия
     private final SessionService sessionService;
 

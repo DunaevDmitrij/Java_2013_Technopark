@@ -1,6 +1,6 @@
-import Global.MsgSystem.Abonent;
-import Global.MsgSystem.Address;
 import Global.MessageSystem;
+import Global.MsgSystem.Abonent;
+import Global.Address;
 import Global.MsgSystem.MessageSystemImp;
 import Global.MsgSystem.Messages.Msg;
 import junit.framework.Assert;
