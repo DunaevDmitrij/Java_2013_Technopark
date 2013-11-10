@@ -39,6 +39,8 @@ public class Main {
         return new Server(port);
     }
 
+    //TODO то, что этот метод возращает обЪект Frontend, вносит страшную путаницу
+    //TODO вариант исправления: метод, который возвращает context
     private static Frontend makeComponents() {
         MessageSystem ms = new MessageSystemImp();
         AccountService accountService = new AccountServiceImp(ms);

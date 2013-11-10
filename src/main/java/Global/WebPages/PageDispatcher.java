@@ -17,6 +17,11 @@ public class PageDispatcher {
     private final SessionService sessionService;
     private Map<String, WebPageImp> pages;
 
+
+    /*
+    TODO: предполагаю, что эти константы нам понадобятся вне этого класса, поэтому надо сделать для него интерфейс и внутри него сделать эти константы доступными
+    пример, где это может понадобиться: в Main для переадресации, в страницах для построения
+    */
     // Здесь и далее: все URL-ы записываются как константы.
     private static final String URL_AUTH = "/auth";
     private static final String URL_HOME = "/home";
