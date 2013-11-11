@@ -32,14 +32,12 @@ public class ThreadPoolImp implements ThreadPool {
     }
 
     @Override
-    @SuppressWarnings("UnusedDeclaration")//will be used in nearest feature
     public void interruptThread(String name){
         this.getThreadByName(name).interrupt();
     }
 
 
     @Override
-    @SuppressWarnings("UnusedDeclaration") //will be used in nearest feature
     public boolean isThreadAlive(String name){
         return this.getThreadByName(name).isAlive();
     }

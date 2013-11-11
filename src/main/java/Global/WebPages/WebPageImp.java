@@ -30,7 +30,6 @@ import java.util.Map;
  */
 
 //-------------------------------------------------------------------------------------------------
-@SuppressWarnings("CanBeFinal")
 public abstract class WebPageImp implements WebPage {
     // Переменная для хранения статуса текущей обработки.
     protected int Status;      // нельзя final - наследуется

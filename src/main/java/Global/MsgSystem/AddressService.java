@@ -13,7 +13,7 @@ public class AddressService {
     private Address accountService;
     private Address frontend;
 
-    @SuppressWarnings("UnusedDeclaration")
+
     public Address getFrontend() {
         return this.frontend;
     }

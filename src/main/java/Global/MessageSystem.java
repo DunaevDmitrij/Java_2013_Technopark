@@ -7,7 +7,7 @@ import Global.MsgSystem.AddressService;
  * Author: artemlobachev
  * Date: 19.10.13
  */
-@SuppressWarnings("UnusedDeclaration")//Created for tests and will be used in tests.
+
 public interface MessageSystem {
     void addService(Abonent abonent);
 

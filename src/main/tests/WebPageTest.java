@@ -50,7 +50,7 @@ public class WebPageTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.testInstance = new TestPage();
     }
 

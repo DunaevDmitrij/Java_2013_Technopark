@@ -83,7 +83,7 @@ public class AuthPage extends WebPageImp {
      * Обработка первого входа.
      * @return Будет возвращена страница с формочкой авторизации
      */
-    @SuppressWarnings("UnusedDeclaration")
+
     @CaseHandler(routine = FIRST_LOOK, reqType = RequestType.GET)
     public String handleFirstLook() {
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
@@ -101,7 +101,7 @@ public class AuthPage extends WebPageImp {
      * Внутри опрос userSession о готовности.
      * @return либо главная страница, либо ошибка, либо ожидание
      */
-    @SuppressWarnings("UnusedDeclaration")
+
     @CaseHandler(routine = ENTRY, reqType = RequestType.GET)
     public String handleEntry() {
         if (this.userSession != null) {
@@ -136,7 +136,7 @@ public class AuthPage extends WebPageImp {
      * Проверка введенных пользователем данных.
      * @return страница ожидания
      */
-    @SuppressWarnings("UnusedDeclaration")
+
     @CaseHandler(routine = CHECK_AUTH, reqType = RequestType.POST)
     public String handleCheckAuth() {
         // Отправляем sessionId для построения нового объекта UserSession

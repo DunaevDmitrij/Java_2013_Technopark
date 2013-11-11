@@ -35,13 +35,13 @@ public class AdminPage extends WebPageImp implements WebPage {
         return 0;
     }
 
-    @SuppressWarnings("UnusedDeclaration") //все по хитрому - он вызывается неявно используя рефлексию
+
     @CaseHandler(routine = REQ_TYPE_SHUTDOWN, reqType = RequestType.POST)
     public String shutdown(){
         ShutdownTask shutdownTask = new ShutdownTask(this.sleepBeworeShutdown);
         Thread shutdownTaskThread = new Thread(shutdownTask);
         shutdownTaskThread.start();
-        return new String("Server will shut down after "+ this.sleepBeworeShutdown + " ms");
+        return "Server will shut down after " + this.sleepBeworeShutdown + " ms";
     }
 
     private class ShutdownTask implements Runnable {

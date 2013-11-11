@@ -21,7 +21,6 @@ public class UserSession
         this.isComplete = false;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public Long getSessionId(){
         return this.sessionId;
     }

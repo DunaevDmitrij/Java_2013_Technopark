@@ -1,6 +1,6 @@
+import Global.Address;
 import Global.MessageSystem;
 import Global.MsgSystem.Abonent;
-import Global.Address;
 import Global.MsgSystem.MessageSystemImp;
 import Global.MsgSystem.Messages.Msg;
 import junit.framework.Assert;
@@ -17,7 +17,7 @@ public class MessageSystemTest {
     private MessageSystem ms;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.ms = new MessageSystemImp();
     }
 
@@ -81,7 +81,6 @@ public class MessageSystemTest {
     private class Reciver implements Abonent {
         private final Address address;
         private String message;
-        @SuppressWarnings("UnusedDeclaration")
         private final MessageSystem ms;
 
         public Reciver(MessageSystem ms){
