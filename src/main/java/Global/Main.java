@@ -78,10 +78,10 @@ public class Main {
         Frontend frontend = makeComponents();
         Server server = makeServer(args);
 
-        AdminPageServlet adminPageServlet = new AdminPageServletImp();
+        //AdminPageServlet adminPageServlet = new AdminPage();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(adminPageServlet), AdminPageServletImp.adminPageURL);
+        //context.addServlet(new ServletHolder(adminPageServlet), AdminPage.adminPageURL);
 
         context.addServlet(new ServletHolder(frontend), "/*");
 

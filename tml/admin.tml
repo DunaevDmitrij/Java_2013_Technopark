@@ -3,7 +3,7 @@
 <title>Admin Page</title>
 </head>
 <body>
-<form>
+<form method="POST">
 <input type="text" id="shutdown" name="shutdown"/>
 <button type="submit">Убить, нельзя помиловать!</button>
 </form>

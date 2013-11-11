@@ -25,6 +25,7 @@ public class PageDispatcher {
     // Здесь и далее: все URL-ы записываются как константы.
     private static final String URL_AUTH = "/auth";
     private static final String URL_HOME = "/home";
+    private static final String URL_ADMIN_PAGE = "/admin";
 
 
     public PageDispatcher(SessionService sessionService) {
@@ -37,6 +38,7 @@ public class PageDispatcher {
         this.pages = new HashMap<>();
         this.pages.put(URL_HOME, new HomePage());
         this.pages.put(URL_AUTH, new AuthPage(this.sessionService));
+        this.pages.put(URL_ADMIN_PAGE, new AdminPage());
     }
 
     public WebPageImp getPage(String url) {
