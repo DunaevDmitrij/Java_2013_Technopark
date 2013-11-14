@@ -1,47 +1,90 @@
 package Global.WebPages;
 
-import Global.WebPage;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Author: artemlobachev
  * Date: 02.11.13
  */
-public class AdminPage extends WebPageImp implements WebPage {
-    private static final int REQ_TYPE_SHUTDOWN = 1;
-    private int sleepBeworeShutdown;
 
+// TODO: Артем, посмотри на изменения. Здесь также добавлен пример обработки ошибок в Runtime с отображением на странице.
 
-    @Override
-    public String handleGET(HttpServletRequest request){
-        this.Status = HttpServletResponse.SC_OK;
-        return WebPageImp.generatePage("admin.tml");
+public class AdminPage extends WebPageImp {
+    private static final int ENTRY = 0;         // простой вход на сайт
+    private static final int REQ_SHUTDOWN = 1;  // запрос остановки сервера
+    private static final int EMPTY_INPUT = 2;   // пример: ошибка ввода
+
+    // Базовый шаблон
+    private static final String TEMPLATE = "admin.tml";
+
+    private int sleepBeforeShutdown;
+    private final Map<String, Object> pageVariables;   // Контекст шаблона
+
+    /**
+     * Здесь заполняются значения контекста по умолчанию.
+     */
+    public AdminPage() {
+        super();
+        this.pageVariables = new HashMap<>();
+        // Изначально ошибок нет
+        this.pageVariables.put("errors", new String[] {});
     }
 
     @Override
     protected int analyzeRequestGET(HttpServletRequest request) {
-        return 0;
+        return ENTRY;
     }
+
 
     @Override
     protected int analyzeRequestPOST(HttpServletRequest request) {
         String timeString = request.getParameter("shutdown");
+
         if (timeString != null) {
-            this.sleepBeworeShutdown = Integer.valueOf(timeString);
-            return REQ_TYPE_SHUTDOWN;
+            if (timeString.isEmpty()) {
+                return EMPTY_INPUT;
+            }
+
+            this.sleepBeforeShutdown = Integer.valueOf(timeString);
+            return REQ_SHUTDOWN;
         }
-        return 0;
+        return ENTRY;
+    }
+
+    /**
+     * Простой вход на страницу администратора.
+     * @return возврат шаблона с контекстом по умолчанию.
+     */
+    @CaseHandler(routine = ENTRY, reqType = RequestType.ANY)
+    public String handleENTRY() {
+        this.Status = HttpServletResponse.SC_OK;
+        return generatePage(TEMPLATE, this.pageVariables);
     }
 
 
-    @CaseHandler(routine = REQ_TYPE_SHUTDOWN, reqType = RequestType.POST)
-    public String shutdown(){
-        ShutdownTask shutdownTask = new ShutdownTask(this.sleepBeworeShutdown);
+    /**
+     * Запрос об остановке сервера.
+     * @return информационное сообщение обостановке
+     */
+    @CaseHandler(routine = REQ_SHUTDOWN, reqType = RequestType.POST)
+    public String handleShutdown() {
+        ShutdownTask shutdownTask = new ShutdownTask(this.sleepBeforeShutdown);
         Thread shutdownTaskThread = new Thread(shutdownTask);
         shutdownTaskThread.start();
-        return "Server will shut down after " + this.sleepBeworeShutdown + " ms";
+        return "Server will shut down after " + this.sleepBeforeShutdown + " ms";
+    }
+
+    /**
+     * Обработчик ошибки пустого ввода.
+     * @return шаблон с контекстом, у которого обновлено поле errors
+     */
+    @CaseHandler(routine = EMPTY_INPUT, reqType = RequestType.POST)
+    public String handleEmptyInput() {
+        this.pageVariables.put("errors", new String[] {"Empty Input"});
+        return generatePage(TEMPLATE, this.pageVariables);
     }
 
     private class ShutdownTask implements Runnable {

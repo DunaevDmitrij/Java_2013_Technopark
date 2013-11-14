@@ -5,7 +5,8 @@ import Global.MsgSystem.Abonent;
 import Global.Address;
 import Global.SessionService;
 import Global.WebPage;
-import Global.WebPages.PageDispatcher;
+import Global.PageDispatcher;
+import Global.WebPages.PageDispatcherImp;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         ms.addService(this);
 
         SessionService sessionService = new SessionServiceImp(ms);
-        this.dispatcher = new PageDispatcher(sessionService);
+        this.dispatcher = new PageDispatcherImp(sessionService);
     }
 
     /**
@@ -87,9 +88,9 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         } else {
             // Получение страницы строкой. Выполняет анализ сессии, выборку контента и генерацию страницы.
             String pageStr = page.handleGET(request);
-            response.getWriter().println(pageStr);
             // Установка статуса после выполнения handleGET
             response.setStatus(page.getStatus());
+            response.getWriter().println(pageStr);
         }
     }
 
@@ -115,9 +116,9 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         } else {
             // Генерация страницы
             String pageStr = page.handlePOST(request);
-            response.getWriter().println(pageStr);
             // Установка статуса
             response.setStatus(page.getStatus());
+            response.getWriter().println(pageStr);
         }
     }
 

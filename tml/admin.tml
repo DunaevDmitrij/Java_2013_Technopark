@@ -1,11 +1,19 @@
 <html>
+
 <head>
-<title>Admin Page</title>
+  <title>Admin Page</title>
 </head>
+
 <body>
-<form method="POST">
-<input type="text" id="shutdown" name="shutdown"/>
-<button type="submit">Убить, нельзя помиловать!</button>
-</form>
+  <div id="errors">
+    <#list errors as err>
+      <p> <b>Error: </b> ${err}</p>
+    </#list>
+  </div>
+  <form method="POST">
+    <input type="text" id="shutdown" name="shutdown"/>
+    <button type="submit">Убить, нельзя помиловать!</button>
+  </form>
 </body>
+
 </html>

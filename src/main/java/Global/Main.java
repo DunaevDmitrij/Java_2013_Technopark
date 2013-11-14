@@ -24,8 +24,15 @@ public class Main {
     private static final String TN_FRONTEND = "Frontend";
     private static final String TN_ACCOUNT_SERVICE = "AS";
 
+    /**
+     * Создание объекта сервера.
+     * Внутри осуществляется выбор номера порта.
+     * @param args параметры запуска приложения.
+     * @return объект Server.
+     */
     private static Server makeServer(String args[]) {
-        //проверяем наличие параметра порт. Если не передан - запускаемся на порту по умолчанию(переменная DEFAULT_SERVER_PORT).
+        //проверяем наличие параметра порт.
+        // Если не передан - запускаемся на порту по умолчанию(переменная DEFAULT_SERVER_PORT).
         int port;
         if (args.length < 1) {
             System.out.append("No port in parametrs. Using default port " + DEFAULT_SERVER_PORT + ".\n");
@@ -39,20 +46,10 @@ public class Main {
         return new Server(port);
     }
 
-    //TODO то, что этот метод возращает обЪект Frontend, вносит страшную путаницу
-    //TODO вариант исправления: метод, который возвращает context
-    private static Frontend makeComponents() {
-        MessageSystem ms = new MessageSystemImp();
-        AccountService accountService = new AccountServiceImp(ms);
-        Frontend frontend = new Frontend(ms);
-
-        ThreadPool threadPool = new ThreadPoolImp();
-        threadPool.startThread(frontend, TN_FRONTEND);
-        threadPool.startThread(accountService, TN_ACCOUNT_SERVICE);
-
-        return frontend;
-    }
-
+    /**
+     * Создание и настройка обработчиков для внутренних нужд сервера.
+     * @return Список обработчиков.
+     */
     private static HandlerList makeServerHandlers() {
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(false); // не показывать содержание директории при переходе по /
@@ -74,12 +71,18 @@ public class Main {
         return handlers;
     }
 
-    public static void main(String args[ ])throws Exception {
-        Frontend frontend = makeComponents();
+    public static void main(String args[]) throws Exception {
+        MessageSystem ms = new MessageSystemImp();
+        AccountService accountService = new AccountServiceImp(ms);
+        Frontend frontend = new Frontend(ms);
+
+        ThreadPool threadPool = new ThreadPoolImp();
+        threadPool.startThread(frontend, TN_FRONTEND);
+        threadPool.startThread(accountService, TN_ACCOUNT_SERVICE);
+
         Server server = makeServer(args);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-
         context.addServlet(new ServletHolder(frontend), "/*");
 
         HandlerList handlers = makeServerHandlers();

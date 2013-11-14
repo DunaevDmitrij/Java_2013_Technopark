@@ -60,13 +60,13 @@ public abstract class WebPageImp implements WebPage {
      * @return  возвращают сгенерированную страницу
      */
     @Override
-    public String handleGET(HttpServletRequest request) {
+    public final String handleGET(HttpServletRequest request) {
         int routine = this.analyzeRequestGET(request);
         return this.chooseCaseHandler(routine, RequestType.GET);
     }
 
     @Override
-    public String handlePOST(HttpServletRequest request) {
+    public final String handlePOST(HttpServletRequest request) {
         int routine = this.analyzeRequestPOST(request);
         return this.chooseCaseHandler(routine, RequestType.POST);
     }
@@ -94,6 +94,7 @@ public abstract class WebPageImp implements WebPage {
                 } catch (Exception e) {
                     System.out.println("Error: invoke  " + routine + " routine"+ "\n" + this.getClass());
                     this.Status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                    return "";
                 }
             }
         }
