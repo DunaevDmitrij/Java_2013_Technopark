@@ -1,5 +1,7 @@
 package Global.WebPages;
 
+import Global.WebPage;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -11,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * Домашняя страница сайта. Соответствующий URL /home.
  */
 
-public class HomePage extends WebPageImp {
+public class HomePage extends WebPageImp implements WebPage {
     private static final int ENTRY = 0;
 
     private static final String TEMPLATE = "home.tml";

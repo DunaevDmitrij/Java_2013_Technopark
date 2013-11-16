@@ -3,6 +3,7 @@ package Global.WebPages;
 import Global.AccountService;
 import Global.Imps.UserSession;
 import Global.SessionService;
+import Global.WebPage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,7 +22,7 @@ import java.util.Map;
  * Наследует абстрактную веб-страницу.
  */
 
-public class AuthPage extends WebPageImp {
+public class AuthPage extends WebPageImp implements WebPage {
     /**
      * Подзадачи обработки запроса на авторизацию.
      */
