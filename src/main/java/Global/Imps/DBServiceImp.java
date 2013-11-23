@@ -13,13 +13,7 @@ import Global.Address;
 import Global.DBService;
 import Global.MessageSystem;
 
-import javax.management.Query;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Map;
+import java.sql.*;
 
 import static java.lang.Thread.sleep;
 
@@ -31,8 +25,8 @@ public class DBServiceImp implements DBService {
     //параметры подключения к базе
     private static final String serverName = "localhost";
     private static final String database = "PlaneDB";
-    private static final String dbUser = "aviauser";
-    private static final String dbPassword = "aviapassword";
+    private static final String dbUser = "PlaneDB";
+    private static final String dbPassword = "PlaneDB";
     private static final String dbUrl = "jdbc:mysql://" + serverName + "/" + database;
 
     private Connection connect;
@@ -74,7 +68,7 @@ public class DBServiceImp implements DBService {
         String queryString = "SELECT `idUser` FROM `User` WHERE `Login` = '"+login+"' AND `Password` = md5('"+password+"') LIMIT 1";
 
         try {
-            QueryResultWrapper qrw = query(queryString);
+            QueryResultWrapper qrw = this.query(queryString);
 
             if (qrw.rowCounts() == 1)
             {

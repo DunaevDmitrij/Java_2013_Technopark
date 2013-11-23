@@ -11,12 +11,6 @@ import Global.MsgSystem.Abonent;
  */
 public interface DBService extends Abonent, Runnable {
 
-    @Override
-    Address getAddress();
-
-    @Override
-    void run();
-
     public MessageSystem getMessageSystem();
 
     //Получение ID пользователя по логину и паролю
