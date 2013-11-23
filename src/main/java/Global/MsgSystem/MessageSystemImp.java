@@ -1,8 +1,6 @@
 package Global.MsgSystem;
 
-import Global.AccountService;
 import Global.Address;
-import Global.Imps.AccountServiceImp;
 import Global.MessageSystem;
 import Global.MsgSystem.Messages.Msg;
 

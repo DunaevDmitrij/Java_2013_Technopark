@@ -10,10 +10,7 @@ import Global.MsgSystem.Abonent;
  * Time: 22:10
  */
 
-public interface SessionService extends Abonent {
-    @Override
-    Address getAddress();
-
+public interface SessionService {
     void createUserSession(Long sessionId, String userName);
     void closeSession(Long sessionId);
 

@@ -2,6 +2,7 @@ package Global.MsgSystem.Messages;
 
 import Global.AccountService;
 import Global.Address;
+import Global.Imps.Frontend;
 import Global.SessionService;
 
 /**
@@ -13,19 +14,18 @@ import Global.SessionService;
 public class MsgGetUserId extends MsgToAS {
     private final String name;
     private final Long sessionId;
-    private final SessionService poster;
 
-    public MsgGetUserId(Address from, Address to, String name, Long sessionId, SessionService callBack) {
+    public MsgGetUserId(Address from, Address to, String name, Long sessionId) {
         super(from, to);
         this.name = name;
         this.sessionId = sessionId;
-        this.poster = callBack;
     }
 
     @Override
     void exec(AccountService accountService) {
         Long userId = accountService.getUserIdByUserName(this.name);
-        this.poster.updateUserId(this.sessionId, userId);
+        accountService.getMessageSystem().sendMessage(
+                new MsgUpdateUserId(this.getTo(), this.getFrom(), userId, this.sessionId));
     }
 }
 

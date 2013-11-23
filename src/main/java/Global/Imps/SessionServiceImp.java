@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SessionServiceImp implements SessionService {
 
     private final MessageSystem ms;
-    private final Address address;
     // Счетчик для раздачи идентификаторов новым сессиям.
     private final AtomicLong sessionIdCounter = new AtomicLong();
     // Контейнер - отображение sessionId на UserSession.
@@ -31,16 +30,7 @@ public class SessionServiceImp implements SessionService {
 
     public SessionServiceImp(MessageSystem ms) {
         super();
-
         this.ms = ms;
-        this.address = new Address();
-        //регистрируем в MsgSystem
-        ms.addService(this);
-    }
-
-    @Override
-    public Address getAddress() {
-        return this.address;
     }
 
     /**
@@ -49,7 +39,7 @@ public class SessionServiceImp implements SessionService {
      * @param userId новый идентификатор пользователя
      */
     @Override
-    public synchronized void updateUserId(Long sessionId, Long userId) {
+    public void updateUserId(Long sessionId, Long userId) {
         UserSession userSession = this.sessionIdToUserSession.get(sessionId);
         if (userSession == null) {
             // Обработка неожиданности
@@ -92,7 +82,7 @@ public class SessionServiceImp implements SessionService {
 
         // Отправляем сообщение к AccountServiceImp.
         Address accountServiceAddress = this.ms.getAddressService().getAccountService();
-        Address serviceAddress = this.address;
-        this.ms.sendMessage(new MsgGetUserId(serviceAddress, accountServiceAddress, userName, sessionId, this));
+        Address frontendAddress = this.ms.getAddressService().getFrontend();
+        this.ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
     }
 }
