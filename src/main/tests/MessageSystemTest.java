@@ -3,7 +3,7 @@ import Global.MessageSystem;
 import Global.MsgSystem.Abonent;
 import Global.MsgSystem.MessageSystemImp;
 import Global.MsgSystem.Messages.Msg;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
  * Author: artemlobachev
  * Date: 19.10.13
  */
-@SuppressWarnings("deprecation") //JUnit 4 doesn't like class Assert.
+
 public class MessageSystemTest {
 
     private MessageSystem ms;
@@ -48,8 +48,9 @@ public class MessageSystemTest {
         this.ms.execForAbonent(reciver);
 
         Assert.assertEquals(ErrText, reciver.getMessage(), tstMessage);
-
     }
+
+
 
     /**
      * Message class for tests.
