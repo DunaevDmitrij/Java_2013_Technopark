@@ -1,5 +1,5 @@
 import Global.WebPages.WebPageImp;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  * Модульные тесты для класса WebPage
  * (тестируются методы, которые затем наследуются остальными менеджерами страниц)
  */
-@SuppressWarnings("deprecation") //JUnit 4 doesn't like class Assert.
+
 public class WebPageTest {
     // Объект тестирования
     private TestPage testInstance;
