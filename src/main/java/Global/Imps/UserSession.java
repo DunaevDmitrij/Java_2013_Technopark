@@ -1,5 +1,7 @@
 package Global.Imps;
 
+import Global.DBService;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim
@@ -17,7 +19,7 @@ public class UserSession
         super();
         this.sessionId = sessionId;
         this.name = name;
-        this.userId = AccountServiceImp.USER_NOT_EXIST;
+        this.userId = DBServiceImp.USER_NOT_EXIST;
         this.isComplete = false;
     }
 

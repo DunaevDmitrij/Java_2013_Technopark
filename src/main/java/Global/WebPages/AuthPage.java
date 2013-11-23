@@ -1,6 +1,7 @@
 package Global.WebPages;
 
-import Global.Imps.AccountServiceImp;
+import Global.DBService;
+import Global.Imps.DBServiceImp;
 import Global.Imps.UserSession;
 import Global.SessionService;
 
@@ -62,7 +63,7 @@ public class AuthPage extends WebPageImp {
                 //ожидаем пока AccountServiceImp вернет данные
                 if (userSession.isComplete()) {
                     //проверяем, что пользователь существует
-                    if (! userSession.getUserId().equals(AccountServiceImp.USER_NOT_EXIST)) {
+                    if (! userSession.getUserId().equals(DBServiceImp.USER_NOT_EXIST)) {
                         // Заполняем контекст
                         System.out.println("Session Id: " + sessionId);
 

@@ -42,7 +42,7 @@ public class Main {
 
         SessionService sessionService = new SessionServiceImp(ms);
         Frontend frontend = new Frontend(ms, sessionService);
-        AccountService accountService = new AccountServiceImp(ms);
+        DBService accountService = new DBServiceImp(ms);
 
         Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
