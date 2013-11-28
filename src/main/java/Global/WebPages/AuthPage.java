@@ -94,6 +94,8 @@ public class AuthPage extends WebPageImp implements WebPage {
         this.session.setAttribute("sessionId", this.sessionId);
 
         // Пользователь не авторизован
+        this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
+                "Authetication page","Enter your account name");
         return generatePage("auth.tml", this.pageVariables);
     }
 
@@ -113,9 +115,9 @@ public class AuthPage extends WebPageImp implements WebPage {
                     System.out.println("Session Id: " + this.sessionId);
 
                     // Заполняем контекст
-                    this.pageVariables = dataToKey(new String[] {"Page_Title", "Location","UserId", "UserName", "Time", "Session"},
-                            "Authetication page","Enter your account name",this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
-                    return generatePage("auth.tml", this.pageVariables);
+                    this.pageVariables = dataToKey(new String[] {"PageTitle", "Location","UserId", "UserName", "Time", "Session"},
+                            "Shtaa?","Your data",this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
+                    return generatePage("temp.tml", this.pageVariables);
 
                 } else {
                     this.sessionService.closeSession(this.sessionId); //удаляем текущую сессию
@@ -129,7 +131,7 @@ public class AuthPage extends WebPageImp implements WebPage {
                 //TODO: пользователю об ошибке/
             }
         } else {
-            this.pageVariables = dataToKey(new String[] {"Page_Title", "Location"},
+            this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
                     "Authetication page","Enter your account name");
             return generatePage("auth.tml", this.pageVariables);
         }

@@ -5,6 +5,6 @@
 <#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
-    <h1>Hello<h1>
+    Hello, ${UserName}. Your userID: ${UserId}.
 
 <#include "contentToFooter.html">

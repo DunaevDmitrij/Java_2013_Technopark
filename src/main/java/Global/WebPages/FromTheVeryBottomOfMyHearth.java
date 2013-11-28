@@ -50,9 +50,9 @@ public class FromTheVeryBottomOfMyHearth extends WebPageImp implements WebPage {
     public String handleEntry() {
         // Nu poka bez proverok s if i prochim, glavnoe otrisovshik
             // Zapolnenie dannimi (pervie 2 sv'azani so strukturoj shablona)
-        this.pageVariables = dataToKey(new String[] {"Page_Title", "Location"},
+        this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
                 "So much bottom of my hearth","So much test page");
-        return generatePage("test.tml",pageVariables);
+        return generatePage(TEMPLATE,pageVariables);
     }
 
 }
