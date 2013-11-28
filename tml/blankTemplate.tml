@@ -1,0 +1,9 @@
+<#-- Vars: Page_Title -->
+<#include "headToAdditions.html">
+    <#-- Put your SCRIPTS and STYLESHEETS after here -->
+
+<#-- Vars: Location -->
+<#include "endOfAdditionsToContent.html">
+    <#-- Put your CONTENT after here -->
+
+<#include "contentToFooter.html">
