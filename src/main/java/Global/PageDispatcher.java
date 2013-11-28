@@ -16,6 +16,7 @@ public interface PageDispatcher {
     String URL_AUTH = "/auth";
     String URL_HOME = "/home";
     String URL_ADMIN = "/admin";
+    String URL_FROM_THE_VERY_BOTTOM_OF_MY_HEARTH = "/omg_so_test";
 
     WebPageImp getPage(String url);
 

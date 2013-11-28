@@ -1,8 +1,10 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-</head>
-<body>
-Здравствуйте, ${UserName}, ваш userId: ${UserId}.
-</body>
-</html>
+<#-- Vars: Page_Title -->
+<#include "headToAdditions.html">
+    <#-- Put your SCRIPTS and STYLESHEETS after here -->
+
+<#-- Vars: Location -->
+<#include "endOfAdditionsToContent.html">
+    <#-- Put your CONTENT after here -->
+    <center><h1>Zdarova, banditi</h1></center>
+
+<#include "contentToFooter.html">

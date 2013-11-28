@@ -29,6 +29,7 @@ public class PageDispatcherImp implements PageDispatcher {
         this.pages.put(URL_HOME, new HomePage());
         this.pages.put(URL_AUTH, new AuthPage(this.sessionService));
         this.pages.put(URL_ADMIN, new AdminPage());
+        this.pages.put(URL_FROM_THE_VERY_BOTTOM_OF_MY_HEARTH, new FromTheVeryBottomOfMyHearth());
     }
 
     @Override
