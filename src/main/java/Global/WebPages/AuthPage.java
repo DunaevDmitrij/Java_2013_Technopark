@@ -113,9 +113,9 @@ public class AuthPage extends WebPageImp implements WebPage {
                     System.out.println("Session Id: " + this.sessionId);
 
                     // Заполняем контекст
-                    this.pageVariables = dataToKey(new String[] {"UserId", "UserName", "Time", "Session"},
-                            this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
-                    return generatePage("test.tml", this.pageVariables);
+                    this.pageVariables = dataToKey(new String[] {"Page_Title", "Location","UserId", "UserName", "Time", "Session"},
+                            "Authetication page","Enter your account name",this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
+                    return generatePage("auth.tml", this.pageVariables);
 
                 } else {
                     this.sessionService.closeSession(this.sessionId); //удаляем текущую сессию
@@ -129,7 +129,9 @@ public class AuthPage extends WebPageImp implements WebPage {
                 //TODO: пользователю об ошибке/
             }
         } else {
-            return generatePage("auth.tml");
+            this.pageVariables = dataToKey(new String[] {"Page_Title", "Location"},
+                    "Authetication page","Enter your account name");
+            return generatePage("auth.tml", this.pageVariables);
         }
     }
 

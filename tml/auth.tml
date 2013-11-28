@@ -1,8 +1,16 @@
-<html>
-<body>
-<form method="post" action="/auth">
-name : <input type="text" name="name"> <br>
-<input type="submit">
-</form>
-</body>
-</html>
+<#-- Vars: Page_Title -->
+<#include "headToAdditions.html">
+    <#-- Put your SCRIPTS and STYLESHEETS after here -->
+    <link rel="stylesheet" type="text/css" href="css/authForm.css" />
+
+<#-- Vars: Location -->
+<#include "endOfAdditionsToContent.html">
+      <#-- Put your CONTENT after here -->
+      <form class="auth" method="POST" action="/auth">
+        <div>Name:<div>
+        <input type="text" name="name"/>
+        <br>
+        <input type="submit"/>
+      </form>
+
+<#include "contentToFooter.html">

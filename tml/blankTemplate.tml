@@ -4,6 +4,6 @@
 
 <#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">
-    <#-- Put your CONTENT after here -->
+      <#-- Put your CONTENT after here -->
 
 <#include "contentToFooter.html">
