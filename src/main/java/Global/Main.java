@@ -17,7 +17,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class Main {
 
-    private static final String MAIN_PAGE_ADDRESS = "/auth";
+    private static final String MAIN_PAGE_ADDRESS = "/main";
     private static final String STATIC_DIR = "static";
     private static final int DEFAULT_SERVER_PORT = 8080;
 

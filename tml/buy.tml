@@ -2,8 +2,10 @@
 <#include "headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
 
-<#-- Vars: Location, --Pages-- -->
+<#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">
-      <#-- Put your CONTENT after here -->
+    <#-- Put your CONTENT after here -->
+    
+    <h1>Someday information about ticket will be here</h1>
 
 <#include "contentToFooter.html">
