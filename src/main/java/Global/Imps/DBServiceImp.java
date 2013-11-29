@@ -37,11 +37,10 @@ public class DBServiceImp implements DBService {
     private static final String dbPassword = "PlaneDB";
     private static final String dbUrl = "jdbc:mysql://" + serverName + "/" + database;
 
+    private Connection connect;
     private static final String SQL_DIR = "sql";
     private static final Configuration CFG = new Configuration();
-    private Map<String, Object> queryVariables;
-
-    private Connection connect;
+    private Map<String, Object> pageVariables;
 
     private static class QueryWrapper {
         private ResultSet rs;
@@ -89,12 +88,11 @@ public class DBServiceImp implements DBService {
 
     @Override
     public Long getUserIdByUserName(String login, String password) {
-        this.queryVariables = dataToKey(new String[] {"login", "password"},
-                                                       login,   password);
-        String queryString = generateSQL("userid_by_name.sql", this.queryVariables);
+        this.pageVariables = dataToKey(new String [] { "login", "password" },
+                                                        login,   password);
+        String queryString = generateSQL("userid_by_name.sql", this.pageVariables);
 
         System.out.println(queryString);
-
         try {
             QueryWrapper qrw = QueryWrapper.query(queryString, this.connect);
             if (qrw.rowCounts() == 1)
@@ -102,13 +100,13 @@ public class DBServiceImp implements DBService {
                 qrw.getResultSet().next();
                 return qrw.getResultSet().getLong("idUser"); //возвращает ID пользователя
             }
+            // TODO: and otherwise? (!= 1)
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return USER_NOT_EXIST;
     }
-
 
     private static String generateSQL(String templateName, Map<String, Object> context) {
         Writer stream = new StringWriter();
