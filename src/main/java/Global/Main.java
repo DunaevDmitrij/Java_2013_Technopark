@@ -22,7 +22,7 @@ public class Main {
     private static final int DEFAULT_SERVER_PORT = 8080;
 
     private static final String TN_FRONTEND = "Frontend";
-    private static final String TN_ACCOUNT_SERVICE = "AS";
+    private static final String TN_DB_SERVICE = "DB";
 
     /**
      * Создание объекта сервера.
@@ -73,12 +73,12 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
         MessageSystem ms = new MessageSystemImp();
-        AccountService accountService = new AccountServiceImp(ms);
+        DBService dbService = new DBServiceImp(ms);
         Frontend frontend = new Frontend(ms);
 
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
-        threadPool.startThread(accountService, TN_ACCOUNT_SERVICE);
+        threadPool.startThread(dbService, TN_DB_SERVICE);
 
         Server server = makeServer(args);
 

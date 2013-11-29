@@ -1,9 +1,7 @@
 package Global.MsgSystem.Messages;
 
-import Global.AccountService;
 import Global.Address;
-import Global.Imps.Frontend;
-import Global.SessionService;
+import Global.DBService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +9,7 @@ import Global.SessionService;
  * Date: 12.10.13
  * Time: 10:26
  */
-public class MsgGetUserId extends MsgToAS {
+public class MsgGetUserId extends MsgToDB {
     private final String name;
     private final Long sessionId;
 
@@ -22,10 +20,9 @@ public class MsgGetUserId extends MsgToAS {
     }
 
     @Override
-    void exec(AccountService accountService) {
-        Long userId = accountService.getUserIdByUserName(this.name);
-        accountService.getMessageSystem().sendMessage(
-                new MsgUpdateUserId(this.getTo(), this.getFrom(), userId, this.sessionId));
+    void exec(DBService dbService) {
+        Long id = dbService.getUserIdByUserName(this.name, "root");    //FIXME:
+        dbService.getMessageSystem().sendMessage(new MsgUpdateUserId(this.getTo(), this.getFrom(), this.sessionId, id));
     }
 }
 
