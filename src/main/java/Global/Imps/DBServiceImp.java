@@ -11,8 +11,17 @@ package Global.Imps;
 import Global.Address;
 import Global.DBService;
 import Global.MessageSystem;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
@@ -28,6 +37,10 @@ public class DBServiceImp implements DBService {
     private static final String dbPassword = "PlaneDB";
     private static final String dbUrl = "jdbc:mysql://" + serverName + "/" + database;
 
+    private static final String SQL_DIR = "sql";
+    private static final Configuration CFG = new Configuration();
+    private Map<String, Object> queryVariables;
+
     private Connection connect;
 
     private static class QueryWrapper {
@@ -35,6 +48,7 @@ public class DBServiceImp implements DBService {
         private String queryString;
 
         private QueryWrapper(String queryString) {
+            super();
             this.queryString = queryString;
         }
 
@@ -57,7 +71,7 @@ public class DBServiceImp implements DBService {
         }
 
         public ResultSet getResultSet() {
-            return rs;
+            return this.rs;
         }
     }
 
@@ -75,7 +89,11 @@ public class DBServiceImp implements DBService {
 
     @Override
     public Long getUserIdByUserName(String login, String password) {
-        String queryString = "SELECT `idUser` FROM `User` WHERE `Login` = '"+login+"' AND `Password` = md5('"+password+"') LIMIT 1";
+        this.queryVariables = dataToKey(new String[] {"login", "password"},
+                                                       login,   password);
+        String queryString = generateSQL("userid_by_name.sql", this.queryVariables);
+
+        System.out.println(queryString);
 
         try {
             QueryWrapper qrw = QueryWrapper.query(queryString, this.connect);
@@ -84,12 +102,33 @@ public class DBServiceImp implements DBService {
                 qrw.getResultSet().next();
                 return qrw.getResultSet().getLong("idUser"); //возвращает ID пользователя
             }
-            // TODO: and otherwise? (!= 1)
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return USER_NOT_EXIST;
+    }
+
+
+    private static String generateSQL(String templateName, Map<String, Object> context) {
+        Writer stream = new StringWriter();
+        try {
+            Template template = CFG.getTemplate(SQL_DIR + File.separator + templateName);
+            template.process(context, stream);
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return stream.toString();
+    }
+
+    private static Map<String, Object> dataToKey(String[] keys, Object ... values) {
+        Map<String, Object> map = new HashMap<>();
+        // Цикл по элементам массива ключей
+        for (int I = 0; I < keys.length; ++I) {
+            map.put(keys[I], values[I]);
+        }
+        return map;
     }
 
     @Override
