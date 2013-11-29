@@ -30,16 +30,29 @@ public class DBServiceImp implements DBService {
 
     private Connection connect;
 
-    private class QueryResultWrapper {
+    private static class QueryWrapper {
         private ResultSet rs;
-        QueryResultWrapper(ResultSet resultSet) {
-            rs = resultSet;
+        private String queryString;
+
+        private QueryWrapper(String queryString) {
+            this.queryString = queryString;
+        }
+
+        public static QueryWrapper query(String queryString, Connection connect) throws SQLException {
+            QueryWrapper qrw = new QueryWrapper(queryString);
+            qrw.internalQuery(connect);
+            return qrw;
+        }
+
+        private void internalQuery(Connection connect) throws SQLException {
+            Statement statement = connect.createStatement();
+            this.rs = statement.executeQuery(this.queryString);
         }
 
         public int rowCounts() throws SQLException {
-            rs.last();
-            final int rowCounts = rs.getRow();
-            rs.beforeFirst();
+            this.rs.last();
+            final int rowCounts = this.rs.getRow();
+            this.rs.beforeFirst();
             return rowCounts;
         }
 
@@ -54,10 +67,10 @@ public class DBServiceImp implements DBService {
         this.address = new Address();
         //регистрируем DBServiceImp в MsgSystem
         ms.addService(this);
-        //регестрируем DBServiceImp в AddressService, что бы каждый мог обратиться к DBService
+        //регестрируем DBServiceImp в AddressService, чтобы каждый мог обратиться к DBService
         ms.getAddressService().setAccountService(this.address);
 
-        connect = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        this.connect = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
     @Override
@@ -65,23 +78,18 @@ public class DBServiceImp implements DBService {
         String queryString = "SELECT `idUser` FROM `User` WHERE `Login` = '"+login+"' AND `Password` = md5('"+password+"') LIMIT 1";
 
         try {
-            QueryResultWrapper qrw = this.query(queryString);
-
+            QueryWrapper qrw = QueryWrapper.query(queryString, this.connect);
             if (qrw.rowCounts() == 1)
             {
                 qrw.getResultSet().next();
                 return qrw.getResultSet().getLong("idUser"); //возвращает ID пользователя
             }
+            // TODO: and otherwise? (!= 1)
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return USER_NOT_EXIST;
-    }
-
-    private QueryResultWrapper query(String queryString) throws SQLException {
-        Statement statement = connect.createStatement();
-        return new QueryResultWrapper(statement.executeQuery(queryString));
     }
 
     @Override

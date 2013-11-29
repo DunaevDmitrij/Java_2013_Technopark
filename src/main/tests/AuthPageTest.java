@@ -21,7 +21,7 @@ public class AuthPageTest {
     @Before
     public void setUp() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getPathInfo()).thenReturn();
+        // when(request.getPathInfo()).thenReturn();
     }
 
     @Test
