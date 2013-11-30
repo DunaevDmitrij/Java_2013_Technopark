@@ -12,6 +12,7 @@ import Global.Address;
 public class AddressService {
     private Address accountService;
     private Address frontend;
+    private Address resSystem;
 
 
     public Address getFrontend() {
@@ -29,5 +30,13 @@ public class AddressService {
 
     public void setAccountService(Address accountService) {
         this.accountService = accountService;
+    }
+
+    public Address getResSystem() {
+        return this.resSystem;
+    }
+
+    public void setResSystem(Address resSystem) {
+        this.resSystem = resSystem;
     }
 }
