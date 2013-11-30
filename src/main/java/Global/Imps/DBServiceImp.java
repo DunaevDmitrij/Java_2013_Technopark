@@ -23,6 +23,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
 
 public class DBServiceImp implements DBService {
@@ -88,8 +89,10 @@ public class DBServiceImp implements DBService {
 
     @Override
     public Long getUserIdByUserName(String login, String password) {
+        //заполнение sql скрипта
         this.pageVariables = dataToKey(new String [] { "login", "password" },
                                                         login,   password);
+        //формирование sql скрипта
         String queryString = generateSQL("userid_by_name.sql", this.pageVariables);
 
         System.out.println(queryString);
@@ -100,7 +103,6 @@ public class DBServiceImp implements DBService {
                 qrw.getResultSet().next();
                 return qrw.getResultSet().getLong("idUser"); //возвращает ID пользователя
             }
-            // TODO: and otherwise? (!= 1)
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -118,15 +120,6 @@ public class DBServiceImp implements DBService {
             return null;
         }
         return stream.toString();
-    }
-
-    private static Map<String, Object> dataToKey(String[] keys, Object ... values) {
-        Map<String, Object> map = new HashMap<>();
-        // Цикл по элементам массива ключей
-        for (int I = 0; I < keys.length; ++I) {
-            map.put(keys[I], values[I]);
-        }
-        return map;
     }
 
     @Override

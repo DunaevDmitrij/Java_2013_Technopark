@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Global.Utilities.dataToKey;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Kislenko Maksim
