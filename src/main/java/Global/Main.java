@@ -15,6 +15,8 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import java.util.HashMap;
+
 
 public class Main {
 
@@ -77,7 +79,8 @@ public class Main {
         MessageSystem ms = new MessageSystemImp();
         AccountService accountService = new AccountServiceImp(ms);
         Frontend frontend = new Frontend(ms);
-        ResourceSystem resSystem = ResourceSystemImp.getInstance(ms);
+
+        ResourceSystem resSystem = new ResourceSystemImp(ms);
 
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);

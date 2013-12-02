@@ -3,7 +3,8 @@ package Global.ResSystem;
 import Global.Address;
 import Global.MessageSystem;
 import Global.ResourceSystem;
-import Global.ResSystem.ReflectionHelper;
+
+import java.io.File;
 
 import static java.lang.Thread.sleep;
 
@@ -12,32 +13,13 @@ import static java.lang.Thread.sleep;
  * User: Kislenko Maksim
  * Date: 23.11.13
  * Time: 8:44
- * Singleton.
  */
 
 public class ResourceSystemImp implements ResourceSystem {
-    private static ResourceSystemImp Instance;
-    // private static final String RES_DIR = "/resources/";
     private final Address address;
     private final MessageSystem ms;
 
-    /**
-     * Singleton реализация.
-     * @param ms ссылка на систему сообщений
-     * @return возвращает ссылку на объект ресурсной системы
-     */
-    public static ResourceSystem getInstance(MessageSystem ms) {
-        if (Instance == null) {
-            Instance = new ResourceSystemImp(ms);
-        }
-        return Instance;
-    }
-
-    public static ResourceSystem getInstance() {
-        return Instance;
-    }
-
-    private ResourceSystemImp(MessageSystem ms) {
+    public ResourceSystemImp(MessageSystem ms) {
         super();
         this.ms = ms;
         this.address = new Address();
@@ -45,6 +27,30 @@ public class ResourceSystemImp implements ResourceSystem {
         ms.getAddressService().setResSystem(this.address);
     }
 
+    public void loadData() {
+
+    }
+
+    @Override
+    public <ValueType>
+    ValueType getParam(String name) {
+        return this.<SysParam<ValueType>> search(PARAMS, name).getValue();
+    }
+
+    @Override
+    public Staff getStaffInfo(String login) {
+        return this.search(PARAMS, login);
+    }
+
+    private <ResType extends XML_Convertable>
+    ResType search(String fileName, String uniqueValue) {
+        return null;
+    }
+
+    @Override
+    public void append(String fileName, XML_Convertable record) {
+        return;
+    }
 
     @Override
     public Address getAddress() {

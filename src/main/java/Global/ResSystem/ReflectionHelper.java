@@ -27,16 +27,15 @@ public class ReflectionHelper {
             }
 
             return Class.forName(className).getConstructor(arg_types).newInstance(args);
-        } catch (IllegalArgumentException |
-                 SecurityException |
-                 IllegalAccessException |
-                 InstantiationException |
-                 InvocationTargetException |
-                 NoSuchMethodException |
-                 ClassNotFoundException e) {
+        } catch (SecurityException |
+                InstantiationException |
+                IllegalAccessException |
+                ClassNotFoundException |
+                InvocationTargetException |
+                NoSuchMethodException |
+                IllegalArgumentException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -61,9 +60,9 @@ public class ReflectionHelper {
 
             field.setAccessible(false);
         } catch (SecurityException |
-                 NoSuchFieldException |
-                 IllegalArgumentException |
-                 IllegalAccessException e) {
+                IllegalAccessException |
+                NoSuchFieldException |
+                IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
