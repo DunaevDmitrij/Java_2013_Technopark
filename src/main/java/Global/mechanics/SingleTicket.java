@@ -17,6 +17,14 @@ public class SingleTicket {
     public SingleTicket(long id, String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel) {
         super();
         this.isTemporary = false;
+        this.id = id;
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureTime = departureTime;
+        this.flightTime = flightTime;
+        this.flightNumber = flightNumber;
+        this.seatClass = seatClass;
+        this.planeModel = planeModel;
     }
     /*
     For temporary tickets (in search).
@@ -24,6 +32,13 @@ public class SingleTicket {
     public SingleTicket(String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel) {
         super();
         this.isTemporary = true;
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureTime = departureTime;
+        this.flightTime = flightTime;
+        this.flightNumber = flightNumber;
+        this.seatClass = seatClass;
+        this.planeModel = planeModel;
     }
 
     //TODO: do we need to save SingleTickets or only big ticket?
