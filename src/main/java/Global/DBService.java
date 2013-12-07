@@ -16,6 +16,15 @@ public interface DBService extends Abonent, Runnable {
     public MessageSystem getMessageSystem();
 
     //Получение ID пользователя по логину и паролю
-    //Если логина нет в БД, либо пароль не верен, возвращается USER_NOT_EXIST
+    //Если логина нет в БД или пароль не верен, возвращается USER_NOT_EXIST
     Long getUserIdByUserName(String login, String password);
+
+    //создание нового пользователя
+    boolean createUser(String login, String password);
+
+    //удаление пользователя по User ID
+    boolean deleteUser(Long userId);
+
+    //проверка, что пользователь существует
+    boolean checkIsUserExist(String login);
 }
