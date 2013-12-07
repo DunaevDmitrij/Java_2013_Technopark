@@ -12,7 +12,7 @@ public interface Ticket {
     }
 
     public String getOwner();
-    public String gerDepartureAirport();
+    public String getDepartureAirport();
     public Date getDepartureDateTime();
     public String getArrivalAirport();
     public long getFlightTime();

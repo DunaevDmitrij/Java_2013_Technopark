@@ -25,7 +25,7 @@ public class TicketImpTest {
         SingleTicket singleTicket = new SingleTicket(this.departureAirport, "Vegas",new Date(1386428400),50400,"hangover-1", Ticket.seatClass.SEAT_CLASS_FIRST,"Boing 747-400");
         singleTickets.add(singleTicket);
         //date = 10.12.13 12:00, flight time = 12hr
-        singleTicket = new SingleTicket("Vegas", "Bangkok",new Date(1386676800),43200,"hangover-2", Ticket.seatClass.SEAT_CLASS_FIRST,"Boing 737-800");
+        singleTicket = new SingleTicket("Vegas", "Bangkok",new Date(1386676800),43200,"hangover-2", Ticket.seatClass.SEAT_CLASS_ECONOMIC,"Boing 737-800");
         singleTickets.add(singleTicket);
         //date = 15.12.13 10:00, flight time = 5hr
         singleTicket = new SingleTicket("Bangkok", this.arrivalAirport,new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330");
@@ -37,7 +37,25 @@ public class TicketImpTest {
     @Test
     public void testGetFlightTime() {
         final String errText = "Error in flight length counting";
-        System.out.println(System.currentTimeMillis());
         Assert.assertEquals(errText,  691200, ticketImp.getFlightTime());
+    }
+
+    @Test
+    public void testGetMinSeatClass(){
+        final String errText = "Error in getMinSeatClass()";
+        Assert.assertEquals(errText, Ticket.seatClass.SEAT_CLASS_ECONOMIC, this.ticketImp.getMinSeatClass());
+
+    }
+
+    @Test
+    public void  testGetDepartureAirport(){
+        final String errText = "Error in getDepartureAirport()";
+        Assert.assertEquals(errText, this.departureAirport, this.ticketImp.getDepartureAirport());
+    }
+
+    @Test
+    public void  testGetArrivaAirport(){
+        final String errText = "Error in getArrivalAirport()";
+        Assert.assertEquals(errText, this.arrivalAirport, this.ticketImp.getArrivalAirport());
     }
 }

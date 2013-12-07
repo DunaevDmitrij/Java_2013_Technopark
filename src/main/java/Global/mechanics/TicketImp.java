@@ -39,8 +39,8 @@ public class TicketImp implements Ticket {
     }
 
     @Override
-    public String gerDepartureAirport() {
-        return this.tickets.get(0).getArrivalAirport();
+    public String getDepartureAirport() {
+        return this.tickets.get(0).getDepartureAirport();
     }
 
     @Override
