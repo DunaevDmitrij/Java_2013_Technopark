@@ -4,6 +4,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Kislenko Maksim
@@ -13,45 +16,68 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandler {
     private String className;
-    private String element = null;
-    private ReadType object = null;
+    private Map<String, ReadType> records;
+
+    private ReadType record = null;
+    private StringBuilder fieldValue;
+    private String vtype;
+
+    public SAX_Handler(String className) {
+        super();
+        this.records = new HashMap<>();
+        this.className = className;
+        this.fieldValue = new StringBuilder();
+    }
 
     @Override
     public void startDocument() throws SAXException {
-        System.out.println("Start document");
-
     }
 
     @Override
     public void endDocument() throws SAXException {
-        System.out.println("End document ");
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (qName != this.className) {
-            this.element = qName;
-            ReflectionHelper.setFieldValue(this.object, this.element, qName);
-        } else {
-            String className = attributes.getValue(0);
-            System.out.println("Class name: " + className);
+        if (qName.equals(this.className)) {
+            System.out.println(this.className + " loaded.");
+            this.vtype = attributes.getValue("vtype");
 
             try {
-                this.object = (ReadType) ReflectionHelper.createIntance(className);
+                this.record = (ReadType) ReflectionHelper.createInstance("Global.ResSystem." + this.className);
             } catch (Exception e) {
-                System.out.println("Ошибка при создании объекта записи: " + className);
+                System.out.println("Ошибка при создании объекта записи: " + this.className);
                 e.printStackTrace();
-                this.object = null;
+                this.record = null;
             }
+        } else if (this.record != null) {
+            this.fieldValue.setLength(0);
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        this.element = null;
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        this.fieldValue.append(ch, start, length);
     }
 
-    public ReadType getObject() {
-        return this.object;
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (this.record != null) {
+            if (qName.equals(this.className)) {
+                this.records.put(this.record.getUnique(), this.record);
+                this.record = null;
+                this.vtype = null;
+            } else if (qName.equals(this.record.getUniqueField())) {
+                ReflectionHelper.setFieldValue(this.record,
+                        "java.lang.String", qName, this.fieldValue.toString());
+            } else if (this.vtype != null) {
+                ReflectionHelper.setFieldValue(this.record,
+                        "java." + this.vtype, qName, this.fieldValue.toString());
+            }
+        }
+    }
+
+    public Map<String, ReadType> getData() {
+        return this.records;
     }
 }

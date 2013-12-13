@@ -1,14 +1,14 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <Params>
-    <SysParam vtype = "Time">
+    <SysParam vtype = "lang.String">
         <name>Lot's time before takeoff</name>
         <value>01:00:00</value>
     </SysParam>
-    <SysParam vtype = "boolean">
+    <SysParam vtype = "lang.Boolean">
         <name>Ticket saling before takeoff time bump</name>
         <value>true</value>
     </SysParam>
-    <SysParam vtype = "boolean">
+    <SysParam vtype = "lang.Boolean">
         <name>Auction access for ticketless user</name>
         <value>true</value>
     </SysParam>

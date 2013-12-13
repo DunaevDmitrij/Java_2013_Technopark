@@ -1,5 +1,9 @@
 package Global.ResSystem;
 
+import org.apache.xml.serializer.SerializationHandler;
+
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: max
@@ -10,6 +14,10 @@ package Global.ResSystem;
 public class SysParam<ValueType> implements XML_Convertable {
     private String name;         // unique
     private ValueType value;
+
+    public SysParam() {
+        super();
+    }
 
     public SysParam(String name, ValueType value) {
         super();
@@ -22,17 +30,12 @@ public class SysParam<ValueType> implements XML_Convertable {
         return this.name;
     }
 
+    @Override
+    public String getUniqueField() {
+        return "name";
+    }
+
     public ValueType getValue() {
         return this.value;
-    }
-
-    @Override
-    public String toXML() {
-        return "";
-    }
-
-    @Override
-    public XML_Convertable fromXML() {
-        return this;
     }
 }

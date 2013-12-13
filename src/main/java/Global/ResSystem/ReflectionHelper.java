@@ -12,12 +12,25 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionHelper {
 
+    public static Object createInstance(String className) {
+        try {
+            return Class.forName(className).newInstance();
+        } catch (SecurityException |
+                InstantiationException |
+                IllegalAccessException |
+                ClassNotFoundException |
+                IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Получить объект некоего переданного типа.
      * @param className имя запрашиваемого класса.
      * @return экземпляр типа.
      */
-    public static Object createIntance(String className, Object ... args) {
+    public static Object createInstanceWithArgs(String className, Object ... args) {
         try {
             Class<?>[] arg_types = new Class<?>[args.length];
             int I = 0;
@@ -44,25 +57,34 @@ public class ReflectionHelper {
      * Пока работает только для строк и чисел.
      *
      * @param object у кого устанавливаем поле
-     * @param fieldName имя устанавливаемого поля
+     * @param fieldType тип поля (для generic-ов)
+     * @param name имя устанавливаемого поля
      * @param value новое значение
      */
-    public static void setFieldValue(Object object, String fieldName, String value) {
+    public static void setFieldValue(Object object, String fieldType, String name, String value) {
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
+            Field field = object.getClass().getDeclaredField(name);
             field.setAccessible(true);
 
-            if(field.getType().equals(String.class)) {
+            Class<?> type = Class.forName(fieldType);
+
+            System.out.println(object + "|" + type + "|" + name + "|" + value);
+
+            if(type.equals(String.class)) {
                 field.set(object, value);
-            } else if (field.getType().equals(int.class)) {
+            } else if (type.equals(Integer.class)) {
                 field.set(object, Integer.decode(value));
+            } else if (type.equals(Boolean.class)) {
+                field.set(object, Boolean.valueOf(value));
             }
 
             field.setAccessible(false);
         } catch (SecurityException |
+                ClassNotFoundException |
                 IllegalAccessException |
                 NoSuchFieldException |
-                IllegalArgumentException e) {
+                IllegalArgumentException |
+                NullPointerException e) {
             e.printStackTrace();
         }
     }

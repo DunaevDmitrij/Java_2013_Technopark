@@ -1,9 +1,6 @@
 package Global;
 
 import Global.MsgSystem.Abonent;
-import Global.ResSystem.Staff;
-import Global.ResSystem.SysParam;
-import Global.ResSystem.XML_Convertable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,16 +10,11 @@ import Global.ResSystem.XML_Convertable;
  */
 
 public interface ResourceSystem extends Abonent, Runnable {
-    String RES_DIR = "/resources";
+    String RES_DIR = "resources";
 
     String PARAMS = "params.xml";
     String STAFF_INFO = "staff.xml";
 
-    void loadData();
-
     <ValueType>
     ValueType getParam(String name);
-
-    Staff getStaffInfo(String login);
-    void append(String fileName, XML_Convertable record);
 }
