@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Author: artemlobachev
  * Date: 14.12.13
@@ -99,7 +101,15 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
 
     @Override
     public void run() {
+        while (true) {
+            this.ms.execForAbonent(this);
 
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private long getNewSearchRequestId(){
