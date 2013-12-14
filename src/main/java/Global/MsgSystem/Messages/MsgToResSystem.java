@@ -2,7 +2,7 @@ package Global.MsgSystem.Messages;
 
 import Global.Address;
 import Global.MsgSystem.Abonent;
-import Global.ResourceSystem;
+import Global.ResSystem.ResourceSystem;
 
 /**
  * Created with IntelliJ IDEA.

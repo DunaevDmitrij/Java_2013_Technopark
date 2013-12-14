@@ -5,7 +5,7 @@ package Global; /**
  */
 import Global.Imps.*;
 import Global.MsgSystem.MessageSystemImp;
-import Global.ResSystem.ResourceSystemImp;
+import Global.ResSystem.ResourceSystem;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;
@@ -26,7 +26,6 @@ public class Main {
 
     private static final String TN_FRONTEND = "Frontend";
     private static final String TN_ACCOUNT_SERVICE = "AS";
-    private static final String TN_RESOURCES = "ResourceSystem";
 
     /**
      * Создание объекта сервера.
@@ -80,7 +79,6 @@ public class Main {
         AccountService accountService = new AccountServiceImp(ms);
         Frontend frontend = new Frontend(ms);
 
-        ResourceSystem resSystem = new ResourceSystemImp();
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
         threadPool.startThread(accountService, TN_ACCOUNT_SERVICE);

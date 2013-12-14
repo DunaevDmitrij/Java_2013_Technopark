@@ -11,14 +11,20 @@ import java.io.Serializable;
  * Time: 13:12
  */
 
+/**
+ * Класс представляющий системный параметр приложения.
+ * Имеет уникальное имя и поле значения, тип которого передается параметром типа.
+ * @param <ValueType> тип поля значения системного параметра
+ */
 public class SysParam<ValueType> implements XML_Convertable {
     private String name;         // unique
-    private ValueType value;
+    private ValueType value;     // Значение системного параметра
 
     public SysParam() {
         super();
     }
 
+    // Инициализирующий конструктор
     public SysParam(String name, ValueType value) {
         super();
         this.name = name;
@@ -35,6 +41,9 @@ public class SysParam<ValueType> implements XML_Convertable {
         return "name";
     }
 
+    /**
+     *  Можно получить значение
+      */
     public ValueType getValue() {
         return this.value;
     }

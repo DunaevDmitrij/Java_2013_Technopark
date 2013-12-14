@@ -52,6 +52,13 @@ public class ReflectionHelper {
         return null;
     }
 
+    public static String fill(String type) {
+        if (type.equals("String")) return "java.lang.String";
+        else if (type.equals("int")) return "java.lang.Integer";
+        else if (type.equals("boolean")) return "java.lang.Boolean";
+        return null;
+    }
+
     /**
      * Установка значения поля для переданного объекта
      * Пока работает только для строк и чисел.
@@ -68,7 +75,8 @@ public class ReflectionHelper {
 
             Class<?> type;
             if (fieldType != null) {
-                type = Class.forName(fieldType);
+                // тип поля на основе переданного значения (для дженериков)
+                type = Class.forName(fill(fieldType));
             } else {
                 type = field.getType();
             }
