@@ -1,7 +1,7 @@
 package Global.MsgSystem.Messages;
 
 import Global.Address;
-import Global.MsgSystem.Abonent;
+import Global.DBService;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  * Author: artemlobachev
  * Date: 14.12.13
  */
-public class MsgFindTicket extends Msg {
+public class MsgFindTicket extends MsgToDB {
     private Map<String, String> params;
     private long requsetId;
 
@@ -20,7 +20,7 @@ public class MsgFindTicket extends Msg {
     }
 
     @Override
-    public void exec(Abonent abonent) {
+    public void exec(DBService abonent) {
 
     }
 }
