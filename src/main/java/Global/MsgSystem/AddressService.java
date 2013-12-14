@@ -12,7 +12,15 @@ import Global.Address;
 public class AddressService {
     private Address accountService;
     private Address frontend;
+    private Address salesMechanics;
 
+    public Address getSalesMechanics() {
+        return salesMechanics;
+    }
+
+    public void setSalesMechanics(Address salesMechanics) {
+        this.salesMechanics = salesMechanics;
+    }
 
     public Address getFrontend() {
         return this.frontend;

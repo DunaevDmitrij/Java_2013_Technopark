@@ -1,7 +1,6 @@
 package Global.MsgSystem.Messages;
 
-import Global.AccountService;
-import Global.Imps.AccountServiceImp;
+import Global.DBService;
 import Global.MsgSystem.Abonent;
 import Global.Address;
 
@@ -12,20 +11,20 @@ import Global.Address;
  * Time: 10:27
  */
 //абстрактный класс,
-public abstract class MsgToAS extends Msg{
+public abstract class MsgToDB extends Msg{
 
-    public MsgToAS(Address from, Address to) {
+    public MsgToDB(Address from, Address to) {
         super(from, to);
     }
 
     //проверяем что Abonent принадлежит AccountService
     @Override
     public void exec(Abonent abonent) {
-        if(abonent instanceof AccountService){
-            //вызываем выполнение сообщения для AccountService
-            this.exec((AccountService) abonent);
+        if(abonent instanceof DBService){
+            //вызываем выполнение сообщения для AccountServiceImp
+            this.exec((DBService) abonent);
         }
     }
 
-    abstract void exec(AccountService accountService);
+    abstract void exec(DBService dbService);
 }

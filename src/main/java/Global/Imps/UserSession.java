@@ -1,5 +1,7 @@
 package Global.Imps;
 
+import Global.DBService;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim
@@ -11,13 +13,13 @@ public class UserSession
     private final String name;
     private final Long sessionId;
     private Long userId;
-    private Boolean isComplete; //устанавливается в true, когда AccountServiceImp завершит обработку
+    private Boolean isComplete; //устанавливается в true, когда DBServiceImp завершит обработку
 
     public UserSession(Long sessionId, String name) {
         super();
         this.sessionId = sessionId;
         this.name = name;
-        this.userId = AccountServiceImp.USER_NOT_EXIST;
+        this.userId = DBServiceImp.USER_NOT_EXIST;
         this.isComplete = false;
     }
 
