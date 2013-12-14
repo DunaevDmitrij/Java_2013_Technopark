@@ -13,15 +13,17 @@ public interface MechanicSales {
     public interface findParams{
         String ARRIVAL_AIRPORT = "ArrivalAirport";
         String DEPARTURE_AIRPORT = "DepartureAirport";
-        String DEPARTURE_DATE_TIME_SINCE = "DepertureDateTimeSince";
-        String DEPARTURE_DATE_TIME_TO = "DepertureDateTimeTo";
+        String DEPARTURE_DATE_TIME_SINCE = "DepartureDateTimeSince";
+        String DEPARTURE_DATE_TIME_TO = "DepartureDateTimeTo";
         String MAX_FLIGHT_TIME = "FlightTime";
         String MIN_SEAT_CLASS = "MinSeatClass";
     }
 
     public Collection<Ticket> search(Map<String, String> params);
-    //TODO many search methods with different parametr sets or something more interesting?
+
     public boolean buy(Ticket ticket, User passenger);
 
     public void ticketsFound(long requestId, Collection<SingleTicket> tickets);
+
+    public void ticketBought(long requestId, boolean result);
 }

@@ -1,14 +1,10 @@
-import Global.Imps.SessionServiceImp;
 import Global.Imps.UserSession;
-import Global.MessageSystem;
-import Global.MsgSystem.MessageSystemImp;
-import Global.MsgSystem.Messages.MsgGetUserId;
 import Global.SessionService;
 import Global.WebPages.AuthPage;
 import org.eclipse.jetty.server.session.HashedSession;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -63,7 +59,7 @@ public class AuthPageTest {
         when(this.sessionService.getUserInfo(0L)).thenReturn(this.userSession);
 
         String strPage = this.testInstance.handlePOST(this.request);
-        System.out.println(strPage);
+        //System.out.println(strPage);
         String ErrText = "Error in handling get with authorizing of user: ";
 
         int checkPage = strPage.indexOf("Ждите авторизации.");
@@ -71,7 +67,7 @@ public class AuthPageTest {
 
         //--------------
         strPage = this.testInstance.handleGET(this.request);
-        System.out.println(strPage);
+        //System.out.println(strPage);
 
         ErrText = "Error in handling get with authorizing of user: ";
 

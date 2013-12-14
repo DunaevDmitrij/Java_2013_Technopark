@@ -35,4 +35,12 @@ public interface DBService extends Abonent, Runnable {
     //получение списка SingleTicket по зданным праметрам
     //поиск доступных рейсов
     ArrayList<SingleTicket> findSingleTickets(Map<String, String> params);
+
+    /**
+     * Puts to database all singleTicket objects of Ticket, puts to database Ticket object (all in one transaction).
+     * @param ticket
+     * @param user
+     * @return true if success, false otherwithe
+     */
+    boolean buyTicket(Ticket ticket, User user);
 }

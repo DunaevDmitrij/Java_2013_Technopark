@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
@@ -179,6 +180,14 @@ public class DBServiceImp implements DBService {
         }
     }
 
+    @Override
+    public boolean buyTicket(Ticket ticket, User user) {
+
+        //TODO!!!
+        return false;
+    }
+
+    @Override
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },
@@ -227,7 +236,7 @@ public class DBServiceImp implements DBService {
     @Override
     public boolean checkIsUserExist(String login) {
         //заполнение sql скрипта
-        Map<String, Object> pageVariables = dataToKey(new String [] { "login" }, login);
+        Map<String, Object> pageVariables = dataToKey(new String[]{"login"}, login);
         //формирование sql скрипта для проверки существования пользоваталя
         String queryString = generateSQL("check_user.sql", pageVariables);
 
