@@ -34,6 +34,11 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         this.ms.addService(this);
     }
 
+    /**
+     *
+     * @param params Map of pairs MechanicSales.findParams/values
+     * @return null if nothing found, Collection of Ticket objects otherwithe
+     */
     @Override
     public Collection<Ticket> search(Map<String, String> params) {
         //TODO make real search: building tree, etc
@@ -48,15 +53,21 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
                 e.printStackTrace();
             }
         }
-        ArrayList<SingleTicket> singleTickets = new ArrayList<>();
-        singleTickets.add(this.foundTicketResults.get(requestId).iterator().next());
-        Ticket tmpTicket = new TicketImp(singleTickets,false);
-        ArrayList<Ticket> rez = new ArrayList<>();
-        rez.add(tmpTicket);
+        if (!this.foundTicketResults.get(requestId).isEmpty()){
+            ArrayList<SingleTicket> singleTickets = new ArrayList<>();
+            singleTickets.add(this.foundTicketResults.get(requestId).iterator().next());
+            Ticket tmpTicket = new TicketImp(singleTickets,false);
+            ArrayList<Ticket> rez = new ArrayList<>();
+            rez.add(tmpTicket);
+            //removing used values
+            this.foundTicketStatuses.remove(requestId);
+            this.foundTicketResults.remove(requestId);
+            return rez;
+        }
         //removing used values
         this.foundTicketStatuses.remove(requestId);
         this.foundTicketResults.remove(requestId);
-        return rez;
+        return null;
     }
 
     @Override

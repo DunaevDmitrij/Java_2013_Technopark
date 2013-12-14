@@ -24,7 +24,7 @@ public class MsgFindTicket extends MsgToDB {
     @Override
     public void exec(DBService abonent) {
         ArrayList<SingleTicket> singleTickets = abonent.findSingleTickets(this.params);
-        abonent.getMessageSystem().sendMessage(new MsgFindTicketResult(abonent.getAddress(),abonent.getMessageSystem().getAddressService().getAccountService(),requestId,singleTickets));
+        abonent.getMessageSystem().sendMessage(new MsgFindTicketResult(this.getTo(),this.getFrom(),requestId,singleTickets));
 
     }
 }
