@@ -103,6 +103,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     @Override
     public void ticketBought(long requestId, boolean result) {
         this.BuyRequestsResults.put(requestId,result);
+        this.buyRequestsStatuses.put(requestId,true);
     }
 
     @Override
