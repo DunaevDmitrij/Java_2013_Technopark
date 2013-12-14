@@ -14,7 +14,6 @@ import java.sql.SQLException;
  * User: MiST
  * Date: 30.11.13
  * Time: 10:21
- * To change this template use File | Settings | File Templates.
  */
 public class DBServiceTest {
     private DBService dbSerivce;

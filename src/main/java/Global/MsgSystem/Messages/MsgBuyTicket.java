@@ -23,6 +23,7 @@ public class MsgBuyTicket extends MsgToDB{
 
     @Override
     void exec(DBService dbService) {
-
+        boolean rez = dbService.buyTicket(this.ticket, this.user);
+        dbService.getMessageSystem().sendMessage(new MsgBuyTicketResult(this.getTo(),this.getFrom(),this.requestId,rez));
     }
 }
