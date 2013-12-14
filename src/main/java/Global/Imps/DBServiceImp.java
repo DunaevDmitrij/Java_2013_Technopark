@@ -8,9 +8,7 @@ package Global.Imps;
  */
 
 
-import Global.Address;
-import Global.DBService;
-import Global.MessageSystem;
+import Global.*;
 import Global.mechanics.SingleTicket;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -21,9 +19,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.Date;
 
 import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
@@ -123,7 +120,19 @@ public class DBServiceImp implements DBService {
 
     @Override
     public ArrayList<SingleTicket> findSingleTickets(Map<String, String> params) {
-          return new ArrayList<SingleTicket>();
+        //проверка, что обязательные поля заполнены
+        if (!params.containsKey(MechanicSales.findParams.ARRIVAL_AIRPORT) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_AIRPORT) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO))
+            return new ArrayList<SingleTicket>();
+
+        //формируем основной запрос
+        ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
+        Date date = new Date();
+        tickets.add(new SingleTicket("Аэропрт_вылета1", "Аэропорт_прилета1", date, 100, "Имя рейса1", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг1"));
+        tickets.add(new SingleTicket("Аэропрт_вылета2", "Аэропорт_прилета2", date, 200, "Имя рейса2", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг2"));
+        return tickets;
     }
 
     @Override
