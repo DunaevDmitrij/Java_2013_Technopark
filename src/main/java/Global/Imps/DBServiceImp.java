@@ -152,10 +152,8 @@ public class DBServiceImp implements DBService {
         //формирование sql скрипта
         String queryString = generateSQL("find_single_tickets.sql", pageVariables);
 
-        ArrayList<SingleTicket> result = new ArrayList<SingleTicket>();
-
         try {
-            result = execQuery(this.connect, queryString, new TResultHandler<ArrayList<SingleTicket>>() {
+            return execQuery(this.connect, queryString, new TResultHandler<ArrayList<SingleTicket>>() {
                 @Override
                 public ArrayList<SingleTicket> handler(ResultSet result) throws SQLException {
                     if (rowCounts(result) > 0)  {
@@ -182,7 +180,7 @@ public class DBServiceImp implements DBService {
             e.printStackTrace();
         }
 
-        return result;
+        return new ArrayList<SingleTicket>();
     }
 
     private static String timestampToDatetime(String timestamp) {
