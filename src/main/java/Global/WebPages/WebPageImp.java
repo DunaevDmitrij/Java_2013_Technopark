@@ -165,19 +165,4 @@ public abstract class WebPageImp implements WebPage {
     public int getStatus() {
         return this.Status;
     }
-
-    /**
-     * Метод для линеаризации процесса занесения данных в Map<>.
-     * @param keys массив строковых ключей
-     * @param values соответствующие значения полей в контейнере (любой тип)
-     * @return Новосозданный контейнер
-     */
-    protected  static Map<String, Object> dataToKey(String[] keys, Object ... values) {
-        Map<String, Object> map = new HashMap<>();
-        // Цикл по элементам массива ключей
-        for (int I = 0; I < keys.length; ++I) {
-            map.put(keys[I], values[I]);
-        }
-        return map;
-    }
 }
