@@ -118,6 +118,7 @@ public class DBServiceImp implements DBService {
         this.connect = DriverManager.getConnection(dbUrl + databaseName, dbUser, dbPassword);
     }
 
+    //FIXME: выборка по времени
     @Override
     public ArrayList<SingleTicket> findSingleTickets(Map<String, String> params) {
         //проверка, что обязательные поля заполнены
@@ -128,14 +129,56 @@ public class DBServiceImp implements DBService {
             return new ArrayList<SingleTicket>();
 
         //формируем основной запрос
-        ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
-        Date date = new Date();
-        tickets.add(new SingleTicket("Аэропрт_вылета1", "Аэропорт_прилета1", date, 100, "Имя рейса1", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг1"));
-        tickets.add(new SingleTicket("Аэропрт_вылета2", "Аэропорт_прилета2", date, 200, "Имя рейса2", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг2"));
-        return tickets;
+        //заполнение sql скрипта
+        Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to"},
+                params.get(MechanicSales.findParams.ARRIVAL_AIRPORT),   params.get(MechanicSales.findParams.DEPARTURE_AIRPORT),
+                params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE), params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO));
+
+        //формирование sql скрипта
+        String queryString = generateSQL("find_single_tickets.sql", pageVariables);
+
+        try {
+             return execQuery(this.connect, queryString, new TResultHandler<ArrayList<SingleTicket>>() {
+                @Override
+                public ArrayList<SingleTicket> handler(ResultSet result) throws SQLException {
+                    if (rowCounts(result) > 0)  {
+                        ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
+                        while (!result.isLast()) {
+                            result.next();
+                            //TODO: добавить еще и фильтр по остальным параметрам
+                            tickets.add(new SingleTicket("",  //departureAirport
+                                    "",     //arrivalAirport
+                                    result.getDate("TimeDeparture"), //departureTime
+                                    result.getLong("FlightTime"),  //flightTime
+                                    result.getString("FlightName"), //flightNumber
+                                    toSeatClass(result.getLong("PlaceClass")), // seatClass
+                                    result.getString("PlaneName")//planeModel
+                                 ));
+                        }
+                        return tickets;
+                    }
+                    else
+                        return new ArrayList<SingleTicket>();
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<SingleTicket>();
     }
 
-    @Override
+    private static Ticket.seatClass toSeatClass(Long Val) {
+        //FIXME: case
+        if (Val.equals(1)) {
+            return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
+        } else if (Val.equals(2)) {
+            return Ticket.seatClass.SEAT_CLASS_BUSINESS;
+        } else {
+            return Ticket.seatClass.SEAT_CLASS_FIRST;
+        }
+    }
+
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },
