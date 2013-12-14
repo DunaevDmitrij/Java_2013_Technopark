@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 14.12.13
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
+    private static final long OWERFLOW = -1;
     private final Address address;
     private final MessageSystem ms;
     private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
@@ -102,12 +103,16 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     }
 
     private long getNewSearchRequestId(){
-        //TODO
-        return 0;
+        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
+            if (this.foundTicketStatuses.containsKey(new Long(rez)))
+                return rez;
+        return OWERFLOW;
     }
 
     private long getNewBuyRequestId(){
-        //TODO
-        return 0;
+        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
+            if (this.buyRequestsStatuses.containsKey(new Long(rez)))
+                return rez;
+        return OWERFLOW;
     }
 }
