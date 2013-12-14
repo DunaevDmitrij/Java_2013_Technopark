@@ -13,8 +13,8 @@ public interface MechanicSales {
     public interface findParams{
         String ARRIVAL_AIRPORT = "ArrivalAirport";
         String DEPARTURE_AIRPORT = "DepartureAirport";
-        String DEPARTURE_DATE_TIME_SINCE = "DepertureDateTimeSince";
-        String DEPARTURE_DATE_TIME_TO = "DepertureDateTimeTo";
+        String DEPARTURE_DATE_TIME_SINCE = "DepartureDateTimeSince";
+        String DEPARTURE_DATE_TIME_TO = "DepartureDateTimeTo";
         String MAX_FLIGHT_TIME = "FlightTime";
         String MIN_SEAT_CLASS = "MinSeatClass";
     }
