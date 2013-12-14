@@ -20,6 +20,6 @@ public class MsgBuyTicketResult extends MsgToMechanics{
 
     @Override
     void exec(MechanicSales mechanicSales) {
-        mechanicSales.ticketBought(this.requestId,this.result);
+        mechanicSales.itemBought(this.requestId, this.result);
     }
 }

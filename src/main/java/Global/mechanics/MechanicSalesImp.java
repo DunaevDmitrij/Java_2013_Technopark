@@ -90,7 +90,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     }
 
     @Override
-    public void ticketsFound(long requestId, Collection<SingleTicket> tickets) {
+    public void itemsFound(long requestId, Collection<SingleTicket> tickets) {
         //TODO: check if has answer
         HashSet<SingleTicket> singleTickets = new HashSet<>();
         for(SingleTicket ticket:tickets){
@@ -101,7 +101,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     }
 
     @Override
-    public void ticketBought(long requestId, boolean result) {
+    public void itemBought(long requestId, boolean result) {
         this.BuyRequestsResults.put(requestId,result);
         this.buyRequestsStatuses.put(requestId,true);
     }

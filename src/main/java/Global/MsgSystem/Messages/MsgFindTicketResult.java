@@ -23,6 +23,6 @@ public class MsgFindTicketResult extends MsgToMechanics {
 
     @Override
     void exec(MechanicSales mechanicSales) {
-        mechanicSales.ticketsFound(this.requestId, this.singleTickets);
+        mechanicSales.itemsFound(this.requestId, this.singleTickets);
     }
 }
