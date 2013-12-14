@@ -11,6 +11,7 @@ package Global.Imps;
 import Global.Address;
 import Global.DBService;
 import Global.MessageSystem;
+import Global.mechanics.SingleTicket;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,6 +119,11 @@ public class DBServiceImp implements DBService {
 
         this.database = databaseName;
         this.connect = DriverManager.getConnection(dbUrl + databaseName, dbUser, dbPassword);
+    }
+
+    @Override
+    public ArrayList<SingleTicket> findSingleTickets(Map<String, String> params) {
+          return new ArrayList<SingleTicket>();
     }
 
     @Override

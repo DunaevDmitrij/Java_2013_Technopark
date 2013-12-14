@@ -1,6 +1,10 @@
 package Global;
 
 import Global.MsgSystem.Abonent;
+import Global.mechanics.SingleTicket;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,4 +31,8 @@ public interface DBService extends Abonent, Runnable {
 
     //проверка, что пользователь существует
     boolean checkIsUserExist(String login);
+
+    //получение списка SingleTicket по зданным праметрам
+    //поиск доступных рейсов
+    ArrayList<SingleTicket> findSingleTickets(Map<String, String> params);
 }
