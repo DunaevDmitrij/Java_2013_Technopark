@@ -135,6 +135,7 @@ public class DBServiceImp implements DBService {
             return new ArrayList<SingleTicket>();
 
         //формируем основной запрос
+
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to"},
                 params.get(MechanicSales.findParams.ARRIVAL_AIRPORT),   params.get(MechanicSales.findParams.DEPARTURE_AIRPORT),
@@ -159,7 +160,8 @@ public class DBServiceImp implements DBService {
                                     result.getLong("FlightTime"),  //flightTime
                                     result.getString("FlightName"), //flightNumber
                                     toSeatClass(result.getLong("PlaceClass")), // seatClass
-                                    result.getString("PlaneName") //planeModel
+                                    result.getString("PlaneName"), //planeModel
+                                    result.getInt("Price") //price
                                  ));
                         }
                         return tickets;
@@ -211,6 +213,11 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public boolean createLot(Ticket ticket) {
+        return false;
+    }
+
+    @Override
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },
@@ -244,7 +251,7 @@ public class DBServiceImp implements DBService {
                 login,   password);
 
         try {
-            if (!checkIsUserExist(login))
+            if (!this.checkIsUserExist(login))
             {
                 if (execUpdate(this.connect, generateSQL("create_user.sql", pageVariables)) == 1)
                     return true;

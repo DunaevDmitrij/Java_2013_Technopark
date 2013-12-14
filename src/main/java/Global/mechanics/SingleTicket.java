@@ -14,7 +14,7 @@ public class SingleTicket {
     For existing ticket.
     Vadim, use this!
      */
-    public SingleTicket(long id, String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel) {
+    public SingleTicket(long id, String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel, int price) {
         super();
         this.isTemporary = false;
         this.id = id;
@@ -25,11 +25,12 @@ public class SingleTicket {
         this.flightNumber = flightNumber;
         this.seatClass = seatClass;
         this.planeModel = planeModel;
+        this.price = price;
     }
     /*
     For temporary tickets (in search).
      */
-    public SingleTicket(String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel) {
+    public SingleTicket(String departureAirport, String arrivalAirport, Date departureTime, long flightTime, String flightNumber, Ticket.seatClass seatClass, String planeModel, int price) {
         super();
         this.isTemporary = true;
         this.departureAirport = departureAirport;
@@ -39,6 +40,7 @@ public class SingleTicket {
         this.flightNumber = flightNumber;
         this.seatClass = seatClass;
         this.planeModel = planeModel;
+        this.price = price;
     }
 
     //TODO: do we need to save SingleTickets or only big ticket?
@@ -51,35 +53,39 @@ public class SingleTicket {
     */
 
     public String getPlaneModel() {
-        return planeModel;
+        return this.planeModel;
     }
 
     public String getDepartureAirport() {
-        return departureAirport;
+        return this.departureAirport;
     }
 
     public String getArrivalAirport() {
-        return arrivalAirport;
+        return this.arrivalAirport;
     }
 
     public Date getDepartureTime() {
-        return departureTime;
+        return this.departureTime;
     }
 
     public long getFlightTime() {
-        return flightTime;
+        return this.flightTime;
     }
 
     public String getFlightNumber() {
-        return flightNumber;
+        return this.flightNumber;
     }
 
     public Ticket.seatClass getSeatClass() {
-        return seatClass;
+        return this.seatClass;
     }
 
     public boolean isTemporary() {
-        return isTemporary;
+        return this.isTemporary;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     private long id;
@@ -91,5 +97,6 @@ public class SingleTicket {
     private String flightNumber;
     private Ticket.seatClass seatClass;
     private boolean isTemporary;
+    private int price;
 
 }

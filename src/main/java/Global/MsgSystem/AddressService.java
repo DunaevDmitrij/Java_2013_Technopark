@@ -15,7 +15,7 @@ public class AddressService {
     private Address salesMechanics;
 
     public Address getSalesMechanics() {
-        return salesMechanics;
+        return this.salesMechanics;
     }
 
     public void setSalesMechanics(Address salesMechanics) {

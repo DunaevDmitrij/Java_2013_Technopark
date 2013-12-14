@@ -1,4 +1,4 @@
-select R.FlightName, R.FlightTime, R.PlaceClass, R.TimeDeparture, plane.Name as PlaneName, a1.Name as AirportArrival, a2.Name as AirportDeparture from
+select R.FlightName, Price, R.FlightTime, R.PlaceClass, R.TimeDeparture, plane.Name as PlaneName, a1.Name as AirportArrival, a2.Name as AirportDeparture from
 (
 select F.idFlight, F.FlightName, F.Plane, F.FlightTime, F.PlaceClass, F.TimeDeparture, F.AirportArrival, F.AirportDeparture, F.DefaultPlaceAmount - Buy.BuyPlaceAmount as ResutlPlace from 
 	(
@@ -28,4 +28,5 @@ select F.idFlight, F.FlightName, F.Plane, F.FlightTime, F.PlaceClass, F.TimeDepa
 inner join plane on R.Plane = plane.idPlane 
 inner join airport as a1 on R.AirportArrival = a1.idAirport
 inner join airport as a2 on R.AirportDeparture = a2.idAirport
+inner join flightcost on flightcost.Flight = R.idFlight and flightcost.class = R.PlaceClass
 where R.ResutlPlace > 0;

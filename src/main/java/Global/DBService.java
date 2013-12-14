@@ -40,7 +40,14 @@ public interface DBService extends Abonent, Runnable {
      * Puts to database all singleTicket objects of Ticket, puts to database Ticket object (all in one transaction).
      * @param ticket
      * @param user
-     * @return true if success, false otherwithe
+     * @return true if success, false otherwise(including if lot for this ticket exists)
      */
     boolean buyTicket(Ticket ticket, User user);
+
+    /**
+     * Creates lot from ticket
+     * @param ticket
+     * @return true if success, false otherwise
+     */
+    boolean createLot(Ticket ticket);
 }

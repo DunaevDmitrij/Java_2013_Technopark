@@ -13,5 +13,4 @@ public interface MechanicAuction extends MechanicSales {
     public boolean addLot(Ticket ticket, int startPrice, Date stopSales);
     public boolean riseLotPrice(Lot lot, User user, int newPrice);
     //TODO not to forget to close lots by time
-    //TODO must lot class extend Ticket? and must it be?
 }
