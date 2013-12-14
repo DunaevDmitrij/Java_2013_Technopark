@@ -140,7 +140,7 @@ public class DBServiceImp implements DBService {
     public boolean buyTicket(Ticket ticket, User user) {
 
         //TODO!!!
-        return false;
+        return true;
     }
 
     @Override
