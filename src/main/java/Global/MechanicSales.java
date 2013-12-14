@@ -20,7 +20,7 @@ public interface MechanicSales {
     }
 
     public Collection<Ticket> search(Map<String, String> params);
-    //TODO many search methods with different parametr sets or something more interesting?
+
     public boolean buy(Ticket ticket, User passenger);
 
     public void ticketsFound(long requestId, Collection<SingleTicket> tickets);

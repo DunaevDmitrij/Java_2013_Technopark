@@ -8,8 +8,8 @@ import Global.MechanicSales;
  * Date: 14.12.13
  */
 public class MsgBuyTicketResult extends MsgToMechanics{
-    private long requesyId;
-    private boolean result;
+    private final long requesyId;
+    private final boolean result;
 
     public MsgBuyTicketResult(Address from, Address to, long requesyId, boolean result){
         super(from, to);
