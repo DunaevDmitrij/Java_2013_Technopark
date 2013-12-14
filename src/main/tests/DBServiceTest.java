@@ -26,10 +26,16 @@ public class DBServiceTest {
     public void setUp() {
         MessageSystem ms = new MessageSystemImp();
         try {
-            dbSerivce = new DBServiceImp(ms);
+            dbSerivce = new DBServiceImp(ms, "TestPlaneDB");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @After
+    public void tearDown() {
+        if (dbSerivce.checkIsUserExist(userName))
+            dbSerivce.deleteUser(dbSerivce.getUserIdByUserName(userName, userPassword));
     }
 
     @Test

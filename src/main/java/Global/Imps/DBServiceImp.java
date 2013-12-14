@@ -33,10 +33,12 @@ public class DBServiceImp implements DBService {
 
     //параметры подключения к базе
     private static final String serverName = "localhost";
-    private static final String database = "PlaneDB";
     private static final String dbUser = "PlaneDB";
     private static final String dbPassword = "PlaneDB";
-    private static final String dbUrl = "jdbc:mysql://" + serverName + "/" + database;
+    private static final String dbUrl = "jdbc:mysql://" + serverName + "/";
+
+    //изменяемые параметры, например, что бы работать с тестовой базой
+    private String database;
 
     private Connection connect;
     private static final String SQL_DIR = "sql";
@@ -104,7 +106,7 @@ public class DBServiceImp implements DBService {
         return result;
     }
 
-    public DBServiceImp(MessageSystem ms) throws SQLException {
+    public DBServiceImp(MessageSystem ms, String databaseName) throws SQLException {
         super();
         this.ms = ms;
         this.address = new Address();
@@ -113,7 +115,8 @@ public class DBServiceImp implements DBService {
         //регестрируем DBServiceImp в AddressService, чтобы каждый мог обратиться к DBService
         ms.getAddressService().setAccountService(this.address);
 
-        this.connect = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        this.database = databaseName;
+        this.connect = DriverManager.getConnection(dbUrl + databaseName, dbUser, dbPassword);
     }
 
     @Override

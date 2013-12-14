@@ -73,7 +73,7 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
         MessageSystem ms = new MessageSystemImp();
-        DBService dbService = new DBServiceImp(ms);
+        DBService dbService = new DBServiceImp(ms, "PlaneDB");
         Frontend frontend = new Frontend(ms);
 
         ThreadPool threadPool = new ThreadPoolImp();
