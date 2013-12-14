@@ -22,6 +22,16 @@ public class TicketImp implements Ticket {
         }
     }
 
+    public TicketImp(Collection<SingleTicket> singleTickets, boolean fromDB) {
+        super();
+        this.owner = null;
+        this.isTemporary = !fromDB;
+        this.tickets = new ArrayList<>();
+        for (SingleTicket ticket : singleTickets) {
+            this.tickets.add(ticket);
+        }
+    }
+
     public void save(){
         //TODO: send message to database
     }
