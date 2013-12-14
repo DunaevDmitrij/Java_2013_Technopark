@@ -31,7 +31,7 @@ public class SysParam<ValueType> implements XML_Convertable {
     }
 
     @Override
-    public String getUniqueField() {
+    public String getUniqueFields() {
         return "name";
     }
 

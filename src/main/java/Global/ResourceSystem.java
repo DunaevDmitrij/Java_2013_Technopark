@@ -1,6 +1,7 @@
 package Global;
 
 import Global.MsgSystem.Abonent;
+import Global.ResSystem.XML_Convertable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,8 +14,10 @@ public interface ResourceSystem extends Abonent, Runnable {
     String RES_DIR = "resources";
 
     String PARAMS = "params.xml";
-    String STAFF_INFO = "staff.xml";
 
     <ValueType>
     ValueType getParam(String name);
+
+    <ContentType extends XML_Convertable>
+    ContentType getRecord(String xmlFile, String uniqueValue);
 }

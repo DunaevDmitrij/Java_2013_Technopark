@@ -66,15 +66,20 @@ public class ReflectionHelper {
             Field field = object.getClass().getDeclaredField(name);
             field.setAccessible(true);
 
-            Class<?> type = Class.forName(fieldType);
+            Class<?> type;
+            if (fieldType != null) {
+                type = Class.forName(fieldType);
+            } else {
+                type = field.getType();
+            }
 
-            System.out.println(object + "|" + type + "|" + name + "|" + value);
+            //System.out.println(object + "|" + type + "|" + name + "|" + value);
 
             if(type.equals(String.class)) {
                 field.set(object, value);
-            } else if (type.equals(Integer.class)) {
+            } else if (type.equals(Integer.class) || type.equals(int.class)) {
                 field.set(object, Integer.decode(value));
-            } else if (type.equals(Boolean.class)) {
+            } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
                 field.set(object, Boolean.valueOf(value));
             }
 

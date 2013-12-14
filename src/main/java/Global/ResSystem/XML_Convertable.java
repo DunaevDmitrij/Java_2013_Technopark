@@ -13,5 +13,5 @@ public interface XML_Convertable extends Serializable {
     long serialVersionUID = -3895203507200457732L;
 
     String getUnique();
-    String getUniqueField();
+    String getUniqueFields();
 }

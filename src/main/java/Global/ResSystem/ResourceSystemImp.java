@@ -4,6 +4,7 @@ import Global.Address;
 import Global.MessageSystem;
 import Global.ResourceSystem;
 
+import java.beans.Expression;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ResourceSystemImp implements ResourceSystem {
     private final Address address;
     private final MessageSystem ms;
 
-    private Map<String, SysParam<?>> params;
+    private Map<String, Map<String, ?>> store;
     private SAXParserFactory factory;
 
     public ResourceSystemImp(MessageSystem ms) {
@@ -35,31 +36,47 @@ public class ResourceSystemImp implements ResourceSystem {
         ms.getAddressService().setResSystem(this.address);
 
         this.factory = SAXParserFactory.newInstance();
-        this.params = this.loadResource(PARAMS, "SysParam");
+
+        this.store = new HashMap<>();
+        this.<SysParam<?>> loadResource(PARAMS, "Global.ResSystem.SysParam");
     }
 
-    private <ContentType extends XML_Convertable>
-    Map<String, ContentType> loadResource(String xmlFile, String className) {
+    protected <ContentType extends XML_Convertable>
+    void loadResource(String xmlFile, String className) {
         try {
             SAXParser parser = this.factory.newSAXParser();
             SAX_Handler<ContentType> handler = new SAX_Handler<>(className);
             parser.parse(RES_DIR + File.separator + xmlFile, handler);
 
-            return handler.getData();
+            this.store.put(xmlFile, handler.getData());
+
         } catch (Exception e) {
             System.out.println("Ошибка при загрузке файла: " + xmlFile);
             e.printStackTrace();
         }
-        return null;
     }
 
     @Override
     public <ValueType>
     ValueType getParam(String name) {
         try {
-            return (ValueType) params.get(name).getValue();
+            SysParam<?> param = (SysParam) this.store.get(PARAMS).get(name);
+            return (ValueType) param.getValue();
         } catch(Exception e) {
             System.out.println("Ошибка типа при выборке системного параметра: " + name);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public <ContentType extends XML_Convertable>
+    ContentType getRecord(String xmlFile, String uniqueValue) {
+        try {
+            ContentType data = (ContentType) this.store.get(xmlFile).get(uniqueValue);
+            return data;
+        } catch (Exception e) {
+            System.out.println("Ошибка типа при выборке: " + xmlFile);
             e.printStackTrace();
         }
         return null;

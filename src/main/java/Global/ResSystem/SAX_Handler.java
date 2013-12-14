@@ -15,6 +15,7 @@ import java.util.Map;
  */
 
 public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandler {
+    private String classFullName;
     private String className;
     private Map<String, ReadType> records;
 
@@ -22,11 +23,17 @@ public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandl
     private StringBuilder fieldValue;
     private String vtype;
 
-    public SAX_Handler(String className) {
+    public SAX_Handler(String classFullName) {
         super();
         this.records = new HashMap<>();
-        this.className = className;
+        this.classFullName = classFullName;
         this.fieldValue = new StringBuilder();
+
+        int beginIndex = this.classFullName.lastIndexOf(".") + 1;
+        if (this.classFullName.lastIndexOf("$") + 1 > beginIndex) {
+            beginIndex = this.classFullName.lastIndexOf("$") + 1;
+        }
+        this.className = this.classFullName.substring(beginIndex, this.classFullName.length());
     }
 
     @Override
@@ -40,13 +47,12 @@ public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandl
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals(this.className)) {
-            System.out.println(this.className + " loaded.");
             this.vtype = attributes.getValue("vtype");
 
             try {
-                this.record = (ReadType) ReflectionHelper.createInstance("Global.ResSystem." + this.className);
+                this.record = (ReadType) ReflectionHelper.createInstance(this.classFullName);
             } catch (Exception e) {
-                System.out.println("Ошибка при создании объекта записи: " + this.className);
+                System.out.println("Ошибка при создании объекта записи: " + this.classFullName);
                 e.printStackTrace();
                 this.record = null;
             }
@@ -67,12 +73,12 @@ public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandl
                 this.records.put(this.record.getUnique(), this.record);
                 this.record = null;
                 this.vtype = null;
-            } else if (qName.equals(this.record.getUniqueField())) {
+            } else if (this.record.getUniqueFields().contains(qName)) {
                 ReflectionHelper.setFieldValue(this.record,
                         "java.lang.String", qName, this.fieldValue.toString());
-            } else if (this.vtype != null) {
+            } else {
                 ReflectionHelper.setFieldValue(this.record,
-                        "java." + this.vtype, qName, this.fieldValue.toString());
+                        this.vtype, qName, this.fieldValue.toString());
             }
         }
     }
