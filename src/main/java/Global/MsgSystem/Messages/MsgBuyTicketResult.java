@@ -8,18 +8,18 @@ import Global.MechanicSales;
  * Date: 14.12.13
  */
 public class MsgBuyTicketResult extends MsgToMechanics{
-    private final long requesyId;
+    private final long requestId;
     private final boolean result;
 
     public MsgBuyTicketResult(Address from, Address to, long requesyId, boolean result){
         super(from, to);
-        this.requesyId = requesyId;
+        this.requestId = requesyId;
         this.result = result;
 
     }
 
     @Override
     void exec(MechanicSales mechanicSales) {
-        mechanicSales.ticketBought(this.requesyId,this.result);
+        mechanicSales.ticketBought(this.requestId,this.result);
     }
 }
