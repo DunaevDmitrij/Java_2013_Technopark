@@ -29,4 +29,4 @@ inner join plane on R.Plane = plane.idPlane
 inner join airport as a1 on R.AirportArrival = a1.idAirport
 inner join airport as a2 on R.AirportDeparture = a2.idAirport
 inner join flightcost on flightcost.Flight = R.idFlight and flightcost.class = R.PlaceClass
-where R.ResutlPlace > 0;
+where R.ResutlPlace > 0 ${additional};

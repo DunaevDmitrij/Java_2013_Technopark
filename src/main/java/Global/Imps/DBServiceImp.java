@@ -135,25 +135,33 @@ public class DBServiceImp implements DBService {
             return new ArrayList<SingleTicket>();
 
         //формируем основной запрос
+        //формирование дополнительных условий:
+        String additional = "";
+        if (params.containsKey(MechanicSales.findParams.MAX_PRICE))
+            additional += "and Price <= '" + params.get(MechanicSales.findParams.MAX_PRICE) + "'";
+        //if (params.containsKey(MechanicSales.findParams.MIN_SEAT_CLASS))
+        //    additional += " and PlaceClass = '" + params.get(MechanicSales.findParams.MIN_SEAT_CLASS) + "'";
 
         //заполнение sql скрипта
-        Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to"},
+        Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to", "additional"},
                 params.get(MechanicSales.findParams.ARRIVAL_AIRPORT),   params.get(MechanicSales.findParams.DEPARTURE_AIRPORT),
                 timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE)),
-                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO)));
+                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO)),
+                additional);
 
         //формирование sql скрипта
         String queryString = generateSQL("find_single_tickets.sql", pageVariables);
 
+        ArrayList<SingleTicket> result = new ArrayList<SingleTicket>();
+
         try {
-             return execQuery(this.connect, queryString, new TResultHandler<ArrayList<SingleTicket>>() {
+            result = execQuery(this.connect, queryString, new TResultHandler<ArrayList<SingleTicket>>() {
                 @Override
                 public ArrayList<SingleTicket> handler(ResultSet result) throws SQLException {
                     if (rowCounts(result) > 0)  {
                         ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
                         while (!result.isLast()) {
                             result.next();
-                            //TODO: добавить еще и фильтр по остальным параметрам
                             tickets.add(new SingleTicket(result.getString("AirportDeparture"),  //departureAirport
                                     result.getString("AirportArrival"),     //arrivalAirport
                                     datetimeToDate(result.getString("TimeDeparture")), //departureTime
@@ -174,7 +182,7 @@ public class DBServiceImp implements DBService {
             e.printStackTrace();
         }
 
-        return new ArrayList<SingleTicket>();
+        return result;
     }
 
     private static String timestampToDatetime(String timestamp) {
