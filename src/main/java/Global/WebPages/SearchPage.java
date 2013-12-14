@@ -1,12 +1,8 @@
 package Global.WebPages;
 
-import Global.AccountService;
-import Global.Imps.UserSession;
-import Global.SessionService;
 import Global.WebPage;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 

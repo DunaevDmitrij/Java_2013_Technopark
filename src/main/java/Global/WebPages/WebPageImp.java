@@ -165,4 +165,19 @@ public abstract class WebPageImp implements WebPage {
     public int getStatus() {
         return this.Status;
     }
+
+    public static Map<String, Object> dataToKey(String [] keys, Object ... datum) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (keys.length != datum.length) {
+            System.out.println("Неверное количество параметров");
+        }
+
+        int i = 0;
+        for (Object data : datum) {
+            result.put(keys[i], data);
+            ++i;
+        }
+        return result;
+    }
 }

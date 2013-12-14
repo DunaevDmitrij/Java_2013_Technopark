@@ -1,10 +1,9 @@
 package Global.WebPages;
 
-import Global.AccountService;
+import Global.DBService;
 import Global.Imps.UserSession;
 import Global.SessionService;
 import Global.WebPage;
-import Global.PageDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -96,7 +95,7 @@ public class MainPage extends WebPageImp implements WebPage {
             //ожидаем пока AccountService вернет данные
             if (this.userSession.isComplete()) {
                 //проверяем, что пользователь существует
-                if (! this.userSession.getUserId().equals(AccountService.USER_NOT_EXIST)) {
+                if (! this.userSession.getUserId().equals(DBService.USER_NOT_EXIST)) {
                     System.out.println("Session Id: " + this.sessionId);
 
                     // Заполняем контекст
