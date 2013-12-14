@@ -9,9 +9,7 @@ import java.io.Serializable;
  * Time: 13:21
  */
 
-public interface XML_Convertable extends Serializable {
-    long serialVersionUID = -3895203507200457732L;
-
+public interface XML_Convertable {
     String getUnique();
     String getUniqueFields();
 }

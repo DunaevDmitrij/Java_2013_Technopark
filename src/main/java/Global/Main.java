@@ -80,12 +80,10 @@ public class Main {
         AccountService accountService = new AccountServiceImp(ms);
         Frontend frontend = new Frontend(ms);
 
-        ResourceSystem resSystem = new ResourceSystemImp(ms);
-
+        ResourceSystem resSystem = new ResourceSystemImp();
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
         threadPool.startThread(accountService, TN_ACCOUNT_SERVICE);
-        threadPool.startThread(resSystem, TN_RESOURCES);
 
         Server server = makeServer(args);
 

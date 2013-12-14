@@ -10,7 +10,7 @@ import Global.ResSystem.XML_Convertable;
  * Time: 17:17
  */
 
-public interface ResourceSystem extends Abonent, Runnable {
+public interface ResourceSystem {
     String RES_DIR = "resources";
 
     String PARAMS = "params.xml";

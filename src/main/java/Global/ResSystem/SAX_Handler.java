@@ -29,11 +29,15 @@ public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandl
         this.classFullName = classFullName;
         this.fieldValue = new StringBuilder();
 
+        this.className = this.getClassName();
+    }
+
+    public String getClassName() {
         int beginIndex = this.classFullName.lastIndexOf(".") + 1;
         if (this.classFullName.lastIndexOf("$") + 1 > beginIndex) {
             beginIndex = this.classFullName.lastIndexOf("$") + 1;
         }
-        this.className = this.classFullName.substring(beginIndex, this.classFullName.length());
+        return this.classFullName.substring(beginIndex, this.classFullName.length());
     }
 
     @Override
@@ -49,13 +53,7 @@ public class SAX_Handler <ReadType extends XML_Convertable> extends DefaultHandl
         if (qName.equals(this.className)) {
             this.vtype = attributes.getValue("vtype");
 
-            try {
-                this.record = (ReadType) ReflectionHelper.createInstance(this.classFullName);
-            } catch (Exception e) {
-                System.out.println("Ошибка при создании объекта записи: " + this.classFullName);
-                e.printStackTrace();
-                this.record = null;
-            }
+            this.record = (ReadType) ReflectionHelper.createInstance(this.classFullName);
         } else if (this.record != null) {
             this.fieldValue.setLength(0);
         }
