@@ -17,6 +17,7 @@ public interface MechanicSales {
         String DEPARTURE_DATE_TIME_TO = "DepartureDateTimeTo";
         String MAX_FLIGHT_TIME = "FlightTime";
         String MIN_SEAT_CLASS = "MinSeatClass";
+        String MAX_PRICE = "MaxPrice";
     }
 
     public Collection<Ticket> search(Map<String, String> params);
