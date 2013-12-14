@@ -24,4 +24,6 @@ public interface MechanicSales {
     public boolean buy(Ticket ticket, User passenger);
 
     public void ticketsFound(long requestId, Collection<SingleTicket> tickets);
+
+    public void ticketBought(long requestId, boolean result);
 }
