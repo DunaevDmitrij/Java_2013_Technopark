@@ -67,13 +67,13 @@ public class MechanicSalesImpTest {
 
         ArrayList<SingleTicket> singleTickets = new ArrayList<>(3);
         //date = 7.12.13 15:00, flight time = 14hr
-        SingleTicket singleTicket = new SingleTicket("DME", "Vegas",new Date(1386428400),50400,"hangover-1", Ticket.seatClass.SEAT_CLASS_FIRST,"Boing 747-400");
+        SingleTicket singleTicket = new SingleTicket("DME", "Vegas",new Date(1386428400),50400,"hangover-1", Ticket.seatClass.SEAT_CLASS_FIRST,"Boing 747-400",1);
         singleTickets.add(singleTicket);
         //date = 10.12.13 12:00, flight time = 12hr
-        singleTicket = new SingleTicket("Vegas", "Bangkok",new Date(1386676800),43200,"hangover-2", Ticket.seatClass.SEAT_CLASS_ECONOMIC,"Boing 737-800");
+        singleTicket = new SingleTicket("Vegas", "Bangkok",new Date(1386676800),43200,"hangover-2", Ticket.seatClass.SEAT_CLASS_ECONOMIC,"Boing 737-800",2);
         singleTickets.add(singleTicket);
         //date = 15.12.13 10:00, flight time = 5hr
-        singleTicket = new SingleTicket("Bangkok", "MIA",new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330");
+        singleTicket = new SingleTicket("Bangkok", "MIA",new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330",3);
         singleTickets.add(singleTicket);
         //total time = 8d = 691200 s
         Ticket tstTicket = new TicketImp(null, singleTickets, false);

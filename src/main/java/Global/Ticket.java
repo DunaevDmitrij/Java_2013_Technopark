@@ -18,4 +18,6 @@ public interface Ticket {
     public long getFlightTime();
     public Object getRoute();   //TODO make class Route or return Formatted String?
     public seatClass getMinSeatClass();
+    public int getPrice();
+    public boolean isTemporary();
 }

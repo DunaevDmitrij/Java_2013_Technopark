@@ -131,8 +131,8 @@ public class DBServiceImp implements DBService {
         //формируем основной запрос
         ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
         Date date = new Date();
-        tickets.add(new SingleTicket("Аэропрт_вылета1", "Аэропорт_прилета1", date, 100, "Имя рейса1", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг1"));
-        tickets.add(new SingleTicket("Аэропрт_вылета2", "Аэропорт_прилета2", date, 200, "Имя рейса2", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг2"));
+        tickets.add(new SingleTicket("Аэропрт_вылета1", "Аэропорт_прилета1", date, 100, "Имя рейса1", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг1",1));
+        tickets.add(new SingleTicket("Аэропрт_вылета2", "Аэропорт_прилета2", date, 200, "Имя рейса2", Ticket.seatClass.SEAT_CLASS_ECONOMIC, "Мега-боинг2",2));
         return tickets;
     }
 

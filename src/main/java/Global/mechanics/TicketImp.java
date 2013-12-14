@@ -70,7 +70,7 @@ public class TicketImp implements Ticket {
 
     @Override
     public Object getRoute() {
-        return null;  //TODO
+        return new ArrayList<>(this.tickets);  //TODO
     }
 
     @Override
@@ -89,13 +89,21 @@ public class TicketImp implements Ticket {
         return rez;
     }
 
+    @Override
+    public int getPrice() {
+        int rez = 0;
+        for (SingleTicket singleTicket:this.tickets){
+            rez += singleTicket.getPrice();
+        }
+        return rez;
+    }
 
-
+    @Override
     public boolean isTemporary() {
         return this.isTemporary;
     }
 
-    private ArrayList<SingleTicket> tickets;
+    protected ArrayList<SingleTicket> tickets;
     private String owner;
     private boolean isTemporary;
 }
