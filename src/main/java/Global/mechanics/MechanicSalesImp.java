@@ -13,12 +13,15 @@ import java.util.Map;
  * Date: 14.12.13
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
-    private final Address address = new Address();
+    private final Address address;
     private final MessageSystem ms;
     private Map<Long, SingleTicket> foundTickets;
 
     public MechanicSalesImp(MessageSystem ms) {
         this.ms = ms;
+        this.address = new Address();
+        this.ms.getAddressService().setSalesMechanics(this.address);
+        this.ms.addService(this);
     }
 
     @Override
