@@ -16,14 +16,11 @@ import java.util.Map;
 public interface PageDispatcher {
     // Здесь и далее: все URL-ы записываются как константы.
     String URL_AUTH = "/auth";
-    String URL_HOME = "/home";
     String URL_ADMIN = "/admin";
-    String URL_FROM_THE_VERY_BOTTOM_OF_MY_HEARTH = "/omg_so_test";
     String URL_MAIN = "/main";
     String URL_SEARCH = "/search";
     String URL_BUY = "/buy";
     String URL_ACCOUNT = "/account";
-    String URL_AUCTION = "/auction";
 
 
     WebPageImp getPage(String url);

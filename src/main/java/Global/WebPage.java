@@ -17,4 +17,5 @@ public interface WebPage {
     String handlePOST(HttpServletRequest request);
 
     int getStatus();
+
 }
