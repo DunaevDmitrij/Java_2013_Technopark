@@ -5,6 +5,7 @@
 <#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
-    <h1>Hello<h1>
+    
+    <h1>Someday information about ticket will be here</h1>
 
 <#include "contentToFooter.html">

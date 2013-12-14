@@ -5,6 +5,6 @@
 <#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
-    <h1>Hello<h1>
+    <h1>You are on empty buy page. Find ticket you need <a href="/search">HERE</a></h1>
 
 <#include "contentToFooter.html">

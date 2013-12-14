@@ -1,0 +1,30 @@
+<#-- Vars: Page_Title -->
+<#include "headToAdditions.html">
+    <#-- Put your SCRIPTS and STYLESHEETS after here -->
+    <link rel="stylesheet" type="text/css" href="css/search.css" />
+
+<#-- Vars: Location -->
+<#include "endOfAdditionsToContent.html">
+    <#-- Put your CONTENT after here -->
+
+    <form class="search" method="POST" action="/search">
+      <h4>Search criterias</h4>
+      <div>From:</div>
+      <input type="text" name="from"/>
+      <br>
+      <div>Where:</div>
+      <input type="text" name="from"/>
+      <br>
+      <div>Max Price:</div>
+      <input type="text" name="from"/>
+      <br>
+      <div>Plane Changes:</div>
+      <input type="text" name="from"/>
+      <br>
+      <div>Date (format: dd.mm.yyyy):</div>
+      <input type="text" name="from"/>
+      <br>
+      <input type="submit" value="Submit data"/>
+    </form>
+
+<#include "contentToFooter.html">
