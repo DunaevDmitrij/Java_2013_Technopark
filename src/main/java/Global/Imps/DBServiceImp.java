@@ -19,9 +19,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
@@ -119,7 +122,9 @@ public class DBServiceImp implements DBService {
         this.connect = DriverManager.getConnection(dbUrl + databaseName, dbUser, dbPassword);
     }
 
-    //FIXME: выборка по времени
+
+    //TODO вынести временную зону в ресурсы
+    //TODO разобраться с временной зоной
     @Override
     public ArrayList<SingleTicket> findSingleTickets(Map<String, String> params) {
         //проверка, что обязательные поля заполнены
@@ -133,7 +138,8 @@ public class DBServiceImp implements DBService {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to"},
                 params.get(MechanicSales.findParams.ARRIVAL_AIRPORT),   params.get(MechanicSales.findParams.DEPARTURE_AIRPORT),
-                params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE), params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO));
+                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE)),
+                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO)));
 
         //формирование sql скрипта
         String queryString = generateSQL("find_single_tickets.sql", pageVariables);
@@ -147,13 +153,13 @@ public class DBServiceImp implements DBService {
                         while (!result.isLast()) {
                             result.next();
                             //TODO: добавить еще и фильтр по остальным параметрам
-                            tickets.add(new SingleTicket("",  //departureAirport
-                                    "",     //arrivalAirport
-                                    result.getDate("TimeDeparture"), //departureTime
+                            tickets.add(new SingleTicket(result.getString("AirportDeparture"),  //departureAirport
+                                    result.getString("AirportArrival"),     //arrivalAirport
+                                    datetimeToDate(result.getString("TimeDeparture")), //departureTime
                                     result.getLong("FlightTime"),  //flightTime
                                     result.getString("FlightName"), //flightNumber
                                     toSeatClass(result.getLong("PlaceClass")), // seatClass
-                                    result.getString("PlaneName")//planeModel
+                                    result.getString("PlaneName") //planeModel
                                  ));
                         }
                         return tickets;
@@ -169,14 +175,31 @@ public class DBServiceImp implements DBService {
         return new ArrayList<SingleTicket>();
     }
 
+    private static String timestampToDatetime(String timestamp) {
+        Long time = Long.parseLong(timestamp, 10);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+        return sdf.format(time*1000L);
+    }
+
+    private static Date datetimeToDate(String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long unixtime = 0;
+        try {
+            unixtime = sdf.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return new Date(unixtime);
+    }
+
     private static Ticket.seatClass toSeatClass(Long Val) {
-        //FIXME: case
-        if (Val.equals(1)) {
-            return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
-        } else if (Val.equals(2)) {
-            return Ticket.seatClass.SEAT_CLASS_BUSINESS;
-        } else {
-            return Ticket.seatClass.SEAT_CLASS_FIRST;
+        switch (Val.intValue())
+        {
+            case 1: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
+            case 2: return Ticket.seatClass.SEAT_CLASS_BUSINESS;
+            case 3: return Ticket.seatClass.SEAT_CLASS_FIRST;
+            default: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
         }
     }
 
