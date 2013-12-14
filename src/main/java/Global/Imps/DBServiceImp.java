@@ -177,7 +177,7 @@ public class DBServiceImp implements DBService {
                 login,   password);
 
         try {
-            if (!checkIsUserExist(login))
+            if (!this.checkIsUserExist(login))
             {
                 if (execUpdate(this.connect, generateSQL("create_user.sql", pageVariables)) == 1)
                     return true;

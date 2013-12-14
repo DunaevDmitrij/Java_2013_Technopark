@@ -51,35 +51,35 @@ public class SingleTicket {
     */
 
     public String getPlaneModel() {
-        return planeModel;
+        return this.planeModel;
     }
 
     public String getDepartureAirport() {
-        return departureAirport;
+        return this.departureAirport;
     }
 
     public String getArrivalAirport() {
-        return arrivalAirport;
+        return this.arrivalAirport;
     }
 
     public Date getDepartureTime() {
-        return departureTime;
+        return this.departureTime;
     }
 
     public long getFlightTime() {
-        return flightTime;
+        return this.flightTime;
     }
 
     public String getFlightNumber() {
-        return flightNumber;
+        return this.flightNumber;
     }
 
     public Ticket.seatClass getSeatClass() {
-        return seatClass;
+        return this.seatClass;
     }
 
     public boolean isTemporary() {
-        return isTemporary;
+        return this.isTemporary;
     }
 
     private long id;

@@ -1,7 +1,5 @@
 package Global.Imps;
 
-import Global.DBService;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Sidorov Vadim

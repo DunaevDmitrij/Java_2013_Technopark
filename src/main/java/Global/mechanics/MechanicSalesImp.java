@@ -125,16 +125,20 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     }
 
     private long getNewSearchRequestId(){
-        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
-            if (!this.foundTicketStatuses.containsKey(new Long(rez)))
+        for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
+            if (!this.foundTicketStatuses.containsKey(new Long(rez))) {
                 return rez;
+            }
+        }
         return OWERFLOW;
     }
 
     private long getNewBuyRequestId(){
-        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
-            if (!this.buyRequestsStatuses.containsKey(new Long(rez)))
+        for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
+            if (!this.buyRequestsStatuses.containsKey(new Long(rez))) {
                 return rez;
+            }
+        }
         return OWERFLOW;
     }
 }

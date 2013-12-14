@@ -11,8 +11,8 @@ import java.util.Collection;
  * Date: 14.12.13
  */
 public class MsgFindTicketResult extends MsgToMechanics {
-    private Collection<SingleTicket> singleTickets;
-    private long requestId;
+    private final Collection<SingleTicket> singleTickets;
+    private final long requestId;
 
     public MsgFindTicketResult(Address from, Address to, long requestId, Collection<SingleTicket> results){
         super(from, to);

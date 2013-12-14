@@ -92,7 +92,7 @@ public class TicketImp implements Ticket {
 
 
     public boolean isTemporary() {
-        return isTemporary;
+        return this.isTemporary;
     }
 
     private ArrayList<SingleTicket> tickets;
