@@ -1,6 +1,9 @@
 package Global;
 
+import Global.mechanics.SingleTicket;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: artemlobachev
@@ -16,7 +19,7 @@ public interface Ticket {
     public Date getDepartureDateTime();
     public String getArrivalAirport();
     public long getFlightTime();
-    public Object getRoute();   //TODO make class Route or return Formatted String?
+    public List<SingleTicket> getRoute();   //TODO make class Route or return Formatted String?
     public seatClass getMinSeatClass();
     public int getPrice();
     public boolean isTemporary();

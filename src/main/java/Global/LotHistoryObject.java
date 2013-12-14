@@ -7,12 +7,12 @@ import java.util.Date;
  * Date: 29.11.13
  */
 public interface LotHistoryObject {
-    public static enum type{
+    public static enum Type {
         OPEN, CLOSE, RISE_PRICE
     }
 
     public Date getDate();
-    public type getType();
+    public Type getType();
     public User getAuthor();
     public String getArg();//something like new price for RISE_PRICE
 }

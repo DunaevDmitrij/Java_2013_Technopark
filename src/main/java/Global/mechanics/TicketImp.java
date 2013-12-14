@@ -5,6 +5,7 @@ import Global.Ticket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: artemlobachev
@@ -69,7 +70,7 @@ public class TicketImp implements Ticket {
     }
 
     @Override
-    public Object getRoute() {
+    public List<SingleTicket> getRoute() {
         return new ArrayList<>(this.tickets);  //TODO
     }
 

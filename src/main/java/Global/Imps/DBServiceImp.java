@@ -144,6 +144,11 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public boolean createLot(Ticket ticket) {
+        return false;
+    }
+
+    @Override
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },
