@@ -18,6 +18,7 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     //TODO: make own search and buy
     //TODO: task for closing lots
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
 
     public MechanicAuctionImp(MessageSystem ms){
         super(ms);
@@ -26,10 +27,10 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     @Override
     public Collection<Lot> searchLots (Map<String,String>params, boolean activeOnly, int maxResults) {
         long requestId = this.getNewSearchRequestId();
-        this.foundItemStatuses.put(requestId,false);
+        this.foundLotStatuses.put(requestId, false);
         MsgFindLot msg = new MsgFindLot(this.address, this.ms.getAddressService().getAccountService(), params, requestId);
         this.ms.sendMessage(msg);
-        while (!this.foundItemStatuses.get(requestId)){
+        while (!this.foundLotStatuses.get(requestId)){
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -39,12 +40,12 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
         if (!this.foundLots.get(requestId).isEmpty()){
             HashSet<Lot> rez = foundLots.get(requestId);
             //removing used values
-            this.foundItemStatuses.remove(requestId);
+            this.foundLotStatuses.remove(requestId);
             this.foundLots.remove(requestId);
             return rez;
         }
         //removing used values
-        this.foundItemStatuses.remove(requestId);
+        this.foundLotStatuses.remove(requestId);
         this.foundLots.remove(requestId);
         return null;
     }
@@ -77,7 +78,7 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
             singleTickets.add(ticket);
         }
         this.foundLots.put(requestId, singleTickets);
-        this.foundItemStatuses.put(requestId,true);
+        this.foundLotStatuses.put(requestId, true);
     }
 
     @Override
