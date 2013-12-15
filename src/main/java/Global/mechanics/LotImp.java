@@ -35,7 +35,7 @@ public class LotImp extends TicketImp implements Lot {
     @Override
     public boolean risePrice(User user,Date date, int newPrice) {
         this.history.add(new LotHistoryObjectImp(date, LotHistoryObject.Type.RISE_PRICE,user,String.valueOf(newPrice)));
-        this.owner = user.getUserName();
+        this.owner = user.getUserLogin();
         return true;
     }
 
