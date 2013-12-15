@@ -4,6 +4,7 @@ import Global.MsgSystem.Abonent;
 import Global.mechanics.SingleTicket;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -46,8 +47,19 @@ public interface DBService extends Abonent, Runnable {
 
     /**
      * Creates lot from ticket
+     *
      * @param ticket
-     * @return true if success, false otherwise
+     * @param startPrice
+     *@param closeDate @return true if success, false otherwise
      */
-    boolean createLot(Ticket ticket);
+    boolean createLot(Ticket ticket, int startPrice, Date closeDate);
+
+    /**
+     * Rises Lot price for User
+     * @param lot
+     * @param user
+     * @param newPrice
+     * @return
+     */
+    boolean riseLotPrice(Lot lot, User user, int newPrice);
 }

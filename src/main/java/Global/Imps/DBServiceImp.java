@@ -144,7 +144,12 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
-    public boolean createLot(Ticket ticket) {
+    public boolean createLot(Ticket ticket, int startPrice, Date closeDate) {
+        return false;
+    }
+
+    @Override
+    public boolean riseLotPrice(Lot lot, User user, int newPrice) {
         return false;
     }
 
