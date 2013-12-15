@@ -37,6 +37,8 @@ public interface DBService extends Abonent, Runnable {
     //поиск доступных рейсов
     ArrayList<SingleTicket> findSingleTickets(Map<String, String> params);
 
+    ArrayList<Lot> findLots(Map<String,String> params);
+
     /**
      * Puts to database all singleTicket objects of Ticket, puts to database Ticket object (all in one transaction).
      * @param ticket
@@ -44,6 +46,8 @@ public interface DBService extends Abonent, Runnable {
      * @return true if success, false otherwise(including if lot for this ticket exists)
      */
     boolean buyTicket(Ticket ticket, User user);
+
+    boolean buyLot(Lot lot, User user);
 
     /**
      * Creates lot from ticket

@@ -137,10 +137,20 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public ArrayList<Lot> findLots(Map<String, String> params) {
+        return null;
+    }
+
+    @Override
     public boolean buyTicket(Ticket ticket, User user) {
 
         //TODO!!!
         return true;
+    }
+
+    @Override
+    public boolean buyLot(Lot lot, User user) {
+        return false;
     }
 
     @Override
