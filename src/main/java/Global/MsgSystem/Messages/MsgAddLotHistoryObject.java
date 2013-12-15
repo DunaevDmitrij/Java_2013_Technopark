@@ -21,6 +21,7 @@ public class MsgAddLotHistoryObject extends MsgToDB {
     }
     @Override
     void exec(DBService dbService) {
-        dbService.addLotHistroryObject(this.lot, this.object);
+        //FIXME: удалить имплементацию!
+        //dbService.addLotHistroryObject(this.lot, this.object);
     }
 }

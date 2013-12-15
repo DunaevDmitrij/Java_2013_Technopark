@@ -137,8 +137,8 @@ public class DBServiceImp implements DBService {
         String additional = "";
         if (params.containsKey(MechanicSales.findParams.MAX_PRICE))
             additional += "and Price <= '" + params.get(MechanicSales.findParams.MAX_PRICE) + "'";
-        //if (params.containsKey(MechanicSales.findParams.MIN_SEAT_CLASS))
-        //    additional += " and PlaceClass = '" + params.get(MechanicSales.findParams.MIN_SEAT_CLASS) + "'";
+        if (params.containsKey(MechanicSales.findParams.MIN_SEAT_CLASS))
+            additional += " and PlaceClass >= '" + params.get(MechanicSales.findParams.MIN_SEAT_CLASS) + "'";
 
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to", "additional"},
@@ -193,25 +193,18 @@ public class DBServiceImp implements DBService {
         }
 
         //добавляем общий билет
-        Integer ticketId = 0;
         Map<String, Object> pageVariables = dataToKey(new String [] { "UserLogin" }, user.getUserLogin());
         try {
             if (execUpdate(this.connect, generateSQL("create_ticket.sql", pageVariables)) == 0)
                 return false;
 
-            ticketId = execQuery(this.connect, generateSQL("get_last_ticket_id.sql", pageVariables), new TResultHandler<Integer>() {
-                @Override
-                public Integer handler(ResultSet result) throws SQLException {
-                    if (!result.isLast())  {
-                        result.next();
-                        return result.getInt("idTicket");
-                    }
-                    else
-                        return 0;
-                }});
+
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates
+            return false;
         }
+
+        Integer ticketId = getLastInsertId();
 
         //добавляем все SingleTicket
         for (SingleTicket sTicket : ticket.getRoute()) {
@@ -223,6 +216,8 @@ public class DBServiceImp implements DBService {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
+
+        ticket.setId(ticketId);
 
         return true;
     }
@@ -245,11 +240,6 @@ public class DBServiceImp implements DBService {
     @Override
     public boolean riseLotPrice(Lot lot, User user, int newPrice) {
         return false;
-    }
-
-    @Override
-    public void addLotHistroryObject(Lot lot, LotHistoryObject object) {
-
     }
 
     @Override
@@ -440,5 +430,20 @@ public class DBServiceImp implements DBService {
         else if (sc == Ticket.seatClass.SEAT_CLASS_BUSINESS) return 2L;
         else if (sc == Ticket.seatClass.SEAT_CLASS_FIRST) return 3L;
         else return 1L;
+    }
+
+    private Integer getLastInsertId() {
+        try {
+            return execQuery(this.connect, generateSQL("get_last_insert_id.sql", new HashMap<String, Object>()), new TResultHandler<Integer>() {
+                @Override
+                public Integer handler(ResultSet result) throws SQLException {
+                    result.next();
+                    return result.getInt(1);
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return 0;
     }
 }
