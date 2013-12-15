@@ -104,7 +104,22 @@ public class TicketImp implements Ticket {
         return this.isTemporary;
     }
 
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(long newId) {
+        this.id = newId;
+    }
+
     protected ArrayList<SingleTicket> tickets;
     protected String owner;
     private boolean isTemporary;
+    protected long id;
+
+
+
+
 }

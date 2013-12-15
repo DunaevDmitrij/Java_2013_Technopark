@@ -23,4 +23,6 @@ public interface Ticket {
     public seatClass getMinSeatClass();
     public int getPrice();
     public boolean isTemporary();
+    public long getId();
+    public void setId(long newId);
 }
