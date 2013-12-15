@@ -164,6 +164,11 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public void addLotHistroryObject(Lot lot, LotHistoryObject object) {
+
+    }
+
+    @Override
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },

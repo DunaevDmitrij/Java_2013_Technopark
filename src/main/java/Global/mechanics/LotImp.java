@@ -26,6 +26,12 @@ public class LotImp extends TicketImp implements Lot {
         this.history.add(new LotHistoryObjectImp(startDate, LotHistoryObject.Type.OPEN,new UserImp("Valera"),String.valueOf(startPrice)));
     }
 
+    public LotImp(Ticket ticket,Date closeDate, List<LotHistoryObject> history){
+        super(ticket.getOwner(),ticket.getRoute(),ticket.isTemporary());
+        this.closeDate = closeDate;
+        this.history = history;
+    }
+
     @Override
     public boolean risePrice(User user,Date date, int newPrice) {
         this.history.add(new LotHistoryObjectImp(date, LotHistoryObject.Type.RISE_PRICE,user,String.valueOf(newPrice)));

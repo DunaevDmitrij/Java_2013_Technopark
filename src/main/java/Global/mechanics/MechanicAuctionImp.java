@@ -2,10 +2,7 @@ package Global.mechanics;
 
 import Global.*;
 import Global.MsgSystem.Abonent;
-import Global.MsgSystem.Messages.MsgAddLot;
-import Global.MsgSystem.Messages.MsgBuyLot;
-import Global.MsgSystem.Messages.MsgFindLot;
-import Global.MsgSystem.Messages.MsgRiseLotPrice;
+import Global.MsgSystem.Messages.*;
 
 import java.util.Collection;
 import java.util.Date;
@@ -126,6 +123,8 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
         this.riseLotPriceStatuses.remove(requestId);
         if (result){
             lot.risePrice(user, new Date(System.currentTimeMillis()), newPrice);
+            MsgAddLotHistoryObject msgHist = new MsgAddLotHistoryObject(this.address, this.ms.getAddressService().getAuctionMechanics(),lot,new LotHistoryObjectImp(new Date(System.currentTimeMillis()), LotHistoryObject.Type.RISE_PRICE,user, String.valueOf(newPrice)));
+            this.ms.sendMessage(msgHist);
         }
         return result;
     }
