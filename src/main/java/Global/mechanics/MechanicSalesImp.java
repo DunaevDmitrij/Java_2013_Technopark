@@ -18,9 +18,9 @@ import static java.lang.Thread.sleep;
  * Date: 14.12.13
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
-    private static final long OWERFLOW = -1;
-    private final Address address;
-    private final MessageSystem ms;
+    protected static final long OWERFLOW = -1;
+    protected final Address address;
+    protected final MessageSystem ms;
     private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, HashSet<SingleTicket>> foundTicketResults = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
@@ -30,8 +30,13 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         super();
         this.ms = ms;
         this.address = new Address();
-        this.ms.getAddressService().setSalesMechanics(this.address);
+        this.addMeToAddressService();
         this.ms.addService(this);
+    }
+
+    @Override
+    public MessageSystem getMessageSystem() {
+        return this.ms;
     }
 
     /**
@@ -42,8 +47,8 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     @Override
     public Collection<Ticket> search(Map<String, String> params) {
         //TODO make real search: building tree, etc
-        long requestId = this.getNewSearchRequestId();
-        this.foundTicketStatuses.put(requestId,false);
+        long requestId = this.findFreeKey(this.foundTicketStatuses);
+        this.foundTicketStatuses.put(requestId, false);
         MsgFindTicket msg = new MsgFindTicket(this.address, this.ms.getAddressService().getAccountService(), params, requestId);
         this.ms.sendMessage(msg);
         while (!this.foundTicketStatuses.get(requestId)){
@@ -72,7 +77,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
 
     @Override
     public boolean buy(Ticket ticket, User passenger) {
-        long requestId = this.getNewBuyRequestId();
+        long requestId = this.findFreeKey(this.buyRequestsStatuses);
         MsgBuyTicket msg = new MsgBuyTicket(this.address, this.ms.getAddressService().getAccountService(), ticket, passenger, requestId);
         this.buyRequestsStatuses.put(requestId, false);
         this.ms.sendMessage(msg);
@@ -90,18 +95,18 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     }
 
     @Override
-    public void ticketsFound(long requestId, Collection<SingleTicket> tickets) {
+    public void itemsFound(long requestId, Collection<SingleTicket> tickets) {
         //TODO: check if has answer
         HashSet<SingleTicket> singleTickets = new HashSet<>();
         for(SingleTicket ticket:tickets){
             singleTickets.add(ticket);
         }
         this.foundTicketResults.put(requestId, singleTickets);
-        this.foundTicketStatuses.put(requestId,true);
+        this.foundTicketStatuses.put(requestId, true);
     }
 
     @Override
-    public void ticketBought(long requestId, boolean result) {
+    public void itemBought(long requestId, boolean result) {
         this.BuyRequestsResults.put(requestId,result);
         this.buyRequestsStatuses.put(requestId,true);
     }
@@ -124,17 +129,16 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         }
     }
 
-    private long getNewSearchRequestId(){
-        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
-            if (!this.foundTicketStatuses.containsKey(new Long(rez)))
+    protected long findFreeKey(ConcurrentHashMap<Long, Boolean> map){
+        for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
+            if (!map.containsKey(new Long(rez))) {
                 return rez;
+            }
+        }
         return OWERFLOW;
     }
 
-    private long getNewBuyRequestId(){
-        for(long rez = 0; rez<Long.MAX_VALUE;rez++)
-            if (!this.buyRequestsStatuses.containsKey(new Long(rez)))
-                return rez;
-        return OWERFLOW;
+    protected void addMeToAddressService(){
+        this.ms.getAddressService().setSalesMechanics(this.address);
     }
 }

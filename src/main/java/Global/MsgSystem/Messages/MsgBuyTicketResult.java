@@ -7,7 +7,7 @@ import Global.MechanicSales;
  * Author: artemlobachev
  * Date: 14.12.13
  */
-public class MsgBuyTicketResult extends MsgToMechanics{
+public class MsgBuyTicketResult extends MsgToMechanicSales {
     private final long requestId;
     private final boolean result;
 
@@ -20,6 +20,6 @@ public class MsgBuyTicketResult extends MsgToMechanics{
 
     @Override
     void exec(MechanicSales mechanicSales) {
-        mechanicSales.ticketBought(this.requestId,this.result);
+        mechanicSales.itemBought(this.requestId, this.result);
     }
 }

@@ -10,9 +10,9 @@ import Global.User;
  * Date: 14.12.13
  */
 public class MsgBuyTicket extends MsgToDB{
-    private Ticket ticket;
-    private User user;
-    private long requestId;
+    private final Ticket ticket;
+    private final User user;
+    private final long requestId;
 
     public MsgBuyTicket(Address from, Address to, Ticket ticket, User user, long requestId) {
         super(from, to);

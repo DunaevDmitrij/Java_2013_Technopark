@@ -6,5 +6,5 @@ package Global;
  */
 public interface User {
 
-    public String getUserName();
+    public String getUserLogin();
 }

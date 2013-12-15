@@ -12,8 +12,8 @@ import java.util.Map;
  * Date: 14.12.13
  */
 public class MsgFindTicket extends MsgToDB {
-    private Map<String, String> params;
-    private long requestId;
+    private final Map<String, String> params;
+    private final long requestId;
 
     public MsgFindTicket(Address from, Address to, Map<String, String> params, long requestId){
         super(from, to);
@@ -24,7 +24,7 @@ public class MsgFindTicket extends MsgToDB {
     @Override
     public void exec(DBService abonent) {
         ArrayList<SingleTicket> singleTickets = abonent.findSingleTickets(this.params);
-        abonent.getMessageSystem().sendMessage(new MsgFindTicketResult(this.getTo(),this.getFrom(),requestId,singleTickets));
+        abonent.getMessageSystem().sendMessage(new MsgFindTicketResult(this.getTo(),this.getFrom(), this.requestId,singleTickets));
 
     }
 }

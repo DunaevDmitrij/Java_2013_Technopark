@@ -8,8 +8,8 @@ import Global.MsgSystem.Abonent;
  * Author: artemlobachev
  * Date: 14.12.13
  */
-public abstract class MsgToMechanics extends Msg{
-    public MsgToMechanics(Address from, Address to) {
+public abstract class MsgToMechanicSales extends Msg{
+    public MsgToMechanicSales(Address from, Address to) {
         super(from, to);
     }
 

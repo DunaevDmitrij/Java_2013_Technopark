@@ -10,9 +10,9 @@ import java.util.Collection;
  * Author: artemlobachev
  * Date: 14.12.13
  */
-public class MsgFindTicketResult extends MsgToMechanics {
-    private Collection<SingleTicket> singleTickets;
-    private long requestId;
+public class MsgFindTicketResult extends MsgToMechanicSales {
+    private final Collection<SingleTicket> singleTickets;
+    private final long requestId;
 
     public MsgFindTicketResult(Address from, Address to, long requestId, Collection<SingleTicket> results){
         super(from, to);
@@ -23,6 +23,6 @@ public class MsgFindTicketResult extends MsgToMechanics {
 
     @Override
     void exec(MechanicSales mechanicSales) {
-        mechanicSales.ticketsFound(this.requestId, this.singleTickets);
+        mechanicSales.itemsFound(this.requestId, this.singleTickets);
     }
 }

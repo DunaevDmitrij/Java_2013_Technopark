@@ -5,6 +5,7 @@ import Global.Ticket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: artemlobachev
@@ -69,8 +70,8 @@ public class TicketImp implements Ticket {
     }
 
     @Override
-    public Object getRoute() {
-        return null;  //TODO
+    public List<SingleTicket> getRoute() {
+        return new ArrayList<>(this.tickets);
     }
 
     @Override
@@ -89,13 +90,21 @@ public class TicketImp implements Ticket {
         return rez;
     }
 
-
-
-    public boolean isTemporary() {
-        return isTemporary;
+    @Override
+    public int getPrice() {
+        int rez = 0;
+        for (SingleTicket singleTicket:this.tickets){
+            rez += singleTicket.getPrice();
+        }
+        return rez;
     }
 
-    private ArrayList<SingleTicket> tickets;
-    private String owner;
+    @Override
+    public boolean isTemporary() {
+        return this.isTemporary;
+    }
+
+    protected ArrayList<SingleTicket> tickets;
+    protected String owner;
     private boolean isTemporary;
 }
