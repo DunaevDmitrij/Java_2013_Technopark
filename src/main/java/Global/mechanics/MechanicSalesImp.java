@@ -18,20 +18,25 @@ import static java.lang.Thread.sleep;
  * Date: 14.12.13
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
-    private static final long OWERFLOW = -1;
-    private final Address address;
-    private final MessageSystem ms;
-    private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
+    protected static final long OWERFLOW = -1;
+    protected final Address address;
+    protected final MessageSystem ms;
+    protected final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, HashSet<SingleTicket>> foundTicketResults = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, Boolean> BuyRequestsResults = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<Long, Boolean> BuyRequestsResults = new ConcurrentHashMap<>();
 
     public MechanicSalesImp(MessageSystem ms) {
         super();
         this.ms = ms;
         this.address = new Address();
-        this.ms.getAddressService().setSalesMechanics(this.address);
+        this.addMeToAddressService();
         this.ms.addService(this);
+    }
+
+    @Override
+    public MessageSystem getMessageSystem() {
+        return this.ms;
     }
 
     /**
@@ -124,7 +129,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         }
     }
 
-    private long getNewSearchRequestId(){
+    protected long getNewSearchRequestId(){
         for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
             if (!this.foundTicketStatuses.containsKey(new Long(rez))) {
                 return rez;
@@ -133,12 +138,16 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         return OWERFLOW;
     }
 
-    private long getNewBuyRequestId(){
+    protected long getNewBuyRequestId(){
         for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
             if (!this.buyRequestsStatuses.containsKey(new Long(rez))) {
                 return rez;
             }
         }
         return OWERFLOW;
+    }
+
+    protected void addMeToAddressService(){
+        this.ms.getAddressService().setSalesMechanics(this.address);
     }
 }

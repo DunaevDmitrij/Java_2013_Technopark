@@ -13,6 +13,15 @@ public class AddressService {
     private Address accountService;
     private Address frontend;
     private Address salesMechanics;
+    private Address auctionMechanics;
+
+    public Address getAuctionMechanics() {
+        return auctionMechanics;
+    }
+
+    public void setAuctionMechanics(Address auctionMechanics) {
+        this.auctionMechanics = auctionMechanics;
+    }
 
     public Address getSalesMechanics() {
         return this.salesMechanics;

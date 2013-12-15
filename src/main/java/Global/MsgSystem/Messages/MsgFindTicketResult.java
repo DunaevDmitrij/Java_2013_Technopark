@@ -10,7 +10,7 @@ import java.util.Collection;
  * Author: artemlobachev
  * Date: 14.12.13
  */
-public class MsgFindTicketResult extends MsgToMechanics {
+public class MsgFindTicketResult extends MsgToMechanicSales {
     private final Collection<SingleTicket> singleTickets;
     private final long requestId;
 
