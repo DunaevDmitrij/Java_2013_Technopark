@@ -9,7 +9,9 @@ package Global.Imps;
 
 
 import Global.*;
+import Global.mechanics.LotImp;
 import Global.mechanics.SingleTicket;
+import Global.mechanics.TicketImp;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -224,7 +226,69 @@ public class DBServiceImp implements DBService {
 
     @Override
     public ArrayList<Lot> findLots(Map<String, String> params) {
-        return null;
+        //проверка, что обязательные поля заполнены
+        if (!params.containsKey(MechanicSales.findParams.ARRIVAL_AIRPORT) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_AIRPORT) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE) ||
+                !params.containsKey(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO))
+            return new ArrayList<Lot>();
+
+        //формируем основной запрос
+        //формирование дополнительных условий:
+        String additional = "";
+        if (params.containsKey(MechanicSales.findParams.MAX_PRICE))
+            additional += "and Price <= '" + params.get(MechanicSales.findParams.MAX_PRICE) + "'";
+        if (params.containsKey(MechanicSales.findParams.MIN_SEAT_CLASS))
+            additional += " and PlaceClass >= '" + params.get(MechanicSales.findParams.MIN_SEAT_CLASS) + "'";
+
+        //заполнение sql скрипта
+        Map<String, Object> pageVariables = dataToKey(new String [] { "AirportArrival", "AirportDeparture", "TimeDeparture_since", "TimeDeparture_to", "additional"},
+                params.get(MechanicSales.findParams.ARRIVAL_AIRPORT),   params.get(MechanicSales.findParams.DEPARTURE_AIRPORT),
+                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE)),
+                timestampToDatetime(params.get(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO)),
+                additional);
+
+        //формирование sql скрипта
+        String queryString = generateSQL("find_lot.sql", pageVariables);
+
+        try {
+            return execQuery(this.connect, queryString, new TResultHandler<ArrayList<Lot>>() {
+                @Override
+                public ArrayList<Lot> handler(ResultSet result) throws SQLException {
+                    if (rowCounts(result) > 0)  {
+                        ArrayList<Lot> lots = new ArrayList<Lot>();
+                        while (!result.isLast()) {
+                            result.next();
+                            SingleTicket tempST = new SingleTicket(result.getString("AirportDeparture"),  //departureAirport
+                                    result.getString("AirportArrival"),     //arrivalAirport
+                                    datetimeToDate(result.getString("TimeDeparture")), //departureTime
+                                    result.getLong("FlightTime"),  //flightTime
+                                    result.getString("FlightName"), //flightNumber
+                                    toSeatClass(result.getLong("PlaceClass")), // seatClass
+                                    result.getString("PlaneName"), //planeModel
+                                    result.getInt("Price") //price
+                            );
+
+                            ArrayList<SingleTicket> a = new ArrayList<SingleTicket>();
+                            a.add(tempST);
+                            Ticket ticket = new TicketImp(a, true);
+
+                            Lot l = new LotImp(ticket, datetimeToDate(result.getString("StartDate")),
+                                    datetimeToDate(result.getString("EndDate")), result.getInt("CurrentPrice"));
+
+                            lots.add(l);
+                        }
+                        return lots;
+                    }
+                    else
+                        return new ArrayList<Lot>();
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<Lot>();
     }
 
     @Override
@@ -251,7 +315,7 @@ public class DBServiceImp implements DBService {
         lotObject = new LotHistoryObject();
         lotObject.idTicket = ticket.getId();
         lotObject.idUser = getTicketOwnerId(ticket.getId());
-        lotObject.EndTime = "2014-01-01"; //FIXME:
+        lotObject.EndTime = timestampToDatetime(String.valueOf(closeDate.getTime())); //FIXME:
         lotObject.CurrentPrice = startPrice;
         lotObject.Type = 1;
 
