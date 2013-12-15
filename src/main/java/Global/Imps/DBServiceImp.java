@@ -158,7 +158,7 @@ public class DBServiceImp implements DBService {
                         ArrayList<SingleTicket> tickets = new ArrayList<SingleTicket>();
                         while (!result.isLast()) {
                             result.next();
-                            tickets.add(new SingleTicket(result.getString("AirportDeparture"),  //departureAirport
+                            SingleTicket tempST = new SingleTicket(result.getString("AirportDeparture"),  //departureAirport
                                     result.getString("AirportArrival"),     //arrivalAirport
                                     datetimeToDate(result.getString("TimeDeparture")), //departureTime
                                     result.getLong("FlightTime"),  //flightTime
@@ -166,7 +166,9 @@ public class DBServiceImp implements DBService {
                                     toSeatClass(result.getLong("PlaceClass")), // seatClass
                                     result.getString("PlaneName"), //planeModel
                                     result.getInt("Price") //price
-                                 ));
+                            );
+                            if (isSTicketAvailabale(tempST))
+                                tickets.add(tempST);
                         }
                         return tickets;
                     }
@@ -370,6 +372,10 @@ public class DBServiceImp implements DBService {
     }
 
     private boolean isSTicketAvailabale(SingleTicket ticket) {
+           return countSTicketsAvailabale(ticket) > 0 ? true : false;
+    }
+
+    private Integer countSTicketsAvailabale(SingleTicket ticket) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String[]{"FlightName", "Class"},
                 ticket.getFlightNumber(), seatClassToLong(ticket.getSeatClass()));
@@ -378,25 +384,22 @@ public class DBServiceImp implements DBService {
 
         try {
             //проверяем, что пользователей нет
-            return execQuery(this.connect, queryString, new TResultHandler<Boolean>() {
+            return execQuery(this.connect, queryString, new TResultHandler<Integer>() {
                 @Override
-                public Boolean handler(ResultSet result) throws SQLException {
+                public Integer handler(ResultSet result) throws SQLException {
                     if (rowCounts(result) == 1) {
                         result.next();
-                        if (result.getInt("Result") > 0)
-                            return true;
-                        else
-                            return false;
+                        return result.getInt("Result");
                     }
                     else
-                        return false;
+                        return 0;
                 }
             });
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return 0;
     }
 
     private static String timestampToDatetime(String timestamp) {
