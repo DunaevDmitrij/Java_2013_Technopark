@@ -26,10 +26,10 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     @Override
     public Collection<Lot> searchLots (Map<String,String>params, boolean activeOnly, int maxResults) {
         long requestId = this.getNewSearchRequestId();
-        this.foundTicketStatuses.put(requestId,false);
+        this.foundItemStatuses.put(requestId,false);
         MsgFindLot msg = new MsgFindLot(this.address, this.ms.getAddressService().getAccountService(), params, requestId);
         this.ms.sendMessage(msg);
-        while (!this.foundTicketStatuses.get(requestId)){
+        while (!this.foundItemStatuses.get(requestId)){
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -39,12 +39,12 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
         if (!this.foundLots.get(requestId).isEmpty()){
             HashSet<Lot> rez = foundLots.get(requestId);
             //removing used values
-            this.foundTicketStatuses.remove(requestId);
+            this.foundItemStatuses.remove(requestId);
             this.foundLots.remove(requestId);
             return rez;
         }
         //removing used values
-        this.foundTicketStatuses.remove(requestId);
+        this.foundItemStatuses.remove(requestId);
         this.foundLots.remove(requestId);
         return null;
     }
@@ -77,7 +77,7 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
             singleTickets.add(ticket);
         }
         this.foundLots.put(requestId, singleTickets);
-        this.foundTicketStatuses.put(requestId,true);
+        this.foundItemStatuses.put(requestId,true);
     }
 
     @Override

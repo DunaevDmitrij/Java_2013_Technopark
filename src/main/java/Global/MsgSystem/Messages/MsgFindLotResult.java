@@ -11,18 +11,18 @@ import java.util.Collection;
  * Date: 15.12.13
  */
 public class MsgFindLotResult extends MsgToMechanicAuction {
-    private final Collection<Lot> singleTickets;
+    private final Collection<Lot> lots;
     private final long requestId;
 
     public MsgFindLotResult(Address from, Address to, long requestId, Collection<Lot> results){
         super(from, to);
-        this.singleTickets = results;
+        this.lots = results;
         this.requestId = requestId;
 
     }
 
     @Override
     void exec(MechanicAuction mechanicSales) {
-        mechanicSales.lotsFound(this.requestId, this.singleTickets);
+        mechanicSales.lotsFound(this.requestId, this.lots);
     }
 }

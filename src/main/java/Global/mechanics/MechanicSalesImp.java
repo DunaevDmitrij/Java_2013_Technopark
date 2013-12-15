@@ -21,7 +21,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     protected static final long OWERFLOW = -1;
     protected final Address address;
     protected final MessageSystem ms;
-    protected final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<Long, Boolean> foundItemStatuses = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, HashSet<SingleTicket>> foundTicketResults = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<Long, Boolean> BuyRequestsResults = new ConcurrentHashMap<>();
@@ -48,10 +48,10 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     public Collection<Ticket> search(Map<String, String> params) {
         //TODO make real search: building tree, etc
         long requestId = this.getNewSearchRequestId();
-        this.foundTicketStatuses.put(requestId,false);
+        this.foundItemStatuses.put(requestId, false);
         MsgFindTicket msg = new MsgFindTicket(this.address, this.ms.getAddressService().getAccountService(), params, requestId);
         this.ms.sendMessage(msg);
-        while (!this.foundTicketStatuses.get(requestId)){
+        while (!this.foundItemStatuses.get(requestId)){
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -65,12 +65,12 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
             ArrayList<Ticket> rez = new ArrayList<>();
             rez.add(tmpTicket);
             //removing used values
-            this.foundTicketStatuses.remove(requestId);
+            this.foundItemStatuses.remove(requestId);
             this.foundTicketResults.remove(requestId);
             return rez;
         }
         //removing used values
-        this.foundTicketStatuses.remove(requestId);
+        this.foundItemStatuses.remove(requestId);
         this.foundTicketResults.remove(requestId);
         return null;
     }
@@ -102,7 +102,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
             singleTickets.add(ticket);
         }
         this.foundTicketResults.put(requestId, singleTickets);
-        this.foundTicketStatuses.put(requestId,true);
+        this.foundItemStatuses.put(requestId, true);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
 
     protected long getNewSearchRequestId(){
         for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
-            if (!this.foundTicketStatuses.containsKey(new Long(rez))) {
+            if (!this.foundItemStatuses.containsKey(new Long(rez))) {
                 return rez;
             }
         }
