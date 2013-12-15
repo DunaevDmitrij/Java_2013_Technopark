@@ -31,7 +31,7 @@ public class TicketImpTest {
         singleTicket = new SingleTicket("Bangkok", this.arrivalAirport,new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330",3);
         singleTickets.add(singleTicket);
         //total time = 8d = 691200 s
-        this.ticketImp = new TicketImp(this.owner, singleTickets, false);
+        this.ticketImp = new TicketImp(this.owner, singleTickets, false, 0L);
     }
 
     @Test

@@ -228,18 +228,126 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    //Тип = 3 - buy (close)
     public boolean buyLot(Lot lot, User user) {
-        return false;
+        LotHistoryObject lotObject = getLotHistoryObjectUsingCondition(" Ticket = '" + lot.getId() + "' ORDER BY Type DESC LIMIT 1");
+
+        if (lotObject == null) return false;
+        if (lotObject.Type == 3) return false;
+
+        lotObject.Type = 3; //buy (close)
+
+        insertLotHistoryObject(lotObject, true);
+
+        return true;
     }
 
     @Override
+    //Тип = 1 - create
     public boolean createLot(Ticket ticket, int startPrice, Date closeDate) {
-        return false;
+        LotHistoryObject lotObject = getLotHistoryObjectUsingCondition(" Ticket = '" + ticket.getId() + "' LIMIT 1");
+        if (lotObject != null) return false;
+
+        lotObject = new LotHistoryObject();
+        lotObject.idTicket = ticket.getId();
+        lotObject.idUser = getTicketOwnerId(ticket.getId());
+        lotObject.EndTime = "2014-01-01"; //FIXME:
+        lotObject.CurrentPrice = startPrice;
+        lotObject.Type = 1;
+
+        insertLotHistoryObject(lotObject, true);
+
+        return true;
     }
 
     @Override
+    //Тип = 2 - rise
     public boolean riseLotPrice(Lot lot, User user, int newPrice) {
-        return false;
+        LotHistoryObject lotObject = getLotHistoryObjectUsingCondition(" Ticket = '" + lot.getId() + "' ORDER BY CurrentPrice DESC, type desc LIMIT 1");
+
+        if (lotObject == null) return false;
+        if (lotObject.Type == 3) return false;
+
+        if (lotObject.CurrentPrice > newPrice) return  false;
+
+        lotObject.Type = 2; //rise
+        lotObject.CurrentPrice = newPrice;
+
+        insertLotHistoryObject(lotObject, true);
+
+        return true;
+    }
+
+    private Integer getTicketOwnerId(Long idTicket) {
+        String sql = "select Passenger from Ticket where idTicket = '" + idTicket + "'";
+
+        try {
+            return execQuery(this.connect, sql, new TResultHandler<Integer>() {
+                @Override
+                public Integer handler(ResultSet result) throws SQLException {
+                    if (rowCounts(result) == 1) {
+                        result.next();
+                        return result.getInt("Passenger");
+                    }
+                    return 0;
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return 0;
+    }
+
+    private class LotHistoryObject {
+        public Integer id;
+        public long idTicket;
+        public Integer idUser;
+        public String StartTime;
+        public String EndTime;
+        public Integer CurrentPrice;
+        public Integer Type;
+    }
+
+    private int insertLotHistoryObject(LotHistoryObject o, boolean isNowStartTime) {
+        String sql = "insert into lothistory(Ticket, User, StartDate, EndDate, CurrentPrice, Type) " +
+                "values ('" + o.idTicket + "','" + o.idUser + "'," + (isNowStartTime == true ? "NOW()" : o.StartTime) +
+                ",'" + o.EndTime + "','" + o.CurrentPrice + "','" + o.Type + "');";
+
+        try {
+            return execUpdate(this.connect, sql);
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return 0;
+    }
+
+    private LotHistoryObject getLotHistoryObjectUsingCondition(String condition) {
+        String sql = "select * from lothistory where " + condition;
+        try {
+            return execQuery(this.connect, sql, new TResultHandler<LotHistoryObject>() {
+                @Override
+                public LotHistoryObject handler(ResultSet result) throws SQLException {
+                    if (rowCounts(result) > 0) {
+                        result.next();
+                        LotHistoryObject r = new LotHistoryObject();
+                        r.id = result.getInt("id");
+                        r.CurrentPrice = result.getInt("CurrentPrice");
+                        r.idTicket = result.getInt("Ticket");
+                        r.idUser = result.getInt("User");
+                        r.StartTime = result.getString("StartDate");
+                        r.EndTime = result.getString("EndDate");
+                        r.Type = result.getInt("Type");
+
+                        return r;
+                    }
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
     }
 
     @Override

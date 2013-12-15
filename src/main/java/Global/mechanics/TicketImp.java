@@ -13,10 +13,11 @@ import java.util.List;
  */
 public class TicketImp implements Ticket {
 
-    public TicketImp(String owner, Collection<SingleTicket> singleTickets, boolean fromDB) {
+    public TicketImp(String owner, Collection<SingleTicket> singleTickets, boolean fromDB, Long ticketId) {
         super();
         this.owner = owner;
         this.isTemporary = !fromDB;
+        this.id = ticketId;
         this.tickets = new ArrayList<>();
         for (SingleTicket ticket : singleTickets) {
             this.tickets.add(ticket);
