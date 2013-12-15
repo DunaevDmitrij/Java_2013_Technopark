@@ -2,10 +2,7 @@ import Global.Lot;
 import Global.LotHistoryObject;
 import Global.Ticket;
 import Global.User;
-import Global.mechanics.LotImp;
-import Global.mechanics.SingleTicket;
-import Global.mechanics.TicketImp;
-import Global.mechanics.UserImp;
+import Global.mechanics.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,12 +22,14 @@ public class LotImpTest {
     private Lot lot;
     private final int lastPrice = 12;
     private final int LotHistoryObjectsCount = 2;
+    private final Date lastRiseDate = new Date(1386115200);
+    private final User userVasia = new UserImp("Vasia");
+    private final User userValera = new UserImp("Valera");
 
 
     @Before
     public void setUp(){
-        User userVasia = new UserImp("Vasia");
-        User userValera = new UserImp("Valera");
+
         ArrayList<SingleTicket> singleTickets = new ArrayList<>(3);
         //date = 7.12.13 15:00, flight time = 14hr
         SingleTicket singleTicket = new SingleTicket(this.departureAirport, "Vegas",new Date(1386428400),50400,"hangover-1", Ticket.seatClass.SEAT_CLASS_FIRST,"Boing 747-400",1);
@@ -43,10 +42,13 @@ public class LotImpTest {
         singleTickets.add(singleTicket);
         //total time = 8d = 691200 s
         TicketImp ticketImp = new TicketImp(this.owner, singleTickets, false);
-        //date = 5 december 2013, 00:00
-        this.lot = new LotImp(ticketImp,new Date(1368316800),10);
-        this.lot.risePrice(userVasia,new Date(),11);
-        this.lot.risePrice(userValera,new Date(),this.lastPrice);
+        //startDate = 2 december 2013, 00:00
+        //closeDate = 5 december 2013, 00:00
+        this.lot = new LotImp(ticketImp, new Date(1385942400), new Date(1386201600),10);
+        //date = 3 december 2013, 00:00
+        this.lot.risePrice(userVasia,new Date(1386028800),11);
+        //data = 4 december 2013, 00:00
+        this.lot.risePrice(userValera,this.lastRiseDate,this.lastPrice);
     }
 
     @Test
@@ -61,6 +63,7 @@ public class LotImpTest {
         final String ErrText = "Lot.getHistoryDESC() works wrong.";
         List<LotHistoryObject> list = this.lot.getHistoryDESC(this.LotHistoryObjectsCount);
         Assert.assertTrue(ErrText, list.size()<=this.LotHistoryObjectsCount);
-        //TODO: add checking some objects
+        LotHistoryObjectImp lotHistoryObjectImp = new LotHistoryObjectImp(this.lastRiseDate, LotHistoryObject.Type.RISE_PRICE, userValera, String.valueOf(this.lastPrice));
+        Assert.assertEquals(ErrText, list.get(0), lotHistoryObjectImp);
     }
 }

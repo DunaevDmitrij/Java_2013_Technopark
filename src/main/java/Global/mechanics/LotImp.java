@@ -17,11 +17,11 @@ public class LotImp extends TicketImp implements Lot {
     private Date closeDate;
     private List<LotHistoryObject> history;
 
-    public LotImp(Ticket ticket, Date closeDate, int startPrice){
+    public LotImp(Ticket ticket,Date startDate, Date closeDate, int startPrice){
         super(ticket.getOwner(),ticket.getRoute(),ticket.isTemporary());
         this.closeDate = closeDate;
         this.history = new ArrayList<>();
-        this.history.add(new LotHistoryObjectImp(new Date(System.currentTimeMillis()), LotHistoryObject.Type.OPEN,new UserImp("Valera"),String.valueOf(startPrice)));
+        this.history.add(new LotHistoryObjectImp(startDate, LotHistoryObject.Type.OPEN,new UserImp("Valera"),String.valueOf(startPrice)));
     }
 
     @Override
