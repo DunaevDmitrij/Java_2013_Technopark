@@ -124,6 +124,9 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
         boolean result = this.riseLotPriceResults.get(requestId);
         this.riseLotPriceResults.remove(requestId);
         this.riseLotPriceStatuses.remove(requestId);
+        if (result){
+            lot.risePrice(user, new Date(System.currentTimeMillis()), newPrice);
+        }
         return result;
     }
 

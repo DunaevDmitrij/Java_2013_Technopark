@@ -71,7 +71,7 @@ public class TicketImp implements Ticket {
 
     @Override
     public List<SingleTicket> getRoute() {
-        return new ArrayList<>(this.tickets);  //TODO
+        return new ArrayList<>(this.tickets);
     }
 
     @Override
@@ -105,6 +105,6 @@ public class TicketImp implements Ticket {
     }
 
     protected ArrayList<SingleTicket> tickets;
-    private String owner;
+    protected String owner;
     private boolean isTemporary;
 }

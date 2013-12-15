@@ -14,6 +14,8 @@ import java.util.List;
  * Date: 14.12.13
  */
 public class LotImp extends TicketImp implements Lot {
+    //TODO: LotHistory<->DB
+
     private Date closeDate;
     private List<LotHistoryObject> history;
 
@@ -27,6 +29,7 @@ public class LotImp extends TicketImp implements Lot {
     @Override
     public boolean risePrice(User user,Date date, int newPrice) {
         this.history.add(new LotHistoryObjectImp(date, LotHistoryObject.Type.RISE_PRICE,user,String.valueOf(newPrice)));
+        this.owner = user.getUserName();
         return true;
     }
 
