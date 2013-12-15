@@ -2,6 +2,7 @@ package Global.mechanics;
 
 import Global.*;
 import Global.MsgSystem.Abonent;
+import Global.MsgSystem.Messages.MsgAddLot;
 import Global.MsgSystem.Messages.MsgBuyLot;
 import Global.MsgSystem.Messages.MsgFindLot;
 
@@ -17,12 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
     //TODO: task for closing lots
-    //TODO: addLot, riseLotPrice
+    //TODO: riseLotPrice
+    //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
+    //TODO: tests (in pair with DBSERVICE)
     public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
+    //find
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, Boolean> buyLotRequestsStatuses = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, Boolean> BuyLotRequestsResults = new ConcurrentHashMap<>();
+    //buy
+    private final ConcurrentHashMap<Long, Boolean> buyLotStatuses = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> BuyLotResults = new ConcurrentHashMap<>();
+    //add
+    private final ConcurrentHashMap<Long, Boolean> addLotStatuses = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> addLotResults = new ConcurrentHashMap<>();
+    //risePrise
+    private final ConcurrentHashMap<Long, Boolean> riseLotPriceStatuses = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> riseLotPriceResults = new ConcurrentHashMap<>();
 
     public MechanicAuctionImp(MessageSystem ms){
         super(ms);
@@ -56,20 +67,20 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
 
     @Override
     public boolean buyLot(Lot lot, User user) {
-        long requestId = this.findFreeKey(this.buyLotRequestsStatuses);
+        long requestId = this.findFreeKey(this.buyLotStatuses);
         MsgBuyLot msg = new MsgBuyLot(this.address, this.ms.getAddressService().getAccountService(), lot, user, requestId);
-        this.buyLotRequestsStatuses.put(requestId, false);
+        this.buyLotStatuses.put(requestId, false);
         this.ms.sendMessage(msg);
-        while (!this.buyLotRequestsStatuses.get(requestId)){
+        while (!this.buyLotStatuses.get(requestId)){
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        boolean result = this.BuyLotRequestsResults.get(requestId);
-        this.BuyLotRequestsResults.remove(requestId);
-        this.buyLotRequestsStatuses.remove(requestId);
+        boolean result = this.BuyLotResults.get(requestId);
+        this.BuyLotResults.remove(requestId);
+        this.buyLotStatuses.remove(requestId);
         return result;
     }
 
@@ -80,7 +91,21 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
 
     @Override
     public boolean addLot(Ticket ticket, int startPrice, Date stopSales) {
-        return false;
+        long requestId = this.findFreeKey(this.addLotStatuses);
+        MsgAddLot msg = new MsgAddLot(this.address, this.ms.getAddressService().getAccountService(),requestId,ticket,startPrice,stopSales);
+        this.addLotStatuses.put(requestId, false);
+        this.ms.sendMessage(msg);
+        while (!this.addLotStatuses.get(requestId)){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean result = this.addLotResults.get(requestId);
+        this.addLotResults.remove(requestId);
+        this.addLotStatuses.remove(requestId);
+        return result;
     }
 
     @Override
@@ -98,10 +123,24 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
         this.foundLotStatuses.put(requestId, true);
     }
 
+    @Override
     public void lotBought(long requestId, boolean result){
-        this.BuyLotRequestsResults.put(requestId,result);
-        this.buyLotRequestsStatuses.put(requestId,true);
-    };
+        this.BuyLotResults.put(requestId, result);
+        this.buyLotStatuses.put(requestId, true);
+    }
+
+    @Override
+    public void lotAdded(long requestId, boolean result) {
+        this.addLotResults.put(requestId,result);
+        this.addLotStatuses.put(requestId,true);
+    }
+
+    @Override
+    public void lotPriceRisen(long requestId, boolean result) {
+        this.riseLotPriceResults.put(requestId,result);
+        this.riseLotPriceStatuses.put(requestId,true);
+    }
+
 
     @Override
     protected void addMeToAddressService(){

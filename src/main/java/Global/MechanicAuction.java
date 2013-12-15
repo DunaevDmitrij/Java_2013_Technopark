@@ -16,5 +16,7 @@ public interface MechanicAuction extends MechanicSales {
     public boolean riseLotPrice(Lot lot, User user, int newPrice);
     public void lotsFound(long requestId, Collection<Lot> tickets);
     public void lotBought(long requestId, boolean result);
+    public void lotAdded(long requestId, boolean result);
+    public void lotPriceRisen(long requestId, boolean result);
     //TODO not to forget to close lots by time
 }
