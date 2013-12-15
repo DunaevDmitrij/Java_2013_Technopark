@@ -35,7 +35,7 @@ public class LotImp extends TicketImp implements Lot {
         int rez = Integer.parseInt(this.history.get(0).getArg());
         for(int i = 1; i<this.history.size();i++){
             if (this.history.get(i).getType() == LotHistoryObject.Type.RISE_PRICE){
-                rez += Integer.parseInt(this.history.get(i).getArg());
+                rez = Integer.parseInt(this.history.get(i).getArg());
             }
         }
         return rez;
