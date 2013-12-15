@@ -21,10 +21,8 @@ import java.io.Writer;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.Map;
-import java.util.TimeZone;
 
 import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
@@ -183,44 +181,53 @@ public class DBServiceImp implements DBService {
         return new ArrayList<SingleTicket>();
     }
 
-    private static String timestampToDatetime(String timestamp) {
-        Long time = Long.parseLong(timestamp, 10);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
-        return sdf.format(time*1000L);
-    }
+    @Override
+    public boolean buyTicket(Ticket ticket, User user) {
 
-    private static Date datetimeToDate(String time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long unixtime = 0;
+        //проверяем, что каждый SingleTicket можно купить
+        for (SingleTicket sTicket : ticket.getRoute()) {
+            if (!isSTicketAvailabale(sTicket))
+                return false;
+        }
+
+        //добавляем общий билет
+        Integer ticketId = 0;
+        Map<String, Object> pageVariables = dataToKey(new String [] { "UserLogin" }, user.getUserLogin());
         try {
-            unixtime = sdf.parse(time).getTime();
-        } catch (ParseException e) {
+            if (execUpdate(this.connect, generateSQL("create_ticket.sql", pageVariables)) == 0)
+                return false;
+
+            ticketId = execQuery(this.connect, generateSQL("get_last_ticket_id.sql", pageVariables), new TResultHandler<Integer>() {
+                @Override
+                public Integer handler(ResultSet result) throws SQLException {
+                    if (!result.isLast())  {
+                        result.next();
+                        return result.getInt("idTicket");
+                    }
+                    else
+                        return 0;
+                }});
+        } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        return new Date(unixtime);
-    }
 
-    private static Ticket.seatClass toSeatClass(Long Val) {
-        switch (Val.intValue())
-        {
-            case 1: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
-            case 2: return Ticket.seatClass.SEAT_CLASS_BUSINESS;
-            case 3: return Ticket.seatClass.SEAT_CLASS_FIRST;
-            default: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
+        //добавляем все SingleTicket
+        for (SingleTicket sTicket : ticket.getRoute()) {
+            Map<String, Object> pV = dataToKey(new String [] { "idTicket", "FlightName", "PlaceClass" },
+                    ticketId, sTicket.getFlightNumber(), seatClassToLong(sTicket.getSeatClass()));
+            try {
+                execUpdate(this.connect, generateSQL("add_ticketinfo.sql", pV));
+            } catch (SQLException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
+
+        return true;
     }
 
     @Override
     public ArrayList<Lot> findLots(Map<String, String> params) {
         return null;
-    }
-
-    @Override
-    public boolean buyTicket(Ticket ticket, User user) {
-
-        //TODO!!!
-        return false;
     }
 
     @Override
@@ -360,5 +367,70 @@ public class DBServiceImp implements DBService {
     @Override
     public MessageSystem getMessageSystem() {
         return this.ms;
+    }
+
+    private boolean isSTicketAvailabale(SingleTicket ticket) {
+        //заполнение sql скрипта
+        Map<String, Object> pageVariables = dataToKey(new String[]{"FlightName", "Class"},
+                ticket.getFlightNumber(), seatClassToLong(ticket.getSeatClass()));
+        //формирование sql скрипта для проверки существования пользоваталя
+        String queryString = generateSQL("count_free_places_for_flight.sql", pageVariables);
+
+        try {
+            //проверяем, что пользователей нет
+            return execQuery(this.connect, queryString, new TResultHandler<Boolean>() {
+                @Override
+                public Boolean handler(ResultSet result) throws SQLException {
+                    if (rowCounts(result) == 1) {
+                        result.next();
+                        if (result.getInt("Result") > 0)
+                            return true;
+                        else
+                            return false;
+                    }
+                    else
+                        return false;
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private static String timestampToDatetime(String timestamp) {
+        Long time = Long.parseLong(timestamp, 10);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+        return sdf.format(time*1000L);
+    }
+
+    private static Date datetimeToDate(String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long unixtime = 0;
+        try {
+            unixtime = sdf.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return new Date(unixtime);
+    }
+
+    private static Ticket.seatClass toSeatClass(Long Val) {
+        switch (Val.intValue())
+        {
+            case 1: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
+            case 2: return Ticket.seatClass.SEAT_CLASS_BUSINESS;
+            case 3: return Ticket.seatClass.SEAT_CLASS_FIRST;
+            default: return Ticket.seatClass.SEAT_CLASS_ECONOMIC;
+        }
+    }
+
+    private static Long seatClassToLong(Ticket.seatClass sc) {
+        if (sc == Ticket.seatClass.SEAT_CLASS_ECONOMIC) return 1L;
+        else if (sc == Ticket.seatClass.SEAT_CLASS_BUSINESS) return 2L;
+        else if (sc == Ticket.seatClass.SEAT_CLASS_FIRST) return 3L;
+        else return 1L;
     }
 }

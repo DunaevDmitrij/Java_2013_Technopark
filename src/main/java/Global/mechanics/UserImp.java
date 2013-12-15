@@ -7,16 +7,16 @@ import Global.User;
  * Date: 14.12.13
  */
 public class UserImp implements User {
-    private final String userName;
+    private final String userLogin;
 
     public UserImp(String userName) {
         super();
-        this.userName = userName;
+        this.userLogin = userName;
     }
 
 
     @Override
-    public String getUserName() {
-        return this.userName;
+    public String getUserLogin() {
+        return this.userLogin;
     }
 }
