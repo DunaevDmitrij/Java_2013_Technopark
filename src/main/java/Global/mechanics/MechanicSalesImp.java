@@ -23,8 +23,8 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     protected final MessageSystem ms;
     private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, HashSet<SingleTicket>> foundTicketResults = new ConcurrentHashMap<>();
-    protected final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
-    protected final ConcurrentHashMap<Long, Boolean> BuyRequestsResults = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> buyRequestsStatuses = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Boolean> BuyRequestsResults = new ConcurrentHashMap<>();
 
     public MechanicSalesImp(MessageSystem ms) {
         super();
@@ -47,7 +47,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     @Override
     public Collection<Ticket> search(Map<String, String> params) {
         //TODO make real search: building tree, etc
-        long requestId = this.getNewSearchRequestId();
+        long requestId = this.findFreeKey(this.foundTicketStatuses);
         this.foundTicketStatuses.put(requestId, false);
         MsgFindTicket msg = new MsgFindTicket(this.address, this.ms.getAddressService().getAccountService(), params, requestId);
         this.ms.sendMessage(msg);
@@ -77,7 +77,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
 
     @Override
     public boolean buy(Ticket ticket, User passenger) {
-        long requestId = this.getNewBuyRequestId();
+        long requestId = this.findFreeKey(this.buyRequestsStatuses);
         MsgBuyTicket msg = new MsgBuyTicket(this.address, this.ms.getAddressService().getAccountService(), ticket, passenger, requestId);
         this.buyRequestsStatuses.put(requestId, false);
         this.ms.sendMessage(msg);
@@ -129,18 +129,9 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         }
     }
 
-    protected long getNewSearchRequestId(){
+    protected long findFreeKey(ConcurrentHashMap<Long, Boolean> map){
         for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
-            if (!this.foundTicketStatuses.containsKey(new Long(rez))) {
-                return rez;
-            }
-        }
-        return OWERFLOW;
-    }
-
-    protected long getNewBuyRequestId(){
-        for(long rez = 0; rez<Long.MAX_VALUE;rez++) {
-            if (!this.buyRequestsStatuses.containsKey(new Long(rez))) {
+            if (!map.containsKey(new Long(rez))) {
                 return rez;
             }
         }
