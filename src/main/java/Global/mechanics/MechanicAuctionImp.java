@@ -5,6 +5,7 @@ import Global.MsgSystem.Abonent;
 import Global.MsgSystem.Messages.MsgAddLot;
 import Global.MsgSystem.Messages.MsgBuyLot;
 import Global.MsgSystem.Messages.MsgFindLot;
+import Global.MsgSystem.Messages.MsgRiseLotPrice;
 
 import java.util.Collection;
 import java.util.Date;
@@ -18,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
     //TODO: task for closing lots
-    //TODO: riseLotPrice
     //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
     //TODO: tests (in pair with DBSERVICE)
     public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
@@ -110,7 +110,21 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
 
     @Override
     public boolean riseLotPrice(Lot lot, User user, int newPrice) {
-        return false;
+        long requestId = this.findFreeKey(this.riseLotPriceStatuses);
+        MsgRiseLotPrice msg = new MsgRiseLotPrice(this.address, this.ms.getAddressService().getAccountService(),requestId,lot,user,newPrice);
+        this.riseLotPriceStatuses.put(requestId, false);
+        this.ms.sendMessage(msg);
+        while (!this.riseLotPriceStatuses.get(requestId)){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean result = this.riseLotPriceResults.get(requestId);
+        this.riseLotPriceResults.remove(requestId);
+        this.riseLotPriceStatuses.remove(requestId);
+        return result;
     }
 
     @Override

@@ -10,12 +10,14 @@ import Global.User;
  * Date: 15.12.13
  */
 public class MsgRiseLotPrice extends MsgToDB {
-    private Lot lot;
-    private int newPrice;
-    private User user;
+    private final Lot lot;
+    private final int newPrice;
+    private final User user;
+    private final long requestId;
 
-    public MsgRiseLotPrice(Address from, Address to, Lot lot, User user, int newPrice){
+    public MsgRiseLotPrice(Address from, Address to,long requestId, Lot lot, User user, int newPrice){
         super(from, to);
+        this.requestId = requestId;
         this.lot = lot;
         this.user = user;
         this.newPrice = newPrice;
@@ -23,8 +25,7 @@ public class MsgRiseLotPrice extends MsgToDB {
 
     @Override
     void exec(DBService dbService) {
-        dbService.riseLotPrice(this.lot,this.user,this.newPrice);
-        //TODO: answer
-
+        boolean rez = dbService.riseLotPrice(this.lot, this.user,this.newPrice);
+        dbService.getMessageSystem().sendMessage(new MsgRiseLotPriceResult(this.getTo(),this.getFrom(),this.requestId,rez));
     }
 }
