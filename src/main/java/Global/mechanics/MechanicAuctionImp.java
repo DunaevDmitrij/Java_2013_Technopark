@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 15.12.13
  */
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
-    //TODO: make own search and buy
     //TODO: task for closing lots
+    //TODO: addLot, riseLotPrice
     public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
