@@ -1,4 +1,5 @@
 import Global.Lot;
+import Global.LotHistoryObject;
 import Global.Ticket;
 import Global.User;
 import Global.mechanics.LotImp;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: artemlobachev
@@ -22,6 +24,7 @@ public class LotImpTest {
     private final String arrivalAirport = "MIA";
     private Lot lot;
     private final int lastPrice = 12;
+    private final int LotHistoryObjectsCount = 2;
 
 
     @Before
@@ -47,14 +50,17 @@ public class LotImpTest {
     }
 
     @Test
-    public void testGetCurrentPrice() throws Exception {
+    public void testGetCurrentPrice(){
         final String ErrText = "Lot.getCurrentPrice() works wrong.";
         Assert.assertEquals(ErrText, this.lot.getCurrentPrice(), this.lastPrice);
 
     }
 
     @Test
-    public void testGetHistoryDESC() throws Exception {
-
+    public void testGetHistoryDESC(){
+        final String ErrText = "Lot.getHistoryDESC() works wrong.";
+        List<LotHistoryObject> list = this.lot.getHistoryDESC(this.LotHistoryObjectsCount);
+        Assert.assertTrue(ErrText, list.size()<=this.LotHistoryObjectsCount);
+        //TODO: add checking some objects
     }
 }

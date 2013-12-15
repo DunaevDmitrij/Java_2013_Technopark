@@ -57,6 +57,7 @@ public class LotImp extends TicketImp implements Lot {
         int currentSize = 0;
         while (currentSize<maxItems && currentSize<this.history.size()){
             rez.add(this.history.get(this.history.size() - 1 - currentSize));
+            currentSize++;
         }
         return rez;
     }
