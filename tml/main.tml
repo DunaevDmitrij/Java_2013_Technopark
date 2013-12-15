@@ -2,7 +2,6 @@
 <#include "headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
     <link rel="stylesheet" type="text/css" href="css/authForm.css" />
-    <link rel="stylesheet" type="text/css" href="css/pages.css" />
 
 <#-- Vars: Location -->
 <#include "endOfAdditionsToContent.html">

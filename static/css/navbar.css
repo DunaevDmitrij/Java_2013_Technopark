@@ -1,0 +1,7 @@
+.navbar {
+    position:fixed;
+    width:5%;
+    left:5%;
+    backgroud-color:red;
+    z-index:666;
+}

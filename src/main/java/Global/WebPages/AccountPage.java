@@ -46,7 +46,9 @@ public class AccountPage extends WebPageImp implements WebPage { // TODO: Connec
     @CaseHandler(routine = JUST_LOOKING, reqType = RequestType.GET)
     public String handleLooking() {
         this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
-                "Acoount","Your personall page");
+                "Account","Your personall page");
         return generatePage(TEMPLATE, this.pageVariables);
     }
+
+
 }
