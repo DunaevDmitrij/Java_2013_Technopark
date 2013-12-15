@@ -20,6 +20,8 @@ public interface MechanicSales {
         String MAX_PRICE = "MaxPrice";
     }
 
+    public MessageSystem getMessageSystem();
+
     public Collection<Ticket> search(Map<String, String> params);
 
     public boolean buy(Ticket ticket, User passenger);

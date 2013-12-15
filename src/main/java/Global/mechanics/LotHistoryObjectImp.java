@@ -23,6 +23,30 @@ public class LotHistoryObjectImp implements LotHistoryObject{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LotHistoryObjectImp that = (LotHistoryObjectImp) o;
+
+        if (!arg.equals(that.arg)) return false;
+        if (!author.equals(that.author)) return false;
+        if (!date.equals(that.date)) return false;
+        if (type != that.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = date.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + arg.hashCode();
+        return result;
+    }
+
+    @Override
     public Date getDate() {
         return this.date;
     }

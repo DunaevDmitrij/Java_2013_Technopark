@@ -4,6 +4,7 @@ import Global.MsgSystem.Abonent;
 import Global.mechanics.SingleTicket;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -36,6 +37,8 @@ public interface DBService extends Abonent, Runnable {
     //поиск доступных рейсов
     ArrayList<SingleTicket> findSingleTickets(Map<String, String> params);
 
+    ArrayList<Lot> findLots(Map<String,String> params);
+
     /**
      * Puts to database all singleTicket objects of Ticket, puts to database Ticket object (all in one transaction).
      * @param ticket
@@ -44,10 +47,23 @@ public interface DBService extends Abonent, Runnable {
      */
     boolean buyTicket(Ticket ticket, User user);
 
+    boolean buyLot(Lot lot, User user);
+
     /**
      * Creates lot from ticket
+     *
      * @param ticket
-     * @return true if success, false otherwise
+     * @param startPrice
+     *@param closeDate @return true if success, false otherwise
      */
-    boolean createLot(Ticket ticket);
+    boolean createLot(Ticket ticket, int startPrice, Date closeDate);
+
+    /**
+     * Rises Lot price for User
+     * @param lot
+     * @param user
+     * @param newPrice
+     * @return
+     */
+    boolean riseLotPrice(Lot lot, User user, int newPrice);
 }

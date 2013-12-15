@@ -212,6 +212,11 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public ArrayList<Lot> findLots(Map<String, String> params) {
+        return null;
+    }
+
+    @Override
     public boolean buyTicket(Ticket ticket, User user) {
 
         //TODO!!!
@@ -219,7 +224,17 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
-    public boolean createLot(Ticket ticket) {
+    public boolean buyLot(Lot lot, User user) {
+        return false;
+    }
+
+    @Override
+    public boolean createLot(Ticket ticket, int startPrice, Date closeDate) {
+        return false;
+    }
+
+    @Override
+    public boolean riseLotPrice(Lot lot, User user, int newPrice) {
         return false;
     }
 
