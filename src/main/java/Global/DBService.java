@@ -68,4 +68,10 @@ public interface DBService extends Abonent, Runnable {
     boolean riseLotPrice(Lot lot, User user, int newPrice);
 
     void addLotHistroryObject(Lot lot, LotHistoryObject object);
+
+    /**
+     *
+     * @return count of closed lots
+     */
+    int closeLotsByTime();
 }

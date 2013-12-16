@@ -169,6 +169,11 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
+    public int closeLotsByTime() {
+        return 0;
+    }
+
+    @Override
     public Long getUserIdByUserName(String login, String password) {
         //заполнение sql скрипта
         Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },

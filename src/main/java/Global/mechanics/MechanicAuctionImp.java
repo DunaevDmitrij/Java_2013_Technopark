@@ -15,10 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 15.12.13
  */
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
-    //TODO: task for closing lots
     //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
     //TODO: tests (in pair with DBSERVICE)
     public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
+
+    public static final int CLOSE_TICKETS_EVERY_X_SECONDS = 60*60*1000;
+
+    private static final int CLOSE_TICKETS_EVERY_X_TICKS = CLOSE_TICKETS_EVERY_X_SECONDS/SLEEP_TIME;
+
+    private int ticksAfterLastLotClosing = 0;
     //find
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
@@ -162,4 +167,20 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     protected void addMeToAddressService(){
         this.ms.getAddressService().setAuctionMechanics(this.address);
     }
+
+    public void closeLotsByTimeService(){
+        this.ms.sendMessage(new MsgCloseLotsByTime(this.address, this.ms.getAddressService().getAccountService()));
+
+    }
+
+    @Override
+    public void run(){
+        super.run();
+        this.ticksAfterLastLotClosing++;
+        if(this.ticksAfterLastLotClosing == CLOSE_TICKETS_EVERY_X_TICKS){
+            this.closeLotsByTimeService();
+            this.ticksAfterLastLotClosing = 0;
+        }
+    }
+
 }
