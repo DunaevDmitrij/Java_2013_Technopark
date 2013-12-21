@@ -29,7 +29,13 @@
     <hr>
 
     <#list result as results>
-      <p> ${result} </p>
+      <p>
+         <b></b> ${result.}
+         <b></b> ${result.}
+         <b></b> ${result.}
+         <b></b> ${result.}
+         <b></b> ${result.}
+      </p>
     </#list>
 
 <#include "contentToFooter.html">

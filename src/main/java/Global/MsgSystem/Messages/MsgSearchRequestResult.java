@@ -20,7 +20,6 @@ public class MsgSearchRequestResult extends MsgToFrontend {
 
     @Override
     void exec(Frontend frontend) {
-        //TODO: result is here. Call some method of frontend to process it.
-
+        frontend.parseSearch(result);
     }
 }

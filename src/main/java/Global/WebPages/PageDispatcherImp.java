@@ -1,5 +1,7 @@
 package Global.WebPages;
 
+import Global.Address;
+import Global.MessageSystem;
 import Global.PageDispatcher;
 import Global.SessionService;
 
@@ -16,12 +18,17 @@ import java.util.Map;
 
 public class PageDispatcherImp implements PageDispatcher {
     private final SessionService sessionService;
+    private final MessageSystem ms;
+    private final Address frontendAddress;
+
     private Map<String, WebPageImp> pages;
 
-    public PageDispatcherImp(SessionService sessionService) {
+    public PageDispatcherImp(MessageSystem ms, SessionService sessionService, Address frontendAddress) {
         super();
         this.sessionService = sessionService;
         this.createPages();
+        this.ms = ms;
+        this.frontendAddress = frontendAddress;
     }
 
     private void createPages() {
@@ -29,7 +36,7 @@ public class PageDispatcherImp implements PageDispatcher {
         this.pages.put(URL_AUTH, new AuthPage(this.sessionService));
         this.pages.put(URL_ADMIN, new AdminPage());
         this.pages.put(URL_MAIN, new MainPage(this.sessionService));
-        this.pages.put(URL_SEARCH, new SearchPage());
+        this.pages.put(URL_SEARCH, new SearchPage(this.ms, this.frontendAddress));
         this.pages.put(URL_BUY, new BuyPage());
         this.pages.put(URL_ACCOUNT, new AccountPage());
     }

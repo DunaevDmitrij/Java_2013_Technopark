@@ -79,9 +79,10 @@ public class SearchPage extends WebPageImp implements WebPage {
     @CaseHandler(routine = SEARCHING, reqType = RequestType.POST)
     public String handleSearch() {
 
+        while (this.tickets == null);
 
-        this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
-                "Search Flight result","Yet empty :C");
+        this.pageVariables = dataToKey(new String[] {"PageTitle", "Location", "results"},
+                "Search Flight result", "", this.tickets);
         return generatePage("searchResult.tml",this.pageVariables);
     }
 }
