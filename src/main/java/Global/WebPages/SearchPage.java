@@ -1,8 +1,13 @@
 package Global.WebPages;
 
+import Global.Address;
+import Global.MessageSystem;
+import Global.MsgSystem.Messages.MsgSearchRequest;
+import Global.Ticket;
 import Global.WebPage;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,14 +29,28 @@ public class SearchPage extends WebPageImp implements WebPage {
     // Im'a templaita, s kotorim budet rabotat'
     private static final String TEMPLATE = "search.tml";
 
+    private MessageSystem ms;
+    private Address frontendAddress;
+    private boolean inSearch;
+    private Collection<Ticket> tickets;
+
     // Dopolnitel'nie peremennie
     // Context
     private Map<String, Object> pageVariables;
 
     // Constructor
-    public SearchPage() {
+    public SearchPage(MessageSystem ms, Address frontendAddress) {
         super();
         this.pageVariables = new HashMap<>();
+        this.inSearch = false;
+        this.tickets = null;
+        this.ms = ms;
+        this.frontendAddress = frontendAddress;
+    }
+
+    public void update(Collection<Ticket> tickets) {
+        this.inSearch = true;
+        this.tickets = tickets;
     }
 
     @Override
@@ -41,6 +60,12 @@ public class SearchPage extends WebPageImp implements WebPage {
 
     @Override
     protected int analyzeRequestPOST(HttpServletRequest request) {
+        Map<String, String> params = new HashMap<>();
+        Address to = this.ms.getAddressService().getSalesMechanics();
+
+        // TODO: parse request for query parameters
+
+        this.ms.sendMessage(new MsgSearchRequest(this.frontendAddress, to, params));
         return SEARCHING;
     }
 
@@ -53,7 +78,8 @@ public class SearchPage extends WebPageImp implements WebPage {
 
     @CaseHandler(routine = SEARCHING, reqType = RequestType.POST)
     public String handleSearch() {
-        //TODO: Search, need DB
+
+
         this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
                 "Search Flight result","Yet empty :C");
         return generatePage("searchResult.tml",this.pageVariables);

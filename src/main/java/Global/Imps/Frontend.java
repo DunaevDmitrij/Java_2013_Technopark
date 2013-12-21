@@ -1,18 +1,16 @@
 package Global.Imps;
 
-import Global.MessageSystem;
+import Global.*;
 import Global.MsgSystem.Abonent;
-import Global.Address;
-import Global.SessionService;
-import Global.WebPage;
-import Global.PageDispatcher;
 import Global.WebPages.PageDispatcherImp;
+import Global.WebPages.SearchPage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 import static java.lang.Thread.sleep;
 
@@ -125,5 +123,13 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 
     public void updateUserID(Long sessionId, Long userId) {
         this.sessionService.updateUserId(sessionId, userId);
+    }
+
+    public void parseSearch(Collection<Ticket> tickets) {
+        WebPage page = this.dispatcher.getPage(PageDispatcher.URL_SEARCH);
+        if (page instanceof SearchPage) {
+            SearchPage searchPage = (SearchPage) page;
+            searchPage.update(tickets);
+        }
     }
 }

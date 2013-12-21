@@ -27,6 +27,9 @@
       <input type="submit" value="Submit data"/>
     </form>
     <hr>
-    <h1>NO DATABASE YET :CCCC</h1>
+
+    <#list result as results>
+      <p> ${result} </p>
+    </#list>
 
 <#include "contentToFooter.html">
