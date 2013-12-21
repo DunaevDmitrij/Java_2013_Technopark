@@ -19,7 +19,7 @@ import static java.lang.Thread.sleep;
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     protected static final long OWERFLOW = -1;
-    protected static final int SLEEP_TIME = 10;
+    protected static final int SLEEP_TIME = 1;
     protected final Address address;
     protected final MessageSystem ms;
     private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();

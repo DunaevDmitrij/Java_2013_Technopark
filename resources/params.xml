@@ -2,7 +2,7 @@
 <Params>
     <SysParam>
         <name>Default delta before closing ticket and departure</name>
-        <value type = "long">30</value>
+        <value type = "long">1</value>
     </SysParam>
     <SysParam>
         <name>Ticket saling before takeoff time bump</name>
