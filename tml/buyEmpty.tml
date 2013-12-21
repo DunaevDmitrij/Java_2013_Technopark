@@ -1,10 +1,10 @@
 <#-- Vars: Page_Title -->
-<#include "tml\\headToAdditions.html">
+<#include "headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
 
 <#-- Vars: Location -->
-<#include "tml\\endOfAdditionsToContent.html">
+<#include "endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
     <h1>You are on empty buy page. Find ticket you need <a href="/search">HERE</a></h1>
 
-<#include "tml\\contentToFooter.html">
+<#include "contentToFooter.html">

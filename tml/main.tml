@@ -1,10 +1,10 @@
 <#-- Vars: Page_Title -->
-<#include "tml\\headToAdditions.html">
+<#include "headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
     <link rel="stylesheet" type="text/css" href="css/authForm.css" />
 
 <#-- Vars: Location -->
-<#include "tml\\endOfAdditionsToContent.html">
+<#include "endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
 
     <form class="auth" method="POST" action="/main">
@@ -20,4 +20,4 @@
 
     <h1>Well, here will be alot of data about planes</h1>
 
-<#include "tml\\contentToFooter.html">
+<#include "contentToFooter.html">

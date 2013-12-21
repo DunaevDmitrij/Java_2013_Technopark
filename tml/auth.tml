@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="css/authForm.css" />
 
 <#-- Vars: Location -->
-<#include "tml\\endOfAdditionsToContent.html">
+<#include "endOfAdditionsToContent.html">
       <#-- Put your CONTENT after here -->
       <form class="auth" method="POST" action="/auth">
         <h2>Authenication form</h2>
@@ -17,4 +17,4 @@
         <input type="submit" value="Submit data">
       </form>
 
-<#include "tml\\contentToFooter.html">
+<#include "contentToFooter.html">
