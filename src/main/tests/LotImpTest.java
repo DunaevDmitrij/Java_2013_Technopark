@@ -41,7 +41,7 @@ public class LotImpTest {
         singleTicket = new SingleTicket("Bangkok", this.arrivalAirport,new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330",3);
         singleTickets.add(singleTicket);
         //total time = 8d = 691200 s
-        TicketImp ticketImp = new TicketImp(this.owner, singleTickets, false);
+        TicketImp ticketImp = new TicketImp(this.owner, singleTickets, false, 0L);
         //startDate = 2 december 2013, 00:00
         //closeDate = 5 december 2013, 00:00
         this.lot = new LotImp(ticketImp, new Date(1385942400), new Date(1386201600),10);

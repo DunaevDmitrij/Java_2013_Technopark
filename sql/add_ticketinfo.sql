@@ -1,0 +1,1 @@
+insert into ticketinfo(Ticket, Flight, PlaceClass) values('${idTicket}', (select idFlight from flight where Name = '${FlightName}'), '${PlaceClass}');

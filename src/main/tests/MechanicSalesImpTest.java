@@ -76,7 +76,7 @@ public class MechanicSalesImpTest {
         singleTicket = new SingleTicket("Bangkok", "MIA",new Date(1387101600),18000,"hangover-3", Ticket.seatClass.SEAT_CLASS_FIRST,"Airbus A330",3);
         singleTickets.add(singleTicket);
         //total time = 8d = 691200 s
-        Ticket tstTicket = new TicketImp(null, singleTickets, false);
+        Ticket tstTicket = new TicketImp(null, singleTickets, false, 0l);
 
         boolean rez = this.mechanicSales.buy(tstTicket,tstUser);
         Thread.sleep(SLEEP_TIME);
