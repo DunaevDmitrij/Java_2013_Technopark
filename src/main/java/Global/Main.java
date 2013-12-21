@@ -3,9 +3,12 @@ package Global; /**
  * Date: 20.09.13
  * Time: 23:27
  */
-import Global.Imps.*;
+
+import Global.Imps.DBServiceImp;
+import Global.Imps.Frontend;
+import Global.Imps.ThreadPoolImp;
 import Global.MsgSystem.MessageSystemImp;
-import Global.ResSystem.ResourceSystem;
+import Global.mechanics.MechanicAuctionImp;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;
@@ -14,8 +17,6 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import java.util.HashMap;
 
 
 public class Main {
@@ -78,10 +79,12 @@ public class Main {
         MessageSystem ms = new MessageSystemImp();
         DBService dbService = new DBServiceImp(ms, "PlaneDB");
         Frontend frontend = new Frontend(ms);
+        MechanicAuction mechanicAuction = new MechanicAuctionImp(ms);
 
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
         threadPool.startThread(dbService, TN_DB_SERVICE);
+        threadPool.startThread(mechanicAuction,"MA");
 
         Server server = makeServer(args);
 

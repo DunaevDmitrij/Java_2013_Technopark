@@ -19,6 +19,7 @@ import static java.lang.Thread.sleep;
  */
 public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
     protected static final long OWERFLOW = -1;
+    protected static final int SLEEP_TIME = 1;
     protected final Address address;
     protected final MessageSystem ms;
     private final ConcurrentHashMap<Long, Boolean> foundTicketStatuses = new ConcurrentHashMap<>();
@@ -122,7 +123,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
             this.ms.execForAbonent(this);
 
             try {
-                sleep(10);
+                sleep(SLEEP_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

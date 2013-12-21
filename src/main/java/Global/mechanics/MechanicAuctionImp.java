@@ -3,6 +3,7 @@ package Global.mechanics;
 import Global.*;
 import Global.MsgSystem.Abonent;
 import Global.MsgSystem.Messages.*;
+import Global.ResSystem.ResourceSystem;
 
 import java.util.Collection;
 import java.util.Date;
@@ -10,15 +11,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Author: artemlobachev
  * Date: 15.12.13
  */
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
-    //TODO: task for closing lots
     //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
     //TODO: tests (in pair with DBSERVICE)
-    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
+    private static final String DEF_DELTA_BCLOSING_TICKET = "Default delta before closing ticket and departure";
+    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = ResourceSystem.getRS().<Long> getParam(DEF_DELTA_BCLOSING_TICKET);//3 days
+
+    public static final long CLOSE_TICKETS_EVERY_X_SECONDS = DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE;
+
+    private static final long CLOSE_TICKETS_EVERY_X_TICKS = CLOSE_TICKETS_EVERY_X_SECONDS/SLEEP_TIME;
+
+    private int ticksAfterLastLotClosing = 0;
     //find
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
@@ -162,4 +171,29 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     protected void addMeToAddressService(){
         this.ms.getAddressService().setAuctionMechanics(this.address);
     }
+
+    public void closeLotsByTimeService(){
+        this.ms.sendMessage(new MsgCloseLotsByTime(this.address, this.ms.getAddressService().getAccountService()));
+
+    }
+
+    @Override
+    public void run(){
+        while (true) {
+            this.ms.execForAbonent(this);
+            this.ticksAfterLastLotClosing++;
+            if(this.ticksAfterLastLotClosing == CLOSE_TICKETS_EVERY_X_TICKS){
+                this.closeLotsByTimeService();
+                this.ticksAfterLastLotClosing = 0;
+                System.out.println("Clearing task started");
+            }
+            try {
+                sleep(SLEEP_TIME*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

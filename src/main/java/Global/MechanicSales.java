@@ -9,7 +9,7 @@ import java.util.Map;
  * Author: artemlobachev
  * Date: 28.11.13
  */
-public interface MechanicSales {
+public interface MechanicSales extends Runnable {
     public interface findParams{
         String ARRIVAL_AIRPORT = "ArrivalAirport";
         String DEPARTURE_AIRPORT = "DepartureAirport";

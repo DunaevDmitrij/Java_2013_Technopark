@@ -55,6 +55,7 @@ public class ReflectionHelper {
     public static String fill(String type) {
         if (type.equals("String")) return "java.lang.String";
         else if (type.equals("int")) return "java.lang.Integer";
+        else if (type.equals("long")) return "java.lang.Long";
         else if (type.equals("boolean")) return "java.lang.Boolean";
         return null;
     }
@@ -87,6 +88,8 @@ public class ReflectionHelper {
                 field.set(object, value);
             } else if (type.equals(Integer.class) || type.equals(int.class)) {
                 field.set(object, Integer.decode(value));
+            } else if (type.equals(Long.class) || type.equals(long.class)) {
+                field.set(object, Long.decode(value));
             } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
                 field.set(object, Boolean.valueOf(value));
             }
