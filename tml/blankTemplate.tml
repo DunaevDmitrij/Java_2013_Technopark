@@ -1,9 +1,9 @@
 <#-- Vars: Page_Title -->
-<#include "headToAdditions.html">
+<#include "tml\\headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
 
 <#-- Vars: Location, --Pages-- -->
-<#include "endOfAdditionsToContent.html">
+<#include "tml\\endOfAdditionsToContent.html">
       <#-- Put your CONTENT after here -->
 
-<#include "contentToFooter.html">
+<#include "tml\\contentToFooter.html">

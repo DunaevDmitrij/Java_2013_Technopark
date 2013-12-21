@@ -1,10 +1,10 @@
 <#-- Vars: Page_Title -->
-<#include "headToAdditions.html">
+<#include "tml\\headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
     <link rel="stylesheet" type="text/css" href="css/search.css" />
 
 <#-- Vars: Location -->
-<#include "endOfAdditionsToContent.html">
+<#include "tml\\endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
 
     <form class="search" method="POST" action="/search">
@@ -29,4 +29,4 @@
     <hr>
     <h1>NO DATABASE YET :CCCC</h1>
 
-<#include "contentToFooter.html">
+<#include "tml\\contentToFooter.html">

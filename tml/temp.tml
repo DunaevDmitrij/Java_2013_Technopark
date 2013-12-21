@@ -1,10 +1,10 @@
 <#-- Vars: Page_Title -->
-<#include "headToAdditions.html">
+<#include "tml\\headToAdditions.html">
     <#-- Put your SCRIPTS and STYLESHEETS after here -->
 
 <#-- Vars: Location -->
-<#include "endOfAdditionsToContent.html">
+<#include "tml\\endOfAdditionsToContent.html">
     <#-- Put your CONTENT after here -->
     Hello, ${UserName}. Your userID: ${UserId}.
 
-<#include "contentToFooter.html">
+<#include "tml\\contentToFooter.html">
