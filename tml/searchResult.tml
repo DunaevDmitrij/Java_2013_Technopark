@@ -30,11 +30,11 @@
 
     <#list result as results>
       <p>
-         <b></b> ${result.}
-         <b></b> ${result.}
-         <b></b> ${result.}
-         <b></b> ${result.}
-         <b></b> ${result.}
+         <b>Owner: </b> ${ result.getOwner() }
+         <b>Departure Airport: </b> ${ result.getDepartureAirport() }
+         <b>Departure Time: </b> ${ result.getDepartureDateTime().toString() }
+         <b>Arrival Airport: </b> ${ result.getArrivalAirport() }
+         <b>Price: </b> ${ result.getPrice() }
       </p>
     </#list>
 

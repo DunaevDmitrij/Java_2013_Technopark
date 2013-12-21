@@ -25,10 +25,10 @@ public class PageDispatcherImp implements PageDispatcher {
 
     public PageDispatcherImp(MessageSystem ms, SessionService sessionService, Address frontendAddress) {
         super();
-        this.sessionService = sessionService;
-        this.createPages();
         this.ms = ms;
         this.frontendAddress = frontendAddress;
+        this.sessionService = sessionService;
+        this.createPages();
     }
 
     private void createPages() {

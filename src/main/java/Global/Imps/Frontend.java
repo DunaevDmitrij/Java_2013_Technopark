@@ -37,7 +37,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         ms.addService(this);
 
         this.sessionService = new SessionServiceImp(ms);
-        this.dispatcher = new PageDispatcherImp(this. ms, this.sessionService, this.address);
+        this.dispatcher = new PageDispatcherImp(ms, this.sessionService, this.address);
     }
 
     /**

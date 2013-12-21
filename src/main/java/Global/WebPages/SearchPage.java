@@ -27,8 +27,8 @@ public class SearchPage extends WebPageImp implements WebPage {
     // Im'a templaita, s kotorim budet rabotat'
     private static final String TEMPLATE = "search.tml";
 
-    private MessageSystem ms;
-    private Address frontendAddress;
+    private final MessageSystem ms;
+    private final Address frontendAddress;
     private boolean inSearch;
     private Collection<Ticket> tickets;
 
