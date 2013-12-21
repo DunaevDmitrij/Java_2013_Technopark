@@ -1,2 +1,2 @@
-INSERT INTO `User` (`Login`, `Password`)
-VALUES ('${login}', md5('${password}'));
+INSERT INTO `User` (`Login`, `Password`, `FirstName`, `LastName`, `PassportNumber`)
+VALUES ('${login}', md5('${password}'), '${firstName}', '${lastName}', '${passportInfo}');

@@ -46,7 +46,7 @@ public class DBServiceTest {
 
         //создаем нового пользователя
         final String errCreateUserText = "Create new test user error";
-        Assert.assertTrue(errCreateUserText, dbSerivce.createUser(userName, userPassword));
+        Assert.assertTrue(errCreateUserText, dbSerivce.createUser(userName, userPassword, "Default", "Default", "Default"));
 
         //проверяем, что пользователь создан
         final String errUserNotCreated = "No test user in database";

@@ -29,7 +29,7 @@ import java.util.Date;
 import static Global.Utilities.dataToKey;
 import static java.lang.Thread.sleep;
 
-public class DBServiceImp implements DBService {
+public  class DBServiceImp implements DBService {
 
     private final Address address;
     private final MessageSystem ms;
@@ -442,10 +442,10 @@ public class DBServiceImp implements DBService {
     }
 
     @Override
-    public boolean createUser(String login, String password) {
+    public boolean createUser(String login, String password, String firstName, String lastName, String passportInfo) {
         //заполнение sql скрипта
-        Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password" },
-                login,   password);
+        Map<String, Object> pageVariables = dataToKey(new String [] { "login", "password", "firstName", "lastName", "passportInfo" },
+                login,   password, firstName, lastName, passportInfo);
 
         try {
             if (!this.checkIsUserExist(login))

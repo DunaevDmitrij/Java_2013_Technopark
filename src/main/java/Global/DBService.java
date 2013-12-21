@@ -25,7 +25,7 @@ public interface DBService extends Abonent, Runnable {
     Long getUserIdByUserName(String login, String password);
 
     //создание нового пользователя
-    boolean createUser(String login, String password);
+    boolean createUser(String login, String password, String firstName, String lastName, String passportInfo);
 
     //удаление пользователя по User ID
     boolean deleteUser(Long userId);
