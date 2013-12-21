@@ -342,6 +342,11 @@ public  class DBServiceImp implements DBService {
         return true;
     }
 
+    @Override
+    public void addLotHistroryObject(Lot lot, Global.LotHistoryObject object) {
+
+    }
+
     private Integer getTicketOwnerId(Long idTicket) {
         String sql = "select Passenger from Ticket where idTicket = '" + idTicket + "'";
 
@@ -412,6 +417,11 @@ public  class DBServiceImp implements DBService {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
+    }
+
+    @Override
+    public int closeLotsByTime() {
+        return 0;
     }
 
     @Override

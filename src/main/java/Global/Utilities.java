@@ -1,5 +1,7 @@
 package Global;
 
+import Global.MsgSystem.Messages.Msg;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,22 @@ public class Utilities {
             map.put(keys[I], values[I]);
         }
         return map;
+    }
+
+    public static void sendMsgInTime(final MessageSystem messageSystem, final Msg msg, final long timeSeconds){
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(timeSeconds);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                messageSystem.sendMessage(msg);
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
 }
