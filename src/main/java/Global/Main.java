@@ -84,6 +84,7 @@ public class Main {
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
         threadPool.startThread(dbService, TN_DB_SERVICE);
+        threadPool.startThread(mechanicAuction,"MA");
 
         Server server = makeServer(args);
 

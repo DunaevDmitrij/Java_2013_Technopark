@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Author: artemlobachev
  * Date: 15.12.13
@@ -177,12 +179,21 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
 
     @Override
     public void run(){
-        super.run();
-        this.ticksAfterLastLotClosing++;
-        if(this.ticksAfterLastLotClosing == CLOSE_TICKETS_EVERY_X_TICKS){
-            this.closeLotsByTimeService();
-            this.ticksAfterLastLotClosing = 0;
+        while (true) {
+            this.ms.execForAbonent(this);
+            this.ticksAfterLastLotClosing++;
+            if(this.ticksAfterLastLotClosing == CLOSE_TICKETS_EVERY_X_TICKS){
+                this.closeLotsByTimeService();
+                this.ticksAfterLastLotClosing = 0;
+                System.out.println("Clearing task started");
+            }
+            try {
+                sleep(SLEEP_TIME*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
 }
