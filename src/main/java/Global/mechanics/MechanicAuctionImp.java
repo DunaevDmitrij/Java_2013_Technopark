@@ -3,6 +3,7 @@ package Global.mechanics;
 import Global.*;
 import Global.MsgSystem.Abonent;
 import Global.MsgSystem.Messages.*;
+import Global.ResSystem.ResourceSystem;
 
 import java.util.Collection;
 import java.util.Date;
@@ -17,11 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuction, Abonent, Runnable{
     //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
     //TODO: tests (in pair with DBSERVICE)
-    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
+    private static final String DEF_DELTA_BCLOSING_TICKET = "Default delta before closing ticket and departure";
+    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = ResourceSystem.getRS().<Long> getParam(DEF_DELTA_BCLOSING_TICKET);//3 days
 
-    public static final int CLOSE_TICKETS_EVERY_X_SECONDS = 60*60*1000;
+    public static final long CLOSE_TICKETS_EVERY_X_SECONDS = DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE;
 
-    private static final int CLOSE_TICKETS_EVERY_X_TICKS = CLOSE_TICKETS_EVERY_X_SECONDS/SLEEP_TIME;
+    private static final long CLOSE_TICKETS_EVERY_X_TICKS = CLOSE_TICKETS_EVERY_X_SECONDS/SLEEP_TIME;
 
     private int ticksAfterLastLotClosing = 0;
     //find
