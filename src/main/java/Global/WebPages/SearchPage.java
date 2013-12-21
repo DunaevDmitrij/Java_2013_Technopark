@@ -1,10 +1,8 @@
 package Global.WebPages;
 
-import Global.Address;
-import Global.MessageSystem;
+import Global.*;
 import Global.MsgSystem.Messages.MsgSearchRequest;
-import Global.Ticket;
-import Global.WebPage;
+import org.junit.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -60,12 +58,16 @@ public class SearchPage extends WebPageImp implements WebPage {
 
     @Override
     protected int analyzeRequestPOST(HttpServletRequest request) {
-        Map<String, String> params = new HashMap<>();
+
         Address to = this.ms.getAddressService().getSalesMechanics();
 
-        // TODO: parse request for query parameters
-
+        Map<String, String> params = new HashMap<>();
+        params.put(MechanicSales.findParams.DEPARTURE_AIRPORT, "Тапоа");
+        params.put(MechanicSales.findParams.ARRIVAL_AIRPORT, "Пашковский");
+        params.put(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE, "1356067604");
+        params.put(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO, "1419139604");
         this.ms.sendMessage(new MsgSearchRequest(this.frontendAddress, to, params));
+
         return SEARCHING;
     }
 
