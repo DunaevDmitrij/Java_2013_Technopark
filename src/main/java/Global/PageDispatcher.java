@@ -3,6 +3,8 @@ package Global;
 import Global.WebPages.WebPageImp;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,8 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 public interface PageDispatcher {
     // Здесь и далее: все URL-ы записываются как константы.
     String URL_AUTH = "/auth";
-    String URL_HOME = "/home";
     String URL_ADMIN = "/admin";
+    String URL_MAIN = "/main";
+    String URL_SEARCH = "/search";
+    String URL_BUY = "/buy";
+    String URL_ACCOUNT = "/account";
+
 
     WebPageImp getPage(String url);
 

@@ -26,9 +26,12 @@ public class PageDispatcherImp implements PageDispatcher {
 
     private void createPages() {
         this.pages = new HashMap<>();
-        this.pages.put(URL_HOME, new HomePage());
         this.pages.put(URL_AUTH, new AuthPage(this.sessionService));
         this.pages.put(URL_ADMIN, new AdminPage());
+        this.pages.put(URL_MAIN, new MainPage(this.sessionService));
+        this.pages.put(URL_SEARCH, new SearchPage());
+        this.pages.put(URL_BUY, new BuyPage());
+        this.pages.put(URL_ACCOUNT, new AccountPage());
     }
 
     @Override

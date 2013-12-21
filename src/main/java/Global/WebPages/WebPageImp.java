@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -163,5 +164,20 @@ public abstract class WebPageImp implements WebPage {
     @Override
     public int getStatus() {
         return this.Status;
+    }
+
+    public static Map<String, Object> dataToKey(String [] keys, Object ... datum) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (keys.length != datum.length) {
+            System.out.println("Неверное количество параметров");
+        }
+
+        int i = 0;
+        for (Object data : datum) {
+            result.put(keys[i], data);
+            ++i;
+        }
+        return result;
     }
 }

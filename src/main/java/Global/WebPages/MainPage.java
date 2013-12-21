@@ -10,71 +10,62 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
-import static Global.Utilities.dataToKey;
-
 /**
  * Created with IntelliJ IDEA.
- * User: Kislenko Maksim
- * Date: 12.10.13
- * Time: 11:02
+ * User: dunaev (Started in AuthPage by Kislenko Maksim)
+ * Date: 11/29/13
+ * Time: 10:32 AM
+ * To change this template use File | Settings | File Templates.
+ *
+ * Athentication + basic information for user
  */
 
-/**
- * Страница авторизации пользователя. Для своей работы требует ссылку на класс SessionServiceImp.
- * Наследует абстрактную веб-страницу.
- */
+public class MainPage extends WebPageImp implements WebPage {
 
-public class AuthPage extends WebPageImp implements WebPage {
-    /**
-     * Подзадачи обработки запроса на авторизацию.
-     */
-    private static final int FIRST_LOOK = 0;    // Первый вход на сайт
-    private static final int ENTRY = 1;         // Вход с существующей сессией
-    private static final int CHECK_AUTH = 2;    // Отправка данных авторизации
+    // Sostojanija dl'a CaseHandler
+    private static final int JUST_LOOKING = 0; // First time
+    private static final int AUTHENTICATED_USER = 1; // If already authenicated
+    private static final int CHECK_AUTH = 2; // Check data
 
-    // Осведомленность. Используется для выборки данных пользователь--сессия
+    // Im'a templaita, s kotorim budet rabotat'
+    private static final String TEMPLATE = "main.tml";
+
+    // TODO: Hash with pages
+
+    // Dopolnitel'nie peremennie
+    // Context
+    private Map<String, Object> pageVariables;
+
+    // Authentication variables
     private final SessionService sessionService;
-
-    // Параметры-связки между анализом и исполнением запроса
     private HttpSession session;
     private Long sessionId;
     private UserSession userSession = null;
     private String userName;
-    private Map<String, Object> pageVariables;
 
-    // конструктор
-    public AuthPage(SessionService sessionService) {
+    // Constructor
+    public MainPage(SessionService sessionService) {
         super();
+        this.pageVariables = new HashMap<>();
         this.sessionService = sessionService;
     }
 
-    /**
-     * Анализ GET запроса и выборка параметров к его обработке.
-     * @param request объект исследуемого запроса
-     * @return необходимый вариант обработки
-     */
     @Override
     protected int analyzeRequestGET(HttpServletRequest request) {
         this.session = request.getSession();
         this.sessionId = (Long) this.session.getAttribute("sessionId");
 
         if (this.sessionId == null) {
-            // первый заход пользователя на сайт
-            return FIRST_LOOK;
+            // First time on site
+            return JUST_LOOKING;
         } else {
             this.userSession = this.sessionService.getUserInfo(this.sessionId);
-            return ENTRY;
+            return AUTHENTICATED_USER;
         }
     }
 
-    /**
-     * Анализ GET запроса и выборка параметров к его обработке.
-     * @param request объект исследуемого запроса
-     * @return необходимый вариант обработки
-     */
     @Override
     protected int analyzeRequestPOST(HttpServletRequest request) {
-        // Пользователь послал свои данные на авторизацию
         HttpSession session = request.getSession();
         this.userName = request.getParameter("name");
         this.sessionId = (Long) session.getAttribute("sessionId");
@@ -82,13 +73,9 @@ public class AuthPage extends WebPageImp implements WebPage {
         return CHECK_AUTH;
     }
 
-    /**
-     * Обработка первого входа.
-     * @return Будет возвращена страница с формочкой авторизации
-     */
-
-    @CaseHandler(routine = FIRST_LOOK, reqType = RequestType.GET)
-    public String handleFirstLook() {
+    // Lol, da eto je metki ebanie. Nu ok, eto obrabotchik lubogo (ANY) zaprosa s kodom ENTRY
+    @CaseHandler(routine = JUST_LOOKING, reqType = RequestType.GET)
+    public String handleLooking() {
         //если это первый заход пользователя на сайт, присваиваем ему уникальный sessionId
         this.sessionId = this.sessionService.getNewSessionId();
 
@@ -97,18 +84,13 @@ public class AuthPage extends WebPageImp implements WebPage {
 
         // Пользователь не авторизован
         this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
-                "Authetication page","Enter your account name");
-        return generatePage("auth.tml", this.pageVariables);
+                "AviaDB","Welcome to AviaDB site!");
+        return generatePage(TEMPLATE, this.pageVariables);
     }
 
-    /**
-     * Обработчик попытки входа на сайт с уже существующей сессией.
-     * Внутри опрос userSession о готовности.
-     * @return либо главная страница, либо ошибка, либо ожидание
-     */
-
-    @CaseHandler(routine = ENTRY, reqType = RequestType.GET)
-    public String handleEntry() {
+    @CaseHandler(routine = AUTHENTICATED_USER, reqType = RequestType.GET)
+    public String handleAuthenticated() {
+        // If user is tried to authenticate
         if (this.userSession != null) {
             //ожидаем пока AccountService вернет данные
             if (this.userSession.isComplete()) {
@@ -118,31 +100,29 @@ public class AuthPage extends WebPageImp implements WebPage {
 
                     // Заполняем контекст
                     this.pageVariables = dataToKey(new String[] {"PageTitle", "Location","UserId", "UserName", "Time", "Session"},
-                            "Shtaa?","Your data",this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
+                            "User Page","Your data",this.userSession.getUserId(), this.userSession.getName(), getTime(), this.sessionId);
                     return generatePage("temp.tml", this.pageVariables);
 
                 } else {
                     this.sessionService.closeSession(this.sessionId); //удаляем текущую сессию
-                    return "Ошибка. Такого пользователя нет";
+                    return "Error. No user with this name";
                 }
             } else {
                 //просим пользователя подождать
+                //TODO: ----------------------------------------------------------------------------------------Remake waiting page
                 return generatePage("wait.tml", new HashMap<String, Object>());
                 //TODO: отправлять тут код ошибки с пустым телом или JSON, сообщающий, что идет поиск,
                 //TODO: сделать на клиенте циклический опрос ограниченное кол-во раз, если ответа нет - сообщение
                 //TODO: пользователю об ошибке/
             }
-        } else {
+        }
+        // Well, not authenticated
+        else {
             this.pageVariables = dataToKey(new String[] {"PageTitle", "Location"},
-                    "Authetication page","Enter your account name");
-            return generatePage("auth.tml", this.pageVariables);
+                    "AviaDB","Welcome to AviaDB site!");
+            return generatePage(TEMPLATE, this.pageVariables);
         }
     }
-
-    /**
-     * Проверка введенных пользователем данных.
-     * @return страница ожидания
-     */
 
     @CaseHandler(routine = CHECK_AUTH, reqType = RequestType.POST)
     public String handleCheckAuth() {

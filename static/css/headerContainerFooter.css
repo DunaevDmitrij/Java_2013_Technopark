@@ -1,0 +1,38 @@
+header {
+  position:fixed;
+  width:90%;
+  left:5%;
+  background-color:#22223b;
+  z-index:666;
+}
+  
+  header div {
+    color:white;
+    display:inline;
+  }
+
+  img {
+    height:40pt;
+    width:40pt;
+    display:inline;
+  }
+
+.container {
+  position:relative;
+  padding:50pt 300pt 50pt 300pt;
+}
+
+footer {
+  position:fixed;
+  bottom:0%;
+  width:90%;
+  left:5%;
+  bottom:0%
+  height:0px;
+  background-color:#22223b;
+  z-index:666;
+}
+
+  footer div {
+    color:white;
+  }
