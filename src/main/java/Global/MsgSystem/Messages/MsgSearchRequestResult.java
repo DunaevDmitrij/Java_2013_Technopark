@@ -20,6 +20,7 @@ public class MsgSearchRequestResult extends MsgToFrontend {
 
     @Override
     void exec(Frontend frontend) {
+        System.out.println("MsgSearchRequestResult");
         frontend.parseSearch(result);
     }
 }

@@ -47,7 +47,6 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     public void run() {
         while (true) {
             this.ms.execForAbonent(this);
-
             try {
                 sleep(10);
             } catch (InterruptedException e) {

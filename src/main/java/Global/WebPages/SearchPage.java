@@ -2,6 +2,7 @@ package Global.WebPages;
 
 import Global.*;
 import Global.MsgSystem.Messages.MsgSearchRequest;
+import Global.mechanics.SingleTicket;
 import org.junit.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +73,12 @@ public class SearchPage extends WebPageImp implements WebPage {
         params.put(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO, "1419139604");
         this.ms.sendMessage(new MsgSearchRequest(this.frontendAddress, to, params));
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
         return SEARCHING;
     }
 
@@ -85,10 +92,21 @@ public class SearchPage extends WebPageImp implements WebPage {
     @CaseHandler(routine = SEARCHING, reqType = RequestType.POST)
     public String handleSearch() {
 
-        while (this.tickets == null);
+        String result = "<table border=1><tr><td>Вылет</td><td>Прилет</td><td>Номер рейса</td><td>Цена</td></tr>";
+        for (Ticket t : this.tickets) {
+            for (SingleTicket st : t.getRoute()) {
+                result += "<tr><td>" + st.getDepartureAirport() + "</td>";
+                result += "<td>" + st.getArrivalAirport() + "</td>";
+                result += "<td>" + st.getFlightNumber() + "</td>";
+                result += "<td>" + + st.getPrice() + "</td></tr>";
+            }
+        }
+        result += "</table>";
+
+        System.out.println(result);
 
         this.pageVariables = dataToKey(new String[] {"PageTitle", "Location", "results"},
-                "Search Flight result", "", this.tickets);
+                "Search Flight result", "", result);
         return generatePage("searchResult.tml", this.pageVariables);
     }
 }

@@ -62,6 +62,9 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         }
         if (!this.foundTicketResults.get(requestId).isEmpty()){
             ArrayList<SingleTicket> singleTickets = new ArrayList<>();
+            //for (SingleTicket ticket : this.foundTicketResults.get(requestId)) {
+            //    singleTickets.add(ticket);
+            //}
             singleTickets.add(this.foundTicketResults.get(requestId).iterator().next());
             Ticket tmpTicket = new TicketImp(singleTickets,false);
             ArrayList<Ticket> rez = new ArrayList<>();
