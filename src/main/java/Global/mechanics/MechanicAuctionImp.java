@@ -185,7 +185,7 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
             if(this.ticksAfterLastLotClosing == CLOSE_TICKETS_EVERY_X_TICKS){
                 this.closeLotsByTimeService();
                 this.ticksAfterLastLotClosing = 0;
-                System.out.println("Clearing task started");
+                //System.out.println("Clearing task started");
             }
             try {
                 sleep(SLEEP_TIME*1000);
