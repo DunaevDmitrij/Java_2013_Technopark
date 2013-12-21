@@ -42,6 +42,7 @@ public class MainPage extends WebPageImp implements WebPage {
     private Long sessionId;
     private UserSession userSession = null;
     private String userName;
+    private String userPassword;
 
     // Constructor
     public MainPage(SessionService sessionService) {
@@ -68,6 +69,7 @@ public class MainPage extends WebPageImp implements WebPage {
     protected int analyzeRequestPOST(HttpServletRequest request) {
         HttpSession session = request.getSession();
         this.userName = request.getParameter("name");
+        this.userPassword = request.getParameter("password");
         this.sessionId = (Long) session.getAttribute("sessionId");
 
         return CHECK_AUTH;
@@ -128,7 +130,7 @@ public class MainPage extends WebPageImp implements WebPage {
     public String handleCheckAuth() {
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль
-        this.sessionService.createUserSession(this.sessionId, this.userName);
+        this.sessionService.createUserSession(this.sessionId, this.userName, this.userPassword);
 
         // Отдаем страницу ожидания.
         return generatePage("wait.tml");

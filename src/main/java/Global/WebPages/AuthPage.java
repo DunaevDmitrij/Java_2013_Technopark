@@ -40,6 +40,7 @@ public class AuthPage extends WebPageImp implements WebPage {
     private Long sessionId;
     private UserSession userSession = null;
     private String userName;
+    private String userPassword;
     private Map<String, Object> pageVariables;
 
     // конструктор
@@ -77,6 +78,7 @@ public class AuthPage extends WebPageImp implements WebPage {
         // Пользователь послал свои данные на авторизацию
         HttpSession session = request.getSession();
         this.userName = request.getParameter("name");
+        this.userPassword = request.getParameter("password");
         this.sessionId = (Long) session.getAttribute("sessionId");
 
         return CHECK_AUTH;
@@ -148,7 +150,7 @@ public class AuthPage extends WebPageImp implements WebPage {
     public String handleCheckAuth() {
         // Отправляем sessionId для построения нового объекта UserSession
         //TODO: здесь надо проверить пароль
-        this.sessionService.createUserSession(this.sessionId, this.userName);
+        this.sessionService.createUserSession(this.sessionId, this.userName, this.userPassword);
 
         // Отдаем страницу ожидания.
         return generatePage("wait.tml");

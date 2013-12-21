@@ -11,17 +11,19 @@ import Global.DBService;
  */
 public class MsgGetUserId extends MsgToDB {
     private final String name;
+    private final String password;
     private final Long sessionId;
 
-    public MsgGetUserId(Address from, Address to, String name, Long sessionId) {
+    public MsgGetUserId(Address from, Address to, String name, String password, Long sessionId) {
         super(from, to);
         this.name = name;
         this.sessionId = sessionId;
+        this.password = password;
     }
 
     @Override
     void exec(DBService dbService) {
-        Long id = dbService.getUserIdByUserName(this.name, "root");    //FIXME:
+        Long id = dbService.getUserIdByUserName(this.name, this.password);
         dbService.getMessageSystem().sendMessage(new MsgUpdateUserId(this.getTo(), this.getFrom(), this.sessionId, id));
     }
 }

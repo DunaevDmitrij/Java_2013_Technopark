@@ -10,7 +10,7 @@ import Global.Imps.UserSession;
  */
 
 public interface SessionService {
-    void createUserSession(Long sessionId, String userName);
+    void createUserSession(Long sessionId, String userName, String userPassword);
     void closeSession(Long sessionId);
 
     Long getNewSessionId();

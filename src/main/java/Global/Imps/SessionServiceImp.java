@@ -75,7 +75,7 @@ public class SessionServiceImp implements SessionService {
      * @param userName новое имя пользователя.
      */
     @Override
-    public void createUserSession(Long sessionId, String userName) {
+    public void createUserSession(Long sessionId, String userName, String userPassword) {
         UserSession userSession = new UserSession(sessionId, userName);
         //добавляем в sessionIdToUserSession
         this.sessionIdToUserSession.put(sessionId, userSession);
@@ -83,6 +83,6 @@ public class SessionServiceImp implements SessionService {
         // Отправляем сообщение к AccountServiceImp.
         Address accountServiceAddress = this.ms.getAddressService().getAccountService();
         Address frontendAddress = this.ms.getAddressService().getFrontend();
-        this.ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, sessionId));
+        this.ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, userName, userPassword, sessionId));
     }
 }
