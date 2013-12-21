@@ -507,6 +507,7 @@ public class DBServiceImp implements DBService {
         Writer stream = new StringWriter();
         try {
             Template template = CFG.getTemplate(SQL_DIR + File.separator + templateName);
+            CFG.setNumberFormat("computer");
             template.process(context, stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
