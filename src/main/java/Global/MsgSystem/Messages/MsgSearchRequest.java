@@ -21,6 +21,7 @@ public class MsgSearchRequest extends MsgToMechanicSales {
 
     @Override
     void exec(MechanicSales mechanicSales) {
+        System.out.println("ura");
         Collection<Ticket> rez = mechanicSales.search(this.params);
         mechanicSales.getMessageSystem().sendMessage(new MsgSearchRequestResult(this.getTo(), this.getFrom(),rez));
     }

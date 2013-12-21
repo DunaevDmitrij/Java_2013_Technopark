@@ -126,6 +126,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     }
 
     public void parseSearch(Collection<Ticket> tickets) {
+        System.out.println("search");
         WebPage page = this.dispatcher.getPage(PageDispatcher.URL_SEARCH);
         if (page instanceof SearchPage) {
             SearchPage searchPage = (SearchPage) page;

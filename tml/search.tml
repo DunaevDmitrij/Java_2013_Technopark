@@ -10,19 +10,19 @@
     <form class="search" method="POST" action="/search">
       <h4>Search criterias</h4>
       <div>From:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="depAirport"/>
       <br>
       <div>Where:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="arrAirport"/>
       <br>
       <div>Max Price:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="price"/>
       <br>
       <div>Plane Changes:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="planeChs"/>
       <br>
       <div>Date (format: dd.mm.yyyy):</div>
-      <input type="text" name="from"/>
+      <input type="text" name="date"/>
       <br>
       <input type="submit" value="Submit data"/>
     </form>

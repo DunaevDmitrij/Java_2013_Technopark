@@ -62,8 +62,15 @@ public class SearchPage extends WebPageImp implements WebPage {
         Address to = this.ms.getAddressService().getSalesMechanics();
 
         Map<String, String> params = new HashMap<>();
-        params.put(MechanicSales.findParams.DEPARTURE_AIRPORT, "Тапоа");
-        params.put(MechanicSales.findParams.ARRIVAL_AIRPORT, "Пашковский");
+
+        String depAirport = request.getParameter("depAirport");
+        String arrAirport = request.getParameter("arrAirport");
+        String price = request.getParameter("price");
+        String planeChs = request.getParameter("planeChs");
+        String date = request.getParameter("date");
+
+        params.put(MechanicSales.findParams.DEPARTURE_AIRPORT, depAirport);
+        params.put(MechanicSales.findParams.ARRIVAL_AIRPORT, arrAirport);
         params.put(MechanicSales.findParams.DEPARTURE_DATE_TIME_SINCE, "1356067604");
         params.put(MechanicSales.findParams.DEPARTURE_DATE_TIME_TO, "1419139604");
         this.ms.sendMessage(new MsgSearchRequest(this.frontendAddress, to, params));
@@ -85,6 +92,6 @@ public class SearchPage extends WebPageImp implements WebPage {
 
         this.pageVariables = dataToKey(new String[] {"PageTitle", "Location", "results"},
                 "Search Flight result", "", this.tickets);
-        return generatePage("searchResult.tml",this.pageVariables);
+        return generatePage("searchResult.tml", this.pageVariables);
     }
 }
