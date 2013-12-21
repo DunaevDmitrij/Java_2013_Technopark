@@ -88,6 +88,8 @@ public class ReflectionHelper {
                 field.set(object, value);
             } else if (type.equals(Integer.class) || type.equals(int.class)) {
                 field.set(object, Integer.decode(value));
+            } else if (type.equals(Long.class) || type.equals(long.class)) {
+                field.set(object, Long.decode(value));
             } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
                 field.set(object, Boolean.valueOf(value));
             }
