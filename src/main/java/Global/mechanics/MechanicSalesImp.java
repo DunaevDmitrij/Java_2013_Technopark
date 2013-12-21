@@ -54,6 +54,7 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         this.ms.sendMessage(msg);
         while (!this.foundTicketStatuses.get(requestId)){
             try {
+                this.ms.execForAbonent(this);
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();

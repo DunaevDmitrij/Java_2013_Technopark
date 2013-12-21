@@ -9,6 +9,7 @@ import Global.Imps.Frontend;
 import Global.Imps.ThreadPoolImp;
 import Global.MsgSystem.MessageSystemImp;
 import Global.mechanics.MechanicAuctionImp;
+import Global.mechanics.MechanicSalesImp;
 import org.eclipse.jetty.rewrite.handler.RedirectRegexRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Handler;
@@ -79,12 +80,13 @@ public class Main {
         MessageSystem ms = new MessageSystemImp();
         DBService dbService = new DBServiceImp(ms, "PlaneDB");
         Frontend frontend = new Frontend(ms);
-        MechanicAuction mechanicAuction = new MechanicAuctionImp(ms);
+        //MechanicAuction mechanicAuction = new MechanicAuctionImp(ms);
+        MechanicSales mechanicSales = new MechanicSalesImp(ms);
 
         ThreadPool threadPool = new ThreadPoolImp();
         threadPool.startThread(frontend, TN_FRONTEND);
         threadPool.startThread(dbService, TN_DB_SERVICE);
-        threadPool.startThread(mechanicAuction,"MA");
+        threadPool.startThread(mechanicSales,"MA");
 
         Server server = makeServer(args);
 
