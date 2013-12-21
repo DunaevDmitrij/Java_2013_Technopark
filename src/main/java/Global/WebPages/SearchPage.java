@@ -65,9 +65,6 @@ public class SearchPage extends WebPageImp implements WebPage {
 
         String depAirport = request.getParameter("depAirport");
         String arrAirport = request.getParameter("arrAirport");
-        String price = request.getParameter("price");
-        String planeChs = request.getParameter("planeChs");
-        String date = request.getParameter("date");
 
         params.put(MechanicSales.findParams.DEPARTURE_AIRPORT, depAirport);
         params.put(MechanicSales.findParams.ARRIVAL_AIRPORT, arrAirport);

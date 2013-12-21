@@ -10,10 +10,10 @@
     <form class="search" method="POST" action="/search">
       <h4>Search criterias</h4>
       <div>From:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="depAirport"/>
       <br>
       <div>Where:</div>
-      <input type="text" name="from"/>
+      <input type="text" name="arrAirport"/>
       <br>
       <div>Max Price:</div>
       <input type="text" name="from"/>
@@ -28,9 +28,8 @@
     </form>
     <hr>
 
-    <#list result as results>
+    <#list results as result>
       <p>
-         <b>Owner: </b> ${ result.getOwner() }
          <b>Departure Airport: </b> ${ result.getDepartureAirport() }
          <b>Departure Time: </b> ${ result.getDepartureDateTime().toString() }
          <b>Arrival Airport: </b> ${ result.getArrivalAirport() }

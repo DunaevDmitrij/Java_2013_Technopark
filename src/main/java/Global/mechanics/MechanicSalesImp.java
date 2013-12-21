@@ -74,7 +74,8 @@ public class MechanicSalesImp implements MechanicSales, Abonent, Runnable {
         //removing used values
         this.foundTicketStatuses.remove(requestId);
         this.foundTicketResults.remove(requestId);
-        return null;
+        ArrayList<Ticket> rez = new ArrayList<>();
+        return rez;
     }
 
     @Override
