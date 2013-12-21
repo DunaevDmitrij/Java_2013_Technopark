@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import Global.ResSystem.ResourceSystem;
+
 /**
  * Author: artemlobachev
  * Date: 15.12.13
@@ -18,7 +20,10 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
     //TODO: task for closing lots
     //TODO: take DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE from resourses
     //TODO: tests (in pair with DBSERVICE)
-    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = 259200;//3 days
+
+    private static final String DEF_DELTA_BCLOSING_TICKET = "Default delta before closing ticket and departure";
+    public static final long DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE = ResourceSystem.getRS().<Long> getParam(DEF_DELTA_BCLOSING_TICKET);;
+
     //find
     private final ConcurrentHashMap<Long, HashSet<Lot>> foundLots = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Boolean> foundLotStatuses = new ConcurrentHashMap<>();
@@ -83,7 +88,8 @@ public class MechanicAuctionImp extends MechanicSalesImp implements MechanicAuct
 
     @Override
     public boolean addLot(Ticket ticket, int startPrice) {
-        return this.addLot(ticket, startPrice, new Date(ticket.getDepartureDateTime().getTime() - DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE));
+        return this.addLot(ticket, startPrice, new Date(ticket.getDepartureDateTime().getTime()
+                - DEFAULT_DELTA_BEFORE_CLOSING_TICKET_AND_DEPARTURE));
     }
 
     @Override

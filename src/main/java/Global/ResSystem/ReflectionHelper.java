@@ -55,6 +55,7 @@ public class ReflectionHelper {
     public static String fill(String type) {
         if (type.equals("String")) return "java.lang.String";
         else if (type.equals("int")) return "java.lang.Integer";
+        else if (type.equals("long")) return "java.lang.Long";
         else if (type.equals("boolean")) return "java.lang.Boolean";
         return null;
     }

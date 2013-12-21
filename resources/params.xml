@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <Params>
     <SysParam>
-        <name>Lot's time before takeoff</name>
+        <name>Default delta before closing ticket and departure</name>
         <value type = "String">01:00:00</value>
     </SysParam>
     <SysParam>
