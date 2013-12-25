@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
  * Date: 09.11.13
  */
 public interface WebPage {
+    String WAITING = "";
+
     /** Методы для генерации страниц по соответствующему запросу.
      *  Должны анализировать сессию, создавать контекст и вызывать генерацию (generatePage()).
      * @param request объект запроса, для получения данных сессии

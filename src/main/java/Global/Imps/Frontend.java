@@ -113,7 +113,13 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             // Генерация страницы
-            String pageStr = page.handlePOST(request);
+            String pageStr = WebPage.WAITING;
+
+            while (pageStr.equals(WebPage.WAITING)) {
+                pageStr = page.handlePOST(request);
+            }
+            System.out.println("response");
+
             // Установка статуса
             response.setStatus(page.getStatus());
             response.getWriter().println(pageStr);

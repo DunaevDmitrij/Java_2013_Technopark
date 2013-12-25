@@ -28,13 +28,7 @@
     </form>
     <hr>
 
-    <#list results as result>
-      <p>
-         <b>Departure Airport: </b> ${ result.getDepartureAirport() }
-         <b>Departure Time: </b> ${ result.getDepartureDateTime().toString() }
-         <b>Arrival Airport: </b> ${ result.getArrivalAirport() }
-         <b>Price: </b> ${ result.getPrice() }
-      </p>
-    </#list>
+    ${results}
+
 
 <#include "contentToFooter.html">
